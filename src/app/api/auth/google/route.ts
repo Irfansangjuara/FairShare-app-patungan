@@ -1,20 +1,25 @@
-import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { NextRequest } from "next/server";
+import { cookies, headers } from "next/headers";
 import crypto from "crypto";
 
 export async function GET(request: NextRequest) {
   const clientId = process.env.GOOGLE_CLIENT_ID;
-  const origin = request.nextUrl.origin;
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || origin || "http://localhost:3000";
-  const redirectUri =
-    process.env.GOOGLE_REDIRECT_URI || `${baseUrl}/api/auth/google/callback`;
-
   if (!clientId) {
-    return NextResponse.json(
-      { error: "GOOGLE_CLIENT_ID is not configured." },
+    return Response.json(
+      { error: "GOOGLE_CLIENT_ID is not configured in environment variables." },
       { status: 500 }
     );
   }
+
+  // Detect host to handle localhost vs production canonical domain
+  const headerList = await headers();
+  const host = headerList.get("x-forwarded-host") || headerList.get("host") || "";
+  const isLocal = host.includes("localhost") || host.includes("127.0.0.1");
+
+  // Determine matching redirect URI
+  const redirectUri = isLocal
+    ? "http://localhost:3000/api/auth/google/callback"
+    : (process.env.GOOGLE_REDIRECT_URI || "https://app-fairshare.vercel.app/api/auth/google/callback");
 
   // Generate random state to protect against CSRF
   const state = crypto.randomBytes(16).toString("hex");
@@ -22,10 +27,18 @@ export async function GET(request: NextRequest) {
   const cookieStore = await cookies();
   cookieStore.set("google_oauth_state", state, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: !isLocal,
     sameSite: "lax",
     path: "/",
     maxAge: 60 * 10, // 10 minutes
+  });
+
+  cookieStore.set("google_oauth_redirect_uri", redirectUri, {
+    httpOnly: true,
+    secure: !isLocal,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 10,
   });
 
   const params = new URLSearchParams({

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { eq, or } from "drizzle-orm";
@@ -11,8 +11,10 @@ export async function GET(request: NextRequest) {
   const state = searchParams.get("state");
   const error = searchParams.get("error");
 
-  const baseUrl =
-    process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin || "http://localhost:3000";
+  const headerList = await headers();
+  const host = headerList.get("x-forwarded-host") || headerList.get("host") || "";
+  const isLocal = host.includes("localhost") || host.includes("127.0.0.1");
+  const baseUrl = isLocal ? "http://localhost:3000" : "https://app-fairshare.vercel.app";
 
   if (error) {
     console.error("Google OAuth returned error:", error);
@@ -32,20 +34,27 @@ export async function GET(request: NextRequest) {
   if (!savedState || savedState !== state) {
     console.error("OAuth state mismatch:", { savedState, state });
     return NextResponse.redirect(
-      `${baseUrl}/login?error=${encodeURIComponent("Validasi sesi OAuth gagal. Silakan coba lagi.")}`
+      `${baseUrl}/login?error=${encodeURIComponent("Validasi sesi OAuth gagal. Silakan coba masuk kembali.")}`
     );
   }
 
-  // Clear state cookie
+  // Retrieve matching redirect URI used in initiation
+  const savedRedirectUri = cookieStore.get("google_oauth_redirect_uri")?.value;
+  const redirectUri =
+    savedRedirectUri ||
+    (isLocal
+      ? "http://localhost:3000/api/auth/google/callback"
+      : (process.env.GOOGLE_REDIRECT_URI || "https://app-fairshare.vercel.app/api/auth/google/callback"));
+
+  // Clean up cookies
   cookieStore.delete("google_oauth_state");
+  cookieStore.delete("google_oauth_redirect_uri");
 
   const clientId = process.env.GOOGLE_CLIENT_ID!;
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET!;
-  const redirectUri =
-    process.env.GOOGLE_REDIRECT_URI || `${baseUrl}/api/auth/google/callback`;
 
   try {
-    // 1. Exchange code for tokens
+    // 1. Exchange authorization code for access token
     const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -62,7 +71,7 @@ export async function GET(request: NextRequest) {
       const errBody = await tokenRes.text();
       console.error("Token exchange failed:", errBody);
       return NextResponse.redirect(
-        `${baseUrl}/login?error=${encodeURIComponent("Gagal menukar token dengan Google.")}`
+        `${baseUrl}/login?error=${encodeURIComponent("Gagal menukar token dengan Google: " + errBody)}`
       );
     }
 
@@ -85,7 +94,7 @@ export async function GET(request: NextRequest) {
 
     if (!email) {
       return NextResponse.redirect(
-        `${baseUrl}/login?error=${encodeURIComponent("Akun Google tidak menyediakan email.")}`
+        `${baseUrl}/login?error=${encodeURIComponent("Akun Google Anda tidak menyediakan alamat email.")}`
       );
     }
 
@@ -128,7 +137,7 @@ export async function GET(request: NextRequest) {
   } catch (err) {
     console.error("Error in Google OAuth callback:", err);
     return NextResponse.redirect(
-      `${baseUrl}/login?error=${encodeURIComponent("Terjadi kesalahan sistem saat proses masuk.")}`
+      `${baseUrl}/login?error=${encodeURIComponent("Terjadi kendala sistem saat proses masuk.")}`
     );
   }
 }
