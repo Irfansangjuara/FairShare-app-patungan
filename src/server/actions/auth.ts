@@ -6,6 +6,7 @@ import { eq } from "drizzle-orm";
 import { hashPassword, verifyPassword, createSession, destroySession } from "../../lib/auth";
 import { registerSchema, loginSchema } from "../../lib/validation";
 import { redirect } from "next/navigation";
+import { ensureDatabaseSchema } from "../../db/migrate";
 
 export interface ActionState {
   error?: string;
@@ -30,6 +31,8 @@ export async function registerAction(
   const { name, email, password } = parsed.data;
 
   try {
+    await ensureDatabaseSchema();
+
     // Check if email already exists
     const existing = await db.query.users.findFirst({
       where: eq(users.email, email.toLowerCase()),
@@ -89,6 +92,8 @@ export async function loginAction(
   const { email, password } = parsed.data;
 
   try {
+    await ensureDatabaseSchema();
+
     let user = await db.query.users.findFirst({
       where: eq(users.email, email.toLowerCase()),
     });

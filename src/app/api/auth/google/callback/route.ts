@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { users } from "@/db/schema";
 import { eq, or } from "drizzle-orm";
 import { createSession } from "@/lib/auth";
+import { ensureDatabaseSchema } from "@/db/migrate";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -107,6 +108,7 @@ export async function GET(request: NextRequest) {
     }
 
     // 3. Upsert user in database
+    await ensureDatabaseSchema();
     const normalizedEmail = email.toLowerCase();
     const existingUser = await db.query.users.findFirst({
       where: or(eq(users.googleId, googleId), eq(users.email, normalizedEmail)),
