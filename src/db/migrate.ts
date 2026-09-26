@@ -9,10 +9,33 @@ export async function ensureDatabaseSchema(): Promise<void> {
     return;
   }
 
+  const dbUrl =
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_URL ||
+    process.env.POSTGRES_PRISMA_URL;
+
+  const isCloudOrProd =
+    process.env.VERCEL === "1" ||
+    process.env.NODE_ENV === "production" ||
+    Boolean(process.env.VERCEL_URL);
+
+  if (isCloudOrProd && !dbUrl) {
+    throw new Error(
+      "DATABASE_URL belum dikonfigurasi di Vercel Environment Variables. Silakan hubungkan database PostgreSQL cloud (seperti Neon / Supabase / Vercel Postgres Storage)."
+    );
+  }
+
   try {
-    // 1. Ensure all tables and columns exist
-    await db.execute(sql`
-      CREATE TABLE IF NOT EXISTS users (
+    // 1. Try to enable uuid extension (non-fatal if restricted by provider)
+    try {
+      await db.execute(sql.raw(`CREATE EXTENSION IF NOT EXISTS "pgcrypto"`));
+    } catch {
+      // Non-fatal, PostgreSQL 13+ has gen_random_uuid() built-in
+    }
+
+    // 2. Ensure each table exists one by one to support PgBouncer/connection poolers
+    const tableStatements = [
+      `CREATE TABLE IF NOT EXISTS users (
         id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
         email text NOT NULL UNIQUE,
         google_id text UNIQUE,
@@ -20,20 +43,17 @@ export async function ensureDatabaseSchema(): Promise<void> {
         avatar_url text,
         password_hash text,
         created_at timestamptz DEFAULT now() NOT NULL
-      );
-
-      ALTER TABLE users ADD COLUMN IF NOT EXISTS google_id text;
-      ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar_url text;
-      ALTER TABLE users ADD COLUMN IF NOT EXISTS password_hash text;
-
-      CREATE TABLE IF NOT EXISTS sessions (
+      )`,
+      `ALTER TABLE users ADD COLUMN IF NOT EXISTS google_id text`,
+      `ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar_url text`,
+      `ALTER TABLE users ADD COLUMN IF NOT EXISTS password_hash text`,
+      `CREATE TABLE IF NOT EXISTS sessions (
         id text PRIMARY KEY,
         user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         expires_at timestamptz NOT NULL,
         created_at timestamptz DEFAULT now() NOT NULL
-      );
-
-      CREATE TABLE IF NOT EXISTS events (
+      )`,
+      `CREATE TABLE IF NOT EXISTS events (
         id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
         owner_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         title varchar(120) NOT NULL,
@@ -43,16 +63,14 @@ export async function ensureDatabaseSchema(): Promise<void> {
         archived_at timestamptz,
         created_at timestamptz DEFAULT now() NOT NULL,
         updated_at timestamptz DEFAULT now() NOT NULL
-      );
-
-      CREATE TABLE IF NOT EXISTS members (
+      )`,
+      `CREATE TABLE IF NOT EXISTS members (
         id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
         event_id uuid NOT NULL REFERENCES events(id) ON DELETE CASCADE,
         name varchar(80) NOT NULL,
         created_at timestamptz DEFAULT now() NOT NULL
-      );
-
-      CREATE TABLE IF NOT EXISTS expenses (
+      )`,
+      `CREATE TABLE IF NOT EXISTS expenses (
         id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
         event_id uuid NOT NULL REFERENCES events(id) ON DELETE CASCADE,
         paid_by_member_id uuid NOT NULL REFERENCES members(id) ON DELETE RESTRICT,
@@ -60,9 +78,8 @@ export async function ensureDatabaseSchema(): Promise<void> {
         amount bigint NOT NULL,
         created_at timestamptz DEFAULT now() NOT NULL,
         updated_at timestamptz DEFAULT now() NOT NULL
-      );
-
-      CREATE TABLE IF NOT EXISTS settlements (
+      )`,
+      `CREATE TABLE IF NOT EXISTS settlements (
         id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
         event_id uuid NOT NULL REFERENCES events(id) ON DELETE CASCADE,
         from_member_id uuid NOT NULL REFERENCES members(id) ON DELETE CASCADE,
@@ -73,10 +90,14 @@ export async function ensureDatabaseSchema(): Promise<void> {
         calculation_version integer DEFAULT 1 NOT NULL,
         created_at timestamptz DEFAULT now() NOT NULL,
         updated_at timestamptz DEFAULT now() NOT NULL
-      );
-    `);
+      )`
+    ];
 
-    // 2. Ensure admin account exists
+    for (const stmt of tableStatements) {
+      await db.execute(sql.raw(stmt));
+    }
+
+    // 3. Ensure admin account exists
     const adminPasswordHash = await hashPassword("admin#123");
     await db.execute(sql`
       INSERT INTO users (id, email, name, password_hash)

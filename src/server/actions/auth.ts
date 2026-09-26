@@ -56,23 +56,46 @@ export async function registerAction(
     await createSession(newUser.id);
   } catch (err: unknown) {
     console.error("registerAction error:", err);
-    const msg = err instanceof Error ? err.message : String(err);
-    if (
-      msg.includes("ECONNREFUSED") ||
-      msg.includes("connect") ||
-      msg.includes("5432") ||
-      msg.includes("postgres") ||
-      msg.includes("DATABASE_URL")
-    ) {
-      return {
-        error:
-          "Koneksi database PostgreSQL belum terhubung di Vercel. Pastikan DATABASE_URL (seperti Neon/Supabase) sudah diset di Vercel Environment Variables.",
-      };
-    }
-    return { error: `Gagal mendaftarkan akun: ${msg.slice(0, 100)}` };
+    return { error: extractAuthError(err, "Gagal mendaftarkan akun") };
   }
 
   redirect("/dashboard");
+}
+
+function extractAuthError(err: unknown, defaultPrefix: string): string {
+  const anyErr = err as {
+    message?: string;
+    code?: string;
+    cause?: { message?: string; code?: string; detail?: string; hint?: string };
+  };
+
+  const causeMessage = anyErr?.cause?.message || anyErr?.cause?.detail || "";
+  const errMessage = anyErr?.message || String(err);
+  const combined = `${errMessage} ${causeMessage} ${anyErr?.cause?.code || ""} ${anyErr?.code || ""}`;
+
+  if (
+    combined.includes("ECONNREFUSED") ||
+    combined.includes("ENOTFOUND") ||
+    combined.includes("5432") ||
+    combined.includes("connect") ||
+    combined.includes("DATABASE_URL") ||
+    combined.includes("terminating connection") ||
+    combined.includes("password authentication failed") ||
+    combined.includes("no pg_hba.conf entry")
+  ) {
+    return "Koneksi database PostgreSQL belum terhubung di Vercel. Pastikan DATABASE_URL (seperti Neon/Supabase) sudah diset di Vercel Environment Variables dan database aktif.";
+  }
+
+  if (causeMessage) {
+    return `${defaultPrefix}: ${causeMessage}`;
+  }
+
+  if (errMessage.startsWith("Failed query:")) {
+    const lines = errMessage.split("\n");
+    return `${defaultPrefix}: ${lines[lines.length - 1] || lines[0].slice(0, 120)}`;
+  }
+
+  return `${defaultPrefix}: ${errMessage.slice(0, 120)}`;
 }
 
 export async function loginAction(
@@ -130,20 +153,7 @@ export async function loginAction(
     await createSession(user.id);
   } catch (err: unknown) {
     console.error("loginAction error:", err);
-    const msg = err instanceof Error ? err.message : String(err);
-    if (
-      msg.includes("ECONNREFUSED") ||
-      msg.includes("connect") ||
-      msg.includes("5432") ||
-      msg.includes("postgres") ||
-      msg.includes("DATABASE_URL")
-    ) {
-      return {
-        error:
-          "Koneksi database PostgreSQL belum terhubung di Vercel. Pastikan DATABASE_URL (seperti Neon/Supabase) sudah diset di Vercel Environment Variables.",
-      };
-    }
-    return { error: `Gagal masuk: ${msg.slice(0, 100)}` };
+    return { error: extractAuthError(err, "Gagal masuk") };
   }
 
   redirect("/dashboard");

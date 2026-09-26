@@ -166,17 +166,32 @@ export async function GET(request: NextRequest) {
     return response;
   } catch (err: unknown) {
     console.error("Error in Google OAuth callback:", err);
-    const errMsg = err instanceof Error ? err.message : String(err);
-    const isDbErr =
-      errMsg.includes("ECONNREFUSED") ||
-      errMsg.includes("connect") ||
-      errMsg.includes("5432") ||
-      errMsg.includes("postgres") ||
-      errMsg.includes("DATABASE_URL");
+    const anyErr = err as {
+      message?: string;
+      code?: string;
+      cause?: { message?: string; code?: string; detail?: string };
+    };
+    const combined = `${anyErr?.message || ""} ${anyErr?.cause?.message || ""} ${anyErr?.cause?.code || ""} ${anyErr?.code || ""}`;
 
-    const userFacingError = isDbErr
-      ? "Koneksi database PostgreSQL belum terhubung di Vercel. Pastikan DATABASE_URL (seperti Neon/Supabase) sudah diset di Vercel Environment Variables."
-      : `Gagal proses login: ${errMsg.slice(0, 100)}`;
+    const isDbErr =
+      combined.includes("ECONNREFUSED") ||
+      combined.includes("ENOTFOUND") ||
+      combined.includes("connect") ||
+      combined.includes("5432") ||
+      combined.includes("postgres") ||
+      combined.includes("DATABASE_URL") ||
+      combined.includes("terminating connection") ||
+      combined.includes("password authentication failed");
+
+    let userFacingError: string;
+    if (isDbErr) {
+      userFacingError =
+        "Koneksi database PostgreSQL belum terhubung di Vercel. Pastikan DATABASE_URL (seperti Neon/Supabase) sudah diset di Vercel Environment Variables.";
+    } else if (anyErr?.cause?.message) {
+      userFacingError = `Gagal proses login: ${anyErr.cause.message}`;
+    } else {
+      userFacingError = `Gagal proses login: ${(anyErr?.message || String(err)).slice(0, 120)}`;
+    }
 
     return NextResponse.redirect(
       `${baseUrl}/login?error=${encodeURIComponent(userFacingError)}`
