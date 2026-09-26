@@ -7,11 +7,11 @@ import {
   CheckCircle2,
   Copy,
   Receipt,
-  Sparkles,
   Users,
   ShieldCheck,
   Smartphone,
 } from "lucide-react";
+
 
 export default async function HomePage() {
   const user = await getSessionUser();

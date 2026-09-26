@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { formatRupiah } from "../lib/money";
 import { toggleSettlementPaidAction } from "../server/actions/settlement";
-import { ArrowRight, CheckCircle2, Clock, Sparkles } from "lucide-react";
+import { ArrowRight, CheckCircle2, Clock, Scale } from "lucide-react";
 import confetti from "canvas-confetti";
 
 interface SettlementItem {
@@ -76,15 +76,16 @@ export function SettlementList({
     return (
       <div className="card-diskon p-8 text-center bg-white">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 mb-3">
-          <Sparkles className="h-6 w-6" />
+          <Scale className="h-6 w-6" />
         </div>
         <h4 className="text-base font-bold text-slate-900">Semua Saldo Sudah Impas</h4>
         <p className="text-sm text-slate-500 max-w-md mx-auto mt-1">
-          Tidak ada instruksi transfer pelunasan yang diperlukan saat ini.
+          Tidak ada instruksi transfer pelunasan yang diperlukan saat ini. Seluruh beban telah seimbang.
         </p>
       </div>
     );
   }
+
 
   const allPaid = settlements.every((s) => s.isPaid);
 

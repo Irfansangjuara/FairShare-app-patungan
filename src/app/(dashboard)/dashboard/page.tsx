@@ -14,8 +14,8 @@ import {
   Archive,
   CheckCircle2,
   Clock,
-  Sparkles,
 } from "lucide-react";
+
 
 export default async function DashboardPage() {
   const user = await getSessionUser();

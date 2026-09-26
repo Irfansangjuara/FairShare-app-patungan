@@ -303,7 +303,8 @@ export function generateWhatsAppRecap({
   }
 
   lines.push("");
-  lines.push(`_Dihitung otomatis via FairShare_ ✨`);
+  lines.push(`_Dihitung otomatis & akurat via FairShare_`);
 
   return lines.join("\n");
 }
+

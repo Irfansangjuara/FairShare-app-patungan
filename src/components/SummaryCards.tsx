@@ -104,7 +104,7 @@ export function SummaryCards({
         <div className="min-w-0">
           <div className="text-sm xs:text-base sm:text-xl lg:text-2xl font-bold font-mono-numbers text-slate-950 truncate tracking-tight">
             {totalSettlements === 0 ? (
-              <span className="text-xs sm:text-sm font-semibold text-slate-600">Sudah Impas ✨</span>
+              <span className="text-xs sm:text-sm font-semibold text-slate-600">Sudah Impas ✓</span>
             ) : isAllPaid ? (
               <span className="text-emerald-700">100% Lunas</span>
             ) : (
@@ -114,6 +114,7 @@ export function SummaryCards({
               </span>
             )}
           </div>
+
           <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5 sm:mt-1 truncate">
             {totalSettlements === 0
               ? "Tidak ada utang piutang"

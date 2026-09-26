@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { GoogleLoginButton } from "../../../components/GoogleLoginButton";
-import { Wallet, CheckCircle2, Sparkles, ShieldCheck } from "lucide-react";
+import { Wallet, CheckCircle2, BadgeCheck, ShieldCheck } from "lucide-react";
 
 interface RegisterPageProps {
   searchParams: Promise<{ error?: string }>;
@@ -55,10 +55,11 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
             {/* Value props list */}
             <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100 space-y-2.5 text-xs text-slate-600">
               <div className="flex items-center gap-2 font-semibold text-slate-800">
-                <Sparkles className="h-4 w-4 text-[#84a908] shrink-0" />
+                <BadgeCheck className="h-4 w-4 text-emerald-600 shrink-0" />
                 <span>Keuntungan Akun FairShare:</span>
               </div>
               <ul className="space-y-1.5 text-[11px] text-slate-600 pl-1">
+
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
                   <span>100% Gratis selamanya tanpa biaya tersembunyi</span>
