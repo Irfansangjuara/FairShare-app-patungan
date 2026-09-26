@@ -1,2 +1,101 @@
-# FairShare-app-patungan
-FairShare App Patungan
+# FairShare — Aplikasi Patungan & Pelunasan Cerdas 💰
+
+Aplikasi web modern untuk mencatat biaya bersama dalam trip atau kegiatan, menghitung jatah dan saldo setiap peserta secara presisi, menyusun usulan transfer pelunasan sederhana (deterministik greedy), menandai checklist pelunasan persisten, serta menyalin rekap siap kirim ke WhatsApp.
+
+Aplikasi di-deploy ke Vercel: **[https://app-fairshare.vercel.app](https://app-fairshare.vercel.app)**
+
+---
+
+## 🌟 Fitur Utama
+
+- **Pembagian Rata & Adil (Integer Rupiah)**:
+  - Pembagian beban: `dasar = total div N`, `sisa = total mod N`. Sisa dialokasikan secara deterministik (berdasarkan `created_at` lalu `id`), memastikan **selisih rupiah Rp 0**.
+  - Invarian matematika terbukti: `Total Beban = Total Pengeluaran` dan `Total Saldo Bersih = Rp 0`.
+- **Rekomendasi Transfer Pelunasan Sederhana (Greedy Deterministik)**:
+  - Menghilangkan transfer silang antaranggota dengan mencocokkan debitur terbesar ke kreditur terbesar secara terurut.
+- **Checklist Pelunasan Persisten**:
+  - Pengelola dapat menandai setiap instruksi transfer sebagai `Lunas` atau `Belum Lunas`.
+  - Status tersimpan langsung di database PostgreSQL dan bertahan setelah refresh.
+  - Dilengkapi efek animasi konfeti saat seluruh transfer selesai dilunasi.
+- **Rekap Siap Kirim WhatsApp**:
+  - Tombol 1-klik untuk menyalin rekap rapi berformat teks WhatsApp ke clipboard, lengkap dengan status pelunasan.
+  - Opsi fallback salin manual dan tombol direct share ke WhatsApp.
+- **Tautan Berbagi Baca-Saja (Public Read-Only)**:
+  - Tautan acak unik di `/share/[token]` untuk dibagikan ke anggota grup tanpa perlu login.
+  - Hak akses terlindungi: pengunjung tidak dapat menambah, mengedit, atau menghapus data event.
+- **Autentikasi Google OAuth**:
+  - Masuk cepat dan aman menggunakan akun Google (tanpa repot menghafal kata sandi).
+- **Desain & Estetika (Diskon.com Design System)**:
+  - Mengadaptasi sistem desain Diskon.com: Tipografi **Fredoka**, angka mata uang monospace **JetBrains Mono**, tombol pil (*pill buttons*) hitam & aksen *lime* (`#b7e913`), kartu rounded 24px, chip surplus emerald dan defisit rose.
+  - Memenuhi standar aksesibilitas WCAG 2.2 AA dan responsif penuh hingga layar ponsel 360px.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js](https://nextjs.org/) (App Router, Server Actions, TypeScript)
+- **Styling**: Tailwind CSS & CSS Tokens
+- **Database & ORM**: PostgreSQL & [Drizzle ORM](https://orm.drizzle.team/)
+- **Autentikasi**: Google OAuth 2.0 (OpenID Connect)
+- **Pengujian**: Node Native Test Runner (`npm test`)
+
+---
+
+## 🚀 Menjalankan di Localhost
+
+### 1. Prasyarat
+- Node.js v18+ (disarankan v20+)
+- PostgreSQL lokal (atau database cloud Neon/Supabase)
+
+### 2. Konfigurasi Lingkungan (`.env`)
+Salin `.env.example` menjadi `.env` dan sesuaikan nilainya:
+
+```env
+DATABASE_URL=postgresql://localhost:5432/fairshare
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+SESSION_SECRET=fairshare_jwt_session_secret_key_super_secure_32_chars_min!
+
+# Google OAuth Credentials
+GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-client-secret
+GOOGLE_REDIRECT_URI=http://localhost:3000/api/auth/google/callback
+```
+
+### 3. Instalasi Dependensi & Migrasi Database
+```bash
+npm install
+npm run db:push
+```
+
+### 4. Jalankan Server Development
+```bash
+npm run dev
+```
+Buka browser di **[http://localhost:3000](http://localhost:3000)**.
+
+---
+
+## ☁️ Pengaturan Deployment Vercel
+
+Pada dashboard proyek di **Vercel** (`app-fairshare.vercel.app`), tambahkan Environment Variables berikut:
+
+1. `DATABASE_URL`: Connection string PostgreSQL cloud (misal Neon / Supabase / Vercel Postgres) dengan `sslmode=require`.
+2. `NEXT_PUBLIC_APP_URL`: `https://app-fairshare.vercel.app`
+3. `SESSION_SECRET`: String acak 32 karakter untuk pengamanan sesi cookie.
+4. `GOOGLE_CLIENT_ID`: Google OAuth Client ID.
+5. `GOOGLE_CLIENT_SECRET`: Google OAuth Client Secret.
+6. `GOOGLE_REDIRECT_URI`: `https://app-fairshare.vercel.app/api/auth/google/callback`
+
+> [!IMPORTANT]
+> Di **Google Cloud Console (Credentials)**, tambahkan kedua URL berikut pada **Authorized redirect URIs**:
+> 1. `http://localhost:3000/api/auth/google/callback` (untuk pengujian lokal)
+> 2. `https://app-fairshare.vercel.app/api/auth/google/callback` (untuk versi live di Vercel)
+
+---
+
+## 🧪 Pengujian Otomatis
+
+Jalankan test suite untuk memvalidasi formatting rupiah, alokasi sisa pembulatan, dan benchmark PRD Bagian 8:
+```bash
+npm test
+```
