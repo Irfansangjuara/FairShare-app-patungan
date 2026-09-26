@@ -48,7 +48,7 @@ export default async function HomePage() {
                   className="btn-pill-lime text-sm sm:text-base py-3 sm:py-3.5 px-6 sm:px-8 font-bold shadow-md hover:shadow-lg flex items-center justify-center gap-2"
                 >
                   <span>Buka Dashboard Event</span>
-                  <ArrowRight className="h-4.5 w-4.5" />
+                  <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
                 </Link>
               ) : (
                 <>
@@ -57,13 +57,19 @@ export default async function HomePage() {
                     className="btn-pill-lime text-sm sm:text-base py-3 sm:py-3.5 px-6 sm:px-8 font-bold shadow-md hover:shadow-lg flex items-center justify-center gap-2"
                   >
                     <span>Mulai Sekarang — Gratis</span>
-                    <ArrowRight className="h-4 w-4" />
+                    <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
                   </Link>
                   <Link
                     href="/login"
                     className="inline-flex items-center justify-center gap-2.5 rounded-full border border-slate-300 bg-white hover:bg-slate-50 px-5 sm:px-6 py-3 sm:py-3.5 text-sm sm:text-base font-semibold text-slate-800 shadow-sm transition-all active:scale-[0.99]"
                   >
-                    <svg className="h-4.5 w-4.5 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+                    <svg
+                      className="h-5 w-5 shrink-0"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
                       <path
                         fill="#4285F4"
                         d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"

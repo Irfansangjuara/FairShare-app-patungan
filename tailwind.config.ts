@@ -14,6 +14,11 @@ const config: Config = {
           500: "#a3d40e",
         },
       },
+      spacing: {
+        4.5: "1.125rem",
+        13: "3.25rem",
+        15: "3.75rem",
+      },
     },
   },
   plugins: [],

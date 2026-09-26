@@ -30,7 +30,7 @@ export function GoogleLoginButton({
       disabled={isLoading}
       className={`group w-full inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white font-semibold text-slate-800 shadow-sm transition-all hover:bg-slate-50 hover:border-slate-300 hover:shadow active:scale-[0.99] focus:outline-none focus:ring-2 focus:ring-lime-400 focus:ring-offset-1 disabled:opacity-70 disabled:cursor-not-allowed ${
         isLarge
-          ? "h-12 sm:h-13 px-5 py-3 text-sm sm:text-base"
+          ? "h-12 sm:h-14 px-5 py-3 text-sm sm:text-base"
           : "h-11 sm:h-12 px-4 py-2.5 text-xs sm:text-sm"
       } ${className}`}
     >
@@ -38,7 +38,13 @@ export function GoogleLoginButton({
         <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin text-slate-500 shrink-0" />
       ) : (
         /* Official Google 'G' icon with authentic colors */
-        <svg className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+        <svg
+          className="h-4 w-4 sm:h-5 sm:w-5 shrink-0"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
           <path
             fill="#4285F4"
             d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"

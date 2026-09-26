@@ -86,7 +86,7 @@ export default async function DashboardPage() {
 
           {activeEvents.length === 0 ? (
             <div className="card-diskon p-8 sm:p-12 text-center bg-white space-y-4">
-              <div className="mx-auto flex h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-3xl bg-slate-100 text-slate-400">
+              <div className="mx-auto flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-3xl bg-slate-100 text-slate-400">
                 <Receipt className="h-6 w-6 sm:h-7 sm:w-7" />
               </div>
               <div className="space-y-1">

@@ -18,14 +18,14 @@ export function Navbar({ user }: NavbarProps) {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/90 backdrop-blur-md">
-      <div className="mx-auto flex h-15 sm:h-16 max-w-6xl items-center justify-between px-3.5 sm:px-6">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-3.5 sm:px-6">
         {/* Brand Logo */}
         <Link
           href={user ? "/dashboard" : "/"}
           className="group flex items-center gap-2 sm:gap-2.5 transition-transform hover:scale-[1.01]"
         >
           <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-2xl bg-black text-[#b7e913] shadow-md group-hover:bg-slate-900 transition-colors">
-            <Wallet className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
+            <Wallet className="h-5 w-5" />
           </div>
           <div className="flex items-center gap-1.5">
             <span className="text-lg sm:text-xl font-bold tracking-tight text-slate-950">FairShare</span>
