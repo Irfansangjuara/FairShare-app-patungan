@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { db } from "../db";
 import { users, sessions } from "../db/schema";
-import { eq, gt } from "drizzle-orm";
+import { eq, gt, and } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
@@ -68,7 +68,7 @@ export async function getSessionUser(): Promise<SessionUser | null> {
       })
       .from(sessions)
       .innerJoin(users, eq(sessions.userId, users.id))
-      .where(eq(sessions.id, sessionId))
+      .where(and(eq(sessions.id, sessionId), gt(sessions.expiresAt, now)))
       .limit(1);
 
     if (result.length === 0) {

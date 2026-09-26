@@ -89,7 +89,7 @@ export async function GET(request: NextRequest) {
       const errBody = await tokenRes.text();
       console.error("Token exchange failed:", errBody);
       return NextResponse.redirect(
-        `${baseUrl}/login?error=${encodeURIComponent("Gagal menukar token dengan Google: " + errBody)}`
+        `${baseUrl}/login?error=${encodeURIComponent("Gagal menukar token dengan Google. Silakan coba lagi.")}`
       );
     }
 

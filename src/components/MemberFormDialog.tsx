@@ -78,7 +78,13 @@ export function MemberFormDialog({
       ) : (
         <button
           onClick={handleOpen}
-          className="btn-pill-primary text-xs sm:text-sm py-2 px-4 shadow-sm"
+          disabled={isAddBlocked}
+          className="btn-pill-primary text-xs sm:text-sm py-2 px-4 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          title={
+            isAddBlocked
+              ? "Peserta tidak dapat ditambah setelah pengeluaran dicatat"
+              : "Tambah Peserta"
+          }
         >
           <UserPlus className="h-4 w-4" />
           <span>Tambah Peserta</span>
