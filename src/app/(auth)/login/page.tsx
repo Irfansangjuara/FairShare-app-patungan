@@ -8,7 +8,8 @@ interface LoginPageProps {
 }
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
-  const { error } = await searchParams;
+  const resolvedParams = searchParams ? await searchParams : {};
+  const error = resolvedParams?.error;
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center px-3.5 sm:px-6 py-8 sm:py-12 bg-[#F8FAFC]">

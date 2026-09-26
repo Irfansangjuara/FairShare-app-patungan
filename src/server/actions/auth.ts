@@ -29,27 +29,46 @@ export async function registerAction(
 
   const { name, email, password } = parsed.data;
 
-  // Check if email already exists
-  const existing = await db.query.users.findFirst({
-    where: eq(users.email, email.toLowerCase()),
-  });
+  try {
+    // Check if email already exists
+    const existing = await db.query.users.findFirst({
+      where: eq(users.email, email.toLowerCase()),
+    });
 
-  if (existing) {
-    return { error: "Email sudah terdaftar. Silakan masuk menggunakan email tersebut." };
+    if (existing) {
+      return { error: "Email sudah terdaftar. Silakan masuk menggunakan email tersebut." };
+    }
+
+    const passwordHash = await hashPassword(password);
+
+    const [newUser] = await db
+      .insert(users)
+      .values({
+        name,
+        email: email.toLowerCase(),
+        passwordHash,
+      })
+      .returning({ id: users.id });
+
+    await createSession(newUser.id);
+  } catch (err: unknown) {
+    console.error("registerAction error:", err);
+    const msg = err instanceof Error ? err.message : String(err);
+    if (
+      msg.includes("ECONNREFUSED") ||
+      msg.includes("connect") ||
+      msg.includes("5432") ||
+      msg.includes("postgres") ||
+      msg.includes("DATABASE_URL")
+    ) {
+      return {
+        error:
+          "Koneksi database PostgreSQL belum terhubung di Vercel. Pastikan DATABASE_URL (seperti Neon/Supabase) sudah diset di Vercel Environment Variables.",
+      };
+    }
+    return { error: `Gagal mendaftarkan akun: ${msg.slice(0, 100)}` };
   }
 
-  const passwordHash = await hashPassword(password);
-
-  const [newUser] = await db
-    .insert(users)
-    .values({
-      name,
-      email: email.toLowerCase(),
-      passwordHash,
-    })
-    .returning({ id: users.id });
-
-  await createSession(newUser.id);
   redirect("/dashboard");
 }
 
@@ -69,20 +88,39 @@ export async function loginAction(
 
   const { email, password } = parsed.data;
 
-  const user = await db.query.users.findFirst({
-    where: eq(users.email, email.toLowerCase()),
-  });
+  try {
+    const user = await db.query.users.findFirst({
+      where: eq(users.email, email.toLowerCase()),
+    });
 
-  if (!user || !user.passwordHash) {
-    return { error: "Email tidak ditemukan atau akun ini terdaftar via Google." };
+    if (!user || !user.passwordHash) {
+      return { error: "Email tidak ditemukan atau akun ini terdaftar via Google." };
+    }
+
+    const isMatch = await verifyPassword(password, user.passwordHash);
+    if (!isMatch) {
+      return { error: "Email atau kata sandi salah." };
+    }
+
+    await createSession(user.id);
+  } catch (err: unknown) {
+    console.error("loginAction error:", err);
+    const msg = err instanceof Error ? err.message : String(err);
+    if (
+      msg.includes("ECONNREFUSED") ||
+      msg.includes("connect") ||
+      msg.includes("5432") ||
+      msg.includes("postgres") ||
+      msg.includes("DATABASE_URL")
+    ) {
+      return {
+        error:
+          "Koneksi database PostgreSQL belum terhubung di Vercel. Pastikan DATABASE_URL (seperti Neon/Supabase) sudah diset di Vercel Environment Variables.",
+      };
+    }
+    return { error: `Gagal masuk: ${msg.slice(0, 100)}` };
   }
 
-  const isMatch = await verifyPassword(password, user.passwordHash);
-  if (!isMatch) {
-    return { error: "Email atau kata sandi salah." };
-  }
-
-  await createSession(user.id);
   redirect("/dashboard");
 }
 
