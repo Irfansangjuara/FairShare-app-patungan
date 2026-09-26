@@ -15,7 +15,12 @@ export async function GET(request: NextRequest) {
   const headerList = await headers();
   const host = headerList.get("x-forwarded-host") || headerList.get("host") || "";
   const isLocal = host.includes("localhost") || host.includes("127.0.0.1");
-  const baseUrl = isLocal ? "http://localhost:3000" : "https://app-fairshare.vercel.app";
+  const isWww = host.includes("www.app-fairshare.vercel.app");
+  const baseUrl = isLocal
+    ? "http://localhost:3000"
+    : isWww
+    ? "https://www.app-fairshare.vercel.app"
+    : "https://app-fairshare.vercel.app";
 
   if (error) {
     console.error("Google OAuth returned error:", error);
@@ -45,7 +50,11 @@ export async function GET(request: NextRequest) {
     savedRedirectUri ||
     (isLocal
       ? "http://localhost:3000/api/auth/google/callback"
-      : (process.env.GOOGLE_REDIRECT_URI || "https://app-fairshare.vercel.app/api/auth/google/callback"));
+      : process.env.GOOGLE_REDIRECT_URI
+      ? process.env.GOOGLE_REDIRECT_URI
+      : isWww
+      ? "https://www.app-fairshare.vercel.app/api/auth/google/callback"
+      : "https://app-fairshare.vercel.app/api/auth/google/callback");
 
   // Clean up cookies
   cookieStore.delete("google_oauth_state");

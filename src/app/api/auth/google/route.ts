@@ -6,7 +6,12 @@ export async function GET(request: NextRequest) {
   const headerList = await headers();
   const host = headerList.get("x-forwarded-host") || headerList.get("host") || "";
   const isLocal = host.includes("localhost") || host.includes("127.0.0.1");
-  const baseUrl = isLocal ? "http://localhost:3000" : "https://app-fairshare.vercel.app";
+  const isWww = host.includes("www.app-fairshare.vercel.app");
+  const baseUrl = isLocal
+    ? "http://localhost:3000"
+    : isWww
+    ? "https://www.app-fairshare.vercel.app"
+    : "https://app-fairshare.vercel.app";
 
   const clientId = process.env.GOOGLE_CLIENT_ID;
   if (!clientId) {
@@ -17,10 +22,17 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // Determine matching redirect URI
-  const redirectUri = isLocal
-    ? "http://localhost:3000/api/auth/google/callback"
-    : (process.env.GOOGLE_REDIRECT_URI || "https://app-fairshare.vercel.app/api/auth/google/callback");
+  // Determine matching redirect URI (supports both apex and www domains registered in Google Cloud Console)
+  let redirectUri: string;
+  if (isLocal) {
+    redirectUri = "http://localhost:3000/api/auth/google/callback";
+  } else if (process.env.GOOGLE_REDIRECT_URI) {
+    redirectUri = process.env.GOOGLE_REDIRECT_URI;
+  } else if (isWww) {
+    redirectUri = "https://www.app-fairshare.vercel.app/api/auth/google/callback";
+  } else {
+    redirectUri = "https://app-fairshare.vercel.app/api/auth/google/callback";
+  }
 
   // Generate random state to protect against CSRF
   const state = crypto.randomBytes(16).toString("hex");
