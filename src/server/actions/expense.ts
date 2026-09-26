@@ -45,6 +45,18 @@ export async function createExpenseAction(
     };
   }
 
+  // PRD Section 5 Assumption #3: Minimum 2 members required
+  const allMembers = await db.query.members.findMany({
+    where: eq(members.eventId, eventId),
+  });
+
+  if (allMembers.length < 2) {
+    return {
+      error:
+        "Event membutuhkan minimal 2 peserta sebelum pengeluaran dapat dicatat.",
+    };
+  }
+
   const rawTitle = formData.get("title");
   const rawAmount = formData.get("amount");
   const rawPayerId = formData.get("paidByMemberId");

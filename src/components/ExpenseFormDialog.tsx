@@ -113,8 +113,13 @@ export function ExpenseFormDialog({
       ) : (
         <button
           onClick={handleOpen}
-          disabled={members.length === 0}
-          className="btn-pill-lime text-xs sm:text-sm py-2 px-4 shadow-sm"
+          disabled={members.length < 2}
+          className="btn-pill-lime text-xs sm:text-sm py-2 px-4 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          title={
+            members.length < 2
+              ? "Tambahkan minimal 2 peserta terlebih dahulu"
+              : "Tambah Pengeluaran"
+          }
         >
           <Plus className="h-4 w-4" />
           <span>Tambah Pengeluaran</span>
