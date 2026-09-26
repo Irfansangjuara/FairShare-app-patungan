@@ -5,13 +5,15 @@ import "./globals.css";
 const fredoka = Fredoka({
   variable: "--font-fredoka",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const viewport: Viewport = {
@@ -22,9 +24,41 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "FairShare — Aplikasi Patungan & Pelunasan Cerdas",
+  metadataBase: new URL("https://app-fairshare.vercel.app"),
+  title: {
+    default: "FairShare — Aplikasi Patungan & Pelunasan Cerdas",
+    template: "%s | FairShare",
+  },
   description:
     "Hitung jatah patungan, saldo anggota, rekomendasi transfer pelunasan, checklist lunas, dan salin rekap siap kirim ke WhatsApp.",
+  keywords: [
+    "aplikasi patungan",
+    "split bill",
+    "patungan trip",
+    "pelunasan patungan",
+    "kalkulator patungan",
+    "rekap whatsapp patungan",
+  ],
+  authors: [{ name: "FairShare Team" }],
+  creator: "FairShare",
+  openGraph: {
+    title: "FairShare — Aplikasi Patungan & Pelunasan Cerdas",
+    description:
+      "Hitung jatah patungan, saldo anggota, rekomendasi transfer pelunasan, checklist lunas, dan salin rekap siap kirim ke WhatsApp.",
+    url: "https://app-fairshare.vercel.app",
+    siteName: "FairShare",
+    locale: "id_ID",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FairShare — Aplikasi Patungan & Pelunasan Cerdas",
+    description:
+      "Hitung jatah patungan, saldo anggota, dan rekomendasi transfer pelunasan otomatis.",
+  },
+  alternates: {
+    canonical: "/",
+  },
   icons: {
     icon: "/favicon.ico",
   },

@@ -101,16 +101,16 @@ export default async function HomePage() {
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
-                    <span className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    <span className="text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-wider">
                       Simulasi Contoh Riil (PRD Benchmark)
                     </span>
                   </div>
-                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 mt-0.5">
+                  <h2 className="text-lg sm:text-xl font-bold text-slate-900 mt-0.5">
                     Liburan Jogja Bersama 🏖️
-                  </h3>
+                  </h2>
                 </div>
                 <div className="text-right">
-                  <div className="text-[11px] sm:text-xs text-slate-500 font-medium">Total Pengeluaran</div>
+                  <div className="text-[11px] sm:text-xs text-slate-600 font-medium">Total Pengeluaran</div>
                   <div className="text-lg sm:text-xl font-bold font-mono-numbers text-slate-950">
                     Rp 934.000
                   </div>
@@ -120,7 +120,7 @@ export default async function HomePage() {
               {/* Members distribution & settlements preview */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 py-4 sm:py-5 border-b border-slate-100">
                 <div className="p-2.5 sm:p-3 rounded-2xl bg-slate-50">
-                  <span className="text-xs text-slate-500 block">Andri</span>
+                  <span className="text-xs text-slate-600 block">Andri</span>
                   <span className="font-bold text-slate-900 text-xs sm:text-sm font-mono-numbers">
                     Bayar 385k
                   </span>
@@ -129,7 +129,7 @@ export default async function HomePage() {
                   </span>
                 </div>
                 <div className="p-2.5 sm:p-3 rounded-2xl bg-slate-50">
-                  <span className="text-xs text-slate-500 block">Tedy</span>
+                  <span className="text-xs text-slate-600 block">Tedy</span>
                   <span className="font-bold text-slate-900 text-xs sm:text-sm font-mono-numbers">
                     Bayar 284k
                   </span>
@@ -138,7 +138,7 @@ export default async function HomePage() {
                   </span>
                 </div>
                 <div className="p-2.5 sm:p-3 rounded-2xl bg-slate-50">
-                  <span className="text-xs text-slate-500 block">Irfan</span>
+                  <span className="text-xs text-slate-600 block">Irfan</span>
                   <span className="font-bold text-slate-900 text-xs sm:text-sm font-mono-numbers">
                     Bayar 200k
                   </span>
@@ -147,7 +147,7 @@ export default async function HomePage() {
                   </span>
                 </div>
                 <div className="p-2.5 sm:p-3 rounded-2xl bg-slate-50">
-                  <span className="text-xs text-slate-500 block">Rion</span>
+                  <span className="text-xs text-slate-600 block">Rion</span>
                   <span className="font-bold text-slate-900 text-xs sm:text-sm font-mono-numbers">
                     Bayar 65k
                   </span>
@@ -160,7 +160,7 @@ export default async function HomePage() {
               {/* Settlement Transfer Result */}
               <div className="pt-4 sm:pt-5 space-y-3">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
-                  <span className="text-[11px] sm:text-xs font-bold uppercase text-slate-400 tracking-wider">
+                  <span className="text-[11px] sm:text-xs font-bold uppercase text-slate-600 tracking-wider">
                     Hasil Rekomendasi Transfer Sederhana
                   </span>
                   <span className="text-[11px] sm:text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 self-start sm:self-auto">
@@ -268,7 +268,7 @@ export default async function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-slate-50 py-8 px-4 text-center text-xs text-slate-500">
+      <footer className="border-t border-slate-200 bg-slate-50 py-8 px-4 text-center text-xs text-slate-600 font-medium">
         <p>FairShare © {new Date().getFullYear()} — Aplikasi Patungan & Pelunasan Cerdas</p>
       </footer>
     </div>
