@@ -50,8 +50,16 @@ export async function GET(request: NextRequest) {
   cookieStore.delete("google_oauth_state");
   cookieStore.delete("google_oauth_redirect_uri");
 
-  const clientId = process.env.GOOGLE_CLIENT_ID!;
-  const clientSecret = process.env.GOOGLE_CLIENT_SECRET!;
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+
+  if (!clientId || !clientSecret) {
+    return NextResponse.redirect(
+      `${baseUrl}/login?error=${encodeURIComponent(
+        "Kredensial GOOGLE_CLIENT_ID atau GOOGLE_CLIENT_SECRET belum diset di Vercel Environment Variables."
+      )}`
+    );
+  }
 
   try {
     // 1. Exchange authorization code for access token
@@ -145,10 +153,22 @@ export async function GET(request: NextRequest) {
     });
 
     return response;
-  } catch (err) {
+  } catch (err: unknown) {
     console.error("Error in Google OAuth callback:", err);
+    const errMsg = err instanceof Error ? err.message : String(err);
+    const isDbErr =
+      errMsg.includes("ECONNREFUSED") ||
+      errMsg.includes("connect") ||
+      errMsg.includes("5432") ||
+      errMsg.includes("postgres") ||
+      errMsg.includes("DATABASE_URL");
+
+    const userFacingError = isDbErr
+      ? "Koneksi database PostgreSQL belum terhubung di Vercel. Pastikan DATABASE_URL (seperti Neon/Supabase) sudah diset di Vercel Environment Variables."
+      : `Gagal proses login: ${errMsg.slice(0, 100)}`;
+
     return NextResponse.redirect(
-      `${baseUrl}/login?error=${encodeURIComponent("Terjadi kendala sistem saat proses masuk.")}`
+      `${baseUrl}/login?error=${encodeURIComponent(userFacingError)}`
     );
   }
 }

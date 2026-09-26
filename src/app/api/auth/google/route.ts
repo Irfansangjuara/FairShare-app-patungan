@@ -3,18 +3,19 @@ import { headers } from "next/headers";
 import crypto from "crypto";
 
 export async function GET(request: NextRequest) {
-  const clientId = process.env.GOOGLE_CLIENT_ID;
-  if (!clientId) {
-    return NextResponse.json(
-      { error: "GOOGLE_CLIENT_ID is not configured in environment variables." },
-      { status: 500 }
-    );
-  }
-
-  // Detect host to handle localhost vs production canonical domain
   const headerList = await headers();
   const host = headerList.get("x-forwarded-host") || headerList.get("host") || "";
   const isLocal = host.includes("localhost") || host.includes("127.0.0.1");
+  const baseUrl = isLocal ? "http://localhost:3000" : "https://app-fairshare.vercel.app";
+
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  if (!clientId) {
+    return NextResponse.redirect(
+      `${baseUrl}/login?error=${encodeURIComponent(
+        "GOOGLE_CLIENT_ID belum diset di Vercel. Silakan tambahkan GOOGLE_CLIENT_ID & GOOGLE_CLIENT_SECRET di Vercel Environment Variables."
+      )}`
+    );
+  }
 
   // Determine matching redirect URI
   const redirectUri = isLocal
