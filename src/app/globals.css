@@ -32,6 +32,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
   gap: 0.5rem;
   border-radius: 9999px;
   background-color: #000000;
@@ -67,6 +68,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
   gap: 0.5rem;
   border-radius: 9999px;
   background-color: var(--accent-lime);

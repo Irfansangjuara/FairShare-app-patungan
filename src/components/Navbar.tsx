@@ -70,16 +70,16 @@ export function Navbar({ user }: NavbarProps) {
               </div>
             </>
           ) : (
-            <div className="flex items-center gap-1 sm:gap-2">
+            <div className="flex items-center gap-1 sm:gap-2 shrink-0">
               <Link
                 href="/login"
-                className="text-xs sm:text-sm font-semibold text-slate-700 hover:text-slate-950 px-2.5 sm:px-3.5 py-1.5 rounded-full hover:bg-slate-100 transition-colors"
+                className="whitespace-nowrap shrink-0 text-xs sm:text-sm font-semibold text-slate-700 hover:text-slate-950 px-2.5 sm:px-3.5 py-1.5 rounded-full hover:bg-slate-100 transition-colors"
               >
                 Masuk
               </Link>
               <Link
                 href="/register"
-                className="btn-pill-lime text-xs sm:text-sm py-1.5 sm:py-2 px-3 sm:px-4 font-bold shadow-sm"
+                className="btn-pill-lime whitespace-nowrap shrink-0 text-xs sm:text-sm py-1.5 sm:py-2 px-3 sm:px-4 font-bold shadow-sm"
               >
                 <span>Daftar</span>
                 <span className="hidden sm:inline">&nbsp;Gratis</span>

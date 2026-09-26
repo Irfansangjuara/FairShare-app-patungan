@@ -41,27 +41,27 @@ export default async function HomePage() {
               <strong>siapa membayar siapa, berapa nominal rupiahnya, dan apakah sudah lunas</strong>.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 pt-3 w-full max-w-md mx-auto">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 pt-3 w-full max-w-sm sm:max-w-none sm:w-auto mx-auto">
               {user ? (
                 <Link
                   href="/dashboard"
-                  className="btn-pill-lime text-sm sm:text-base py-3 sm:py-3.5 px-6 sm:px-8 font-bold shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                  className="btn-pill-lime text-sm sm:text-base py-3 sm:py-3.5 px-6 sm:px-8 font-bold shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 whitespace-nowrap shrink-0 sm:w-auto"
                 >
-                  <span>Buka Dashboard Event</span>
-                  <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="whitespace-nowrap">Buka Dashboard Event</span>
+                  <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
                 </Link>
               ) : (
                 <>
                   <Link
                     href="/register"
-                    className="btn-pill-lime text-sm sm:text-base py-3 sm:py-3.5 px-6 sm:px-8 font-bold shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                    className="btn-pill-lime text-sm sm:text-base py-3 sm:py-3.5 px-6 sm:px-8 font-bold shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 whitespace-nowrap shrink-0 sm:w-auto"
                   >
-                    <span>Mulai Sekarang — Gratis</span>
-                    <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <span className="whitespace-nowrap">Mulai Sekarang — Gratis</span>
+                    <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
                   </Link>
                   <Link
                     href="/login"
-                    className="inline-flex items-center justify-center gap-2.5 rounded-full border border-slate-300 bg-white hover:bg-slate-50 px-5 sm:px-6 py-3 sm:py-3.5 text-sm sm:text-base font-semibold text-slate-800 shadow-sm transition-all active:scale-[0.99]"
+                    className="inline-flex items-center justify-center gap-2.5 rounded-full border border-slate-300 bg-white hover:bg-slate-50 px-6 sm:px-7 py-3 sm:py-3.5 text-sm sm:text-base font-semibold text-slate-800 shadow-sm transition-all active:scale-[0.99] whitespace-nowrap shrink-0 sm:w-auto"
                   >
                     <svg
                       className="h-5 w-5 shrink-0"
@@ -87,7 +87,7 @@ export default async function HomePage() {
                         d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
                       />
                     </svg>
-                    <span>Masuk Akun</span>
+                    <span className="whitespace-nowrap">Masuk Akun</span>
                   </Link>
                 </>
               )}
