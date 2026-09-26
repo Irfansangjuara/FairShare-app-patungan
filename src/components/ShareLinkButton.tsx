@@ -53,19 +53,20 @@ export function ShareLinkButton({ eventId, shareToken: initialToken }: ShareLink
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-white px-3.5 py-2 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"
+        className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-white px-3 sm:px-3.5 py-2 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 active:scale-95 transition-all shadow-sm"
         title="Bagikan Tautan Baca-Saja"
       >
         <LinkIcon className="h-3.5 w-3.5 text-slate-500" />
-        <span>Tautan Berbagi</span>
+        <span className="hidden sm:inline">Tautan Berbagi</span>
+        <span className="sm:hidden">Tautan</span>
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="card-diskon w-full max-w-md p-6 bg-white space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-3.5 sm:p-4 animate-in fade-in">
+          <div className="card-diskon w-full max-w-md max-h-[90vh] overflow-y-auto p-5 sm:p-6 bg-white space-y-4">
             <div className="flex items-center justify-between border-b pb-3">
               <div className="flex items-center gap-2">
-                <div className="p-2 rounded-xl bg-blue-50 text-blue-600">
+                <div className="p-1.5 sm:p-2 rounded-xl bg-blue-50 text-blue-600">
                   <Share2 className="h-4 w-4" />
                 </div>
                 <h3 className="text-base font-bold text-slate-900">Tautan Berbagi Baca-Saja</h3>
@@ -78,7 +79,7 @@ export function ShareLinkButton({ eventId, shareToken: initialToken }: ShareLink
               </button>
             </div>
 
-            <p className="text-xs text-slate-600">
+            <p className="text-xs text-slate-600 leading-relaxed">
               Siapa pun yang memiliki tautan ini dapat melihat rincian patungan, status pelunasan,
               dan menyalin rekap WhatsApp tanpa perlu login. <strong>Mereka tidak dapat mengubah data.</strong>
             </p>
@@ -93,7 +94,7 @@ export function ShareLinkButton({ eventId, shareToken: initialToken }: ShareLink
               />
               <button
                 onClick={handleCopy}
-                className="btn-pill-primary text-xs py-2 px-3 shrink-0"
+                className="btn-pill-primary text-xs py-2 px-3 sm:px-3.5 shrink-0 active:scale-95"
               >
                 {copied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
                 <span>{copied ? "Tersalin" : "Salin"}</span>
@@ -113,7 +114,7 @@ export function ShareLinkButton({ eventId, shareToken: initialToken }: ShareLink
 
               <button
                 onClick={() => setIsOpen(false)}
-                className="btn-pill-primary text-xs py-1.5 px-4"
+                className="btn-pill-primary text-xs py-1.5 px-4 font-bold"
               >
                 Tutup
               </button>
@@ -123,4 +124,5 @@ export function ShareLinkButton({ eventId, shareToken: initialToken }: ShareLink
       )}
     </>
   );
+
 }

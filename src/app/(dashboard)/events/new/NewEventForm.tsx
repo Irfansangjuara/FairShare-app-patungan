@@ -9,7 +9,7 @@ export function NewEventForm() {
   const [state, formAction, isPending] = useActionState(createEventAction, null);
 
   return (
-    <div className="card-diskon p-6 sm:p-8 bg-white border border-slate-200">
+    <div className="card-diskon p-4 sm:p-8 bg-white border border-slate-200">
       {state?.error && (
         <div className="mb-5 p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-800">
           {state.error}
@@ -26,7 +26,7 @@ export function NewEventForm() {
             name="title"
             required
             placeholder="Contoh: Liburan Jogja, Futsal Mingguan, Camping Pangalengan"
-            className="w-full rounded-2xl border border-slate-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-lime-400"
+            className="w-full rounded-2xl border border-slate-300 px-3.5 sm:px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-lime-400"
           />
           <span className="text-[11px] text-slate-400 block mt-1">
             Wajib diisi, minimal 3 karakter.
@@ -43,7 +43,7 @@ export function NewEventForm() {
               type="text"
               name="location"
               placeholder="Contoh: Yogyakarta, Pantai Indah Kapuk"
-              className="w-full rounded-2xl border border-slate-300 pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-lime-400"
+              className="w-full rounded-2xl border border-slate-300 pl-10 pr-3.5 sm:pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-lime-400"
             />
           </div>
         </div>
@@ -57,22 +57,22 @@ export function NewEventForm() {
             <input
               type="date"
               name="eventDate"
-              className="w-full rounded-2xl border border-slate-300 pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-lime-400 bg-white"
+              className="w-full rounded-2xl border border-slate-300 pl-10 pr-3.5 sm:pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-lime-400 bg-white"
             />
           </div>
         </div>
 
-        <div className="pt-3 border-t flex items-center justify-end gap-3">
+        <div className="pt-3 border-t flex items-center justify-between sm:justify-end gap-2 sm:gap-3">
           <Link
             href="/dashboard"
-            className="px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-full"
+            className="px-3.5 sm:px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-full"
           >
             Batal
           </Link>
           <button
             type="submit"
             disabled={isPending}
-            className="btn-pill-lime text-xs sm:text-sm py-2.5 px-6 shadow-md flex items-center gap-2"
+            className="btn-pill-lime text-xs sm:text-sm py-2.5 px-5 sm:px-6 shadow-md flex items-center gap-1.5 sm:gap-2 font-bold"
           >
             <span>{isPending ? "Membuat..." : "Buat Event & Lanjut"}</span>
             <ArrowRight className="h-4 w-4" />
@@ -80,5 +80,6 @@ export function NewEventForm() {
         </div>
       </form>
     </div>
+
   );
 }

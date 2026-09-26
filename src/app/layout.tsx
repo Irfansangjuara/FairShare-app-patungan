@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fredoka, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -14,6 +14,13 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500", "600", "700"],
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#b7e913",
+};
+
 export const metadata: Metadata = {
   title: "FairShare — Aplikasi Patungan & Pelunasan Cerdas",
   description:
@@ -22,6 +29,7 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
   },
 };
+
 
 export default function RootLayout({
   children,

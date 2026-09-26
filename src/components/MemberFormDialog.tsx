@@ -86,10 +86,10 @@ export function MemberFormDialog({
       )}
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="card-diskon w-full max-w-md p-6 bg-white space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-3.5 sm:p-4 animate-in fade-in">
+          <div className="card-diskon w-full max-w-md max-h-[90vh] overflow-y-auto p-5 sm:p-6 bg-white space-y-4">
             <div className="flex items-center justify-between border-b pb-3">
-              <h3 className="text-lg font-bold text-slate-900">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900">
                 {memberToEdit ? "Ubah Nama Peserta" : "Tambah Peserta Baru"}
               </h3>
               <button
@@ -99,6 +99,7 @@ export function MemberFormDialog({
                 <X className="h-5 w-5" />
               </button>
             </div>
+
 
             {isAddBlocked && (
               <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-xs flex items-start gap-2">

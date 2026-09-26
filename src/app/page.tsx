@@ -41,100 +41,108 @@ export default async function HomePage() {
               <strong>siapa membayar siapa, berapa nominal rupiahnya, dan apakah sudah lunas</strong>.
             </p>
 
-            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 pt-3 w-full max-w-md mx-auto">
               {user ? (
                 <Link
                   href="/dashboard"
-                  className="btn-pill-lime text-base py-3 px-8 shadow-md hover:shadow-lg"
+                  className="btn-pill-lime text-sm sm:text-base py-3 sm:py-3.5 px-6 sm:px-8 font-bold shadow-md hover:shadow-lg flex items-center justify-center gap-2"
                 >
                   <span>Buka Dashboard Event</span>
-                  <ArrowRight className="h-5 w-5" />
+                  <ArrowRight className="h-4.5 w-4.5" />
                 </Link>
               ) : (
-                <Link
-                  href="/api/auth/google"
-                  className="btn-pill-primary text-base py-3 px-8 shadow-md hover:shadow-lg flex items-center gap-3"
-                >
-                  <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24">
-                    <path
-                      fill="#4285F4"
-                      d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"
-                    />
-                    <path
-                      fill="#34A853"
-                      d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"
-                    />
-                    <path
-                      fill="#FBBC05"
-                      d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"
-                    />
-                    <path
-                      fill="#EA4335"
-                      d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
-                    />
-                  </svg>
-                  <span>Masuk dengan Google</span>
-                  <ArrowRight className="h-4 w-4 text-slate-400" />
-                </Link>
+                <>
+                  <Link
+                    href="/register"
+                    className="btn-pill-lime text-sm sm:text-base py-3 sm:py-3.5 px-6 sm:px-8 font-bold shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                  >
+                    <span>Mulai Sekarang — Gratis</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                  <Link
+                    href="/login"
+                    className="inline-flex items-center justify-center gap-2.5 rounded-full border border-slate-300 bg-white hover:bg-slate-50 px-5 sm:px-6 py-3 sm:py-3.5 text-sm sm:text-base font-semibold text-slate-800 shadow-sm transition-all active:scale-[0.99]"
+                  >
+                    <svg className="h-4.5 w-4.5 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        fill="#4285F4"
+                        d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"
+                      />
+                      <path
+                        fill="#34A853"
+                        d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"
+                      />
+                      <path
+                        fill="#FBBC05"
+                        d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"
+                      />
+                      <path
+                        fill="#EA4335"
+                        d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
+                      />
+                    </svg>
+                    <span>Masuk Akun</span>
+                  </Link>
+                </>
               )}
             </div>
           </div>
 
           {/* Interactive Benchmark Mockup / Live Preview */}
-          <div className="mx-auto max-w-3xl mt-12 sm:mt-16">
-            <div className="card-diskon border-2 border-slate-200 bg-white p-6 sm:p-8 shadow-xl relative overflow-hidden">
-              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5">
+          <div className="mx-auto max-w-3xl mt-10 sm:mt-16">
+            <div className="card-diskon border-2 border-slate-200 bg-white p-4 sm:p-8 shadow-xl relative overflow-hidden">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4 sm:pb-5">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="flex h-3 w-3 rounded-full bg-emerald-500" />
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                    <span className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">
                       Simulasi Contoh Riil (PRD Benchmark)
                     </span>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mt-0.5">
+                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 mt-0.5">
                     Liburan Jogja Bersama 🏖️
                   </h3>
                 </div>
                 <div className="text-right">
-                  <div className="text-xs text-slate-500 font-medium">Total Pengeluaran</div>
-                  <div className="text-xl font-bold font-mono-numbers text-slate-950">
+                  <div className="text-[11px] sm:text-xs text-slate-500 font-medium">Total Pengeluaran</div>
+                  <div className="text-lg sm:text-xl font-bold font-mono-numbers text-slate-950">
                     Rp 934.000
                   </div>
                 </div>
               </div>
 
               {/* Members distribution & settlements preview */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 py-5 border-b border-slate-100">
-                <div className="p-3 rounded-2xl bg-slate-50">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 py-4 sm:py-5 border-b border-slate-100">
+                <div className="p-2.5 sm:p-3 rounded-2xl bg-slate-50">
                   <span className="text-xs text-slate-500 block">Andri</span>
-                  <span className="font-bold text-slate-900 text-sm font-mono-numbers">
+                  <span className="font-bold text-slate-900 text-xs sm:text-sm font-mono-numbers">
                     Bayar 385k
                   </span>
                   <span className="text-[11px] font-semibold text-emerald-700 block">
                     +Rp 151.500
                   </span>
                 </div>
-                <div className="p-3 rounded-2xl bg-slate-50">
+                <div className="p-2.5 sm:p-3 rounded-2xl bg-slate-50">
                   <span className="text-xs text-slate-500 block">Tedy</span>
-                  <span className="font-bold text-slate-900 text-sm font-mono-numbers">
+                  <span className="font-bold text-slate-900 text-xs sm:text-sm font-mono-numbers">
                     Bayar 284k
                   </span>
                   <span className="text-[11px] font-semibold text-emerald-700 block">
                     +Rp 50.500
                   </span>
                 </div>
-                <div className="p-3 rounded-2xl bg-slate-50">
+                <div className="p-2.5 sm:p-3 rounded-2xl bg-slate-50">
                   <span className="text-xs text-slate-500 block">Irfan</span>
-                  <span className="font-bold text-slate-900 text-sm font-mono-numbers">
+                  <span className="font-bold text-slate-900 text-xs sm:text-sm font-mono-numbers">
                     Bayar 200k
                   </span>
                   <span className="text-[11px] font-semibold text-rose-700 block">
                     -Rp 33.500
                   </span>
                 </div>
-                <div className="p-3 rounded-2xl bg-slate-50">
+                <div className="p-2.5 sm:p-3 rounded-2xl bg-slate-50">
                   <span className="text-xs text-slate-500 block">Rion</span>
-                  <span className="font-bold text-slate-900 text-sm font-mono-numbers">
+                  <span className="font-bold text-slate-900 text-xs sm:text-sm font-mono-numbers">
                     Bayar 65k
                   </span>
                   <span className="text-[11px] font-semibold text-rose-700 block">
@@ -144,54 +152,54 @@ export default async function HomePage() {
               </div>
 
               {/* Settlement Transfer Result */}
-              <div className="pt-5 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold uppercase text-slate-400 tracking-wider">
+              <div className="pt-4 sm:pt-5 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                  <span className="text-[11px] sm:text-xs font-bold uppercase text-slate-400 tracking-wider">
                     Hasil Rekomendasi Transfer Sederhana
                   </span>
-                  <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                  <span className="text-[11px] sm:text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 self-start sm:self-auto">
                     Jatah Masing-masing Rp 233.500
                   </span>
                 </div>
 
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                  <div className="flex items-center justify-between p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-slate-200/80">
                     <span className="text-xs sm:text-sm font-semibold text-slate-900">
                       1. Rion ➡️ Andri
                     </span>
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono-numbers font-bold text-sm text-slate-900">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <span className="font-mono-numbers font-bold text-xs sm:text-sm text-slate-900">
                         Rp 151.500
                       </span>
-                      <span className="text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] sm:text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
                         Lunas ✓
                       </span>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                  <div className="flex items-center justify-between p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-slate-200/80">
                     <span className="text-xs sm:text-sm font-semibold text-slate-900">
                       2. Irfan ➡️ Tedy
                     </span>
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono-numbers font-bold text-sm text-slate-900">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <span className="font-mono-numbers font-bold text-xs sm:text-sm text-slate-900">
                         Rp 33.500
                       </span>
-                      <span className="text-[11px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] sm:text-[11px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">
                         Belum Lunas
                       </span>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                  <div className="flex items-center justify-between p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-slate-200/80">
                     <span className="text-xs sm:text-sm font-semibold text-slate-900">
                       3. Rion ➡️ Tedy
                     </span>
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono-numbers font-bold text-sm text-slate-900">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <span className="font-mono-numbers font-bold text-xs sm:text-sm text-slate-900">
                         Rp 17.000
                       </span>
-                      <span className="text-[11px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] sm:text-[11px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">
                         Belum Lunas
                       </span>
                     </div>
@@ -200,6 +208,7 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
+
         </section>
 
         {/* Feature Highlights Section */}

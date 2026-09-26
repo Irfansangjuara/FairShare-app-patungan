@@ -79,24 +79,24 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
     <div className="min-h-full flex flex-col bg-[#F8FAFC]">
       <Navbar user={user} />
 
-      <main className="flex-1 mx-auto max-w-6xl w-full px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
+      <main className="flex-1 mx-auto max-w-6xl w-full px-3.5 sm:px-6 py-5 sm:py-8 space-y-5 sm:space-y-8">
         {/* Navigation Breadcrumb & Back */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
           <div className="space-y-1">
             <Link
               href="/dashboard"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors mb-1"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors mb-0.5 sm:mb-1"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>Kembali ke Dashboard</span>
             </Link>
 
-            <div className="flex items-center gap-3 flex-wrap">
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-950">
+            <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+              <h1 className="text-xl sm:text-3xl font-extrabold text-slate-950 tracking-tight leading-snug">
                 {event.title}
               </h1>
               {event.archivedAt && (
-                <span className="rounded-full bg-slate-200 text-slate-700 text-xs px-2.5 py-0.5 font-bold">
+                <span className="rounded-full bg-slate-200 text-slate-700 text-[11px] sm:text-xs px-2.5 py-0.5 font-bold">
                   Diarsipkan
                 </span>
               )}
@@ -106,13 +106,13 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
               <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-500 pt-0.5">
                 {event.location && (
                   <div className="flex items-center gap-1">
-                    <MapPin className="h-3.5 w-3.5 text-slate-400" />
-                    <span>{event.location}</span>
+                    <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                    <span className="truncate">{event.location}</span>
                   </div>
                 )}
                 {event.eventDate && (
                   <div className="flex items-center gap-1">
-                    <Calendar className="h-3.5 w-3.5 text-slate-400" />
+                    <Calendar className="h-3.5 w-3.5 text-slate-400 shrink-0" />
                     <span>{event.eventDate}</span>
                   </div>
                 )}
@@ -121,7 +121,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
           </div>
 
           {/* Action Toolbar */}
-          <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 self-start sm:self-auto pt-1 sm:pt-0">
             <WhatsAppRecapButton recapText={recapText} />
             <ShareLinkButton eventId={event.id} shareToken={event.shareToken} />
             <EventSettingsDialog
@@ -133,6 +133,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
             />
           </div>
         </div>
+
 
         {/* Overview Metric Cards */}
         <SummaryCards

@@ -20,13 +20,13 @@ export function BalanceTable({ calculations }: BalanceTableProps) {
   return (
     <div className="card-diskon overflow-hidden border border-slate-200">
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse text-xs sm:text-sm">
+        <table className="w-full text-left border-collapse text-xs sm:text-sm min-w-[440px]">
           <thead>
             <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-500 font-semibold">
-              <th className="py-3 px-4 sm:px-6">Peserta</th>
-              <th className="py-3 px-4 sm:px-6 text-right">Sudah Bayar</th>
-              <th className="py-3 px-4 sm:px-6 text-right">Jatah Beban</th>
-              <th className="py-3 px-4 sm:px-6 text-right">Saldo Bersih</th>
+              <th className="py-2.5 sm:py-3 px-3.5 sm:px-6">Peserta</th>
+              <th className="py-2.5 sm:py-3 px-3.5 sm:px-6 text-right">Sudah Bayar</th>
+              <th className="py-2.5 sm:py-3 px-3.5 sm:px-6 text-right">Jatah Beban</th>
+              <th className="py-2.5 sm:py-3 px-3.5 sm:px-6 text-right">Saldo Bersih</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -36,16 +36,17 @@ export function BalanceTable({ calculations }: BalanceTableProps) {
 
               return (
                 <tr key={member.memberId} className="hover:bg-slate-50/50 transition-colors">
-                  <td className="py-3.5 px-4 sm:px-6 font-semibold text-slate-900">
+                  <td className="py-3 px-3.5 sm:px-6 font-semibold text-slate-900">
                     {member.name}
                   </td>
-                  <td className="py-3.5 px-4 sm:px-6 text-right font-mono-numbers text-slate-700">
+                  <td className="py-3 px-3.5 sm:px-6 text-right font-mono-numbers text-slate-700">
                     {formatRupiah(member.paid)}
                   </td>
-                  <td className="py-3.5 px-4 sm:px-6 text-right font-mono-numbers text-slate-700">
+                  <td className="py-3 px-3.5 sm:px-6 text-right font-mono-numbers text-slate-700">
                     {formatRupiah(member.share)}
                   </td>
-                  <td className="py-3.5 px-4 sm:px-6 text-right">
+                  <td className="py-3 px-3.5 sm:px-6 text-right">
+
                     <span
                       className={`inline-flex items-center gap-1 font-mono-numbers font-bold px-2.5 py-1 rounded-full text-xs ${
                         isSurplus

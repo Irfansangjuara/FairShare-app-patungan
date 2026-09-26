@@ -56,28 +56,28 @@ export function MemberList({
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
         {members.map((member, idx) => (
           <div
             key={member.id}
-            className="card-diskon p-4 flex items-center justify-between gap-3 bg-white"
+            className="card-diskon p-3 sm:p-4 flex items-center justify-between gap-2.5 sm:gap-3 bg-white"
           >
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-black text-[#b7e913] text-xs font-bold shrink-0">
+            <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+              <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-black text-[#b7e913] text-xs font-bold shrink-0">
                 {idx + 1}
               </div>
               <div className="min-w-0">
-                <span className="font-semibold text-sm text-slate-900 block truncate">
+                <span className="font-semibold text-xs sm:text-sm text-slate-900 block truncate">
                   {member.name}
                 </span>
-                <span className="text-[11px] text-slate-400 block">
+                <span className="text-[10px] sm:text-[11px] text-slate-400 block">
                   Peserta #{idx + 1}
                 </span>
               </div>
             </div>
 
             {isOwner && (
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
                 <MemberFormDialog
                   eventId={eventId}
                   expenseCount={expenseCount}
@@ -87,20 +87,21 @@ export function MemberList({
                 <button
                   onClick={() => handleDelete(member.id, member.name)}
                   disabled={isPending || expenseCount > 0}
-                  className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-400"
+                  className="p-1 sm:p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-400"
                   title={
                     expenseCount > 0
                       ? "Tidak dapat dihapus karena sudah ada pengeluaran"
                       : "Hapus Peserta"
                   }
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </button>
               </div>
             )}
           </div>
         ))}
       </div>
+
     </div>
   );
 }

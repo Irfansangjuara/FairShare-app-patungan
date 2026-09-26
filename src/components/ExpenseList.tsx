@@ -86,32 +86,31 @@ export function ExpenseList({
         {expenses.map((exp) => (
           <div
             key={exp.id}
-            className="p-4 sm:px-6 flex items-center justify-between gap-4 hover:bg-slate-50/50 transition-colors"
+            className="p-3 sm:p-4 sm:px-6 flex items-center justify-between gap-2.5 sm:gap-4 hover:bg-slate-50/50 transition-colors"
           >
             <div className="min-w-0 flex-1">
-              <h5 className="text-sm sm:text-base font-semibold text-slate-900 truncate">
+              <h5 className="text-xs sm:text-base font-semibold text-slate-900 truncate">
                 {exp.title}
               </h5>
-              <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
-                <span>Ditalangi oleh <strong className="text-slate-700 font-semibold">{exp.paidByMember?.name || "Peserta"}</strong></span>
+              <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-slate-500 mt-0.5 truncate">
+                <span className="truncate">Oleh <strong className="text-slate-700 font-semibold">{exp.paidByMember?.name || "Peserta"}</strong></span>
                 <span>•</span>
-                <span>
+                <span className="shrink-0">
                   {new Date(exp.createdAt).toLocaleDateString("id-ID", {
                     day: "numeric",
                     month: "short",
-                    year: "numeric",
                   })}
                 </span>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <span className="font-mono-numbers font-bold text-sm sm:text-base text-slate-950">
+            <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+              <span className="font-mono-numbers font-bold text-xs sm:text-base text-slate-950">
                 {formatRupiah(exp.amount)}
               </span>
 
               {isOwner && (
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-0.5 sm:gap-1">
                   <ExpenseFormDialog
                     eventId={eventId}
                     members={members}
@@ -122,20 +121,21 @@ export function ExpenseList({
                   <button
                     onClick={() => handleDelete(exp.id, exp.title)}
                     disabled={isPending || hasPaidSettlements}
-                    className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors disabled:opacity-40"
+                    className="p-1 sm:p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors disabled:opacity-40"
                     title={
                       hasPaidSettlements
                         ? "Batal status lunas untuk menghapus"
                         : "Hapus Pengeluaran"
                     }
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </button>
                 </div>
               )}
             </div>
           </div>
         ))}
+
       </div>
     </div>
   );

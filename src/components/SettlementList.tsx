@@ -104,94 +104,103 @@ export function SettlementList({
           return (
             <div
               key={item.id || idx}
-              className={`card-diskon p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all ${
+              className={`card-diskon p-3.5 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 transition-all ${
                 item.isPaid
                   ? "bg-slate-50/80 border-slate-200 opacity-90"
                   : "bg-white border-slate-200 hover:border-slate-300"
               }`}
             >
-              {/* Transfer Details */}
-              <div className="flex items-center gap-3 flex-wrap">
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-100 text-xs font-bold text-slate-600">
+              {/* Transfer Header / Route */}
+              <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                <span className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-slate-100 text-xs font-bold text-slate-600 shrink-0">
                   {idx + 1}
                 </span>
 
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-sm sm:text-base text-slate-950">
+                <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
+                  <span className="font-semibold text-xs sm:text-base text-slate-950 truncate max-w-[110px] sm:max-w-none">
                     {item.fromMemberName}
                   </span>
-                  <div className="flex items-center text-slate-400">
-                    <ArrowRight className="h-4 w-4" />
+                  <div className="flex items-center text-slate-400 shrink-0">
+                    <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </div>
-                  <span className="font-semibold text-sm sm:text-base text-slate-950">
+                  <span className="font-semibold text-xs sm:text-base text-slate-950 truncate max-w-[110px] sm:max-w-none">
                     {item.toMemberName}
                   </span>
                 </div>
 
-                <div className="font-mono-numbers font-bold text-base sm:text-lg text-slate-900 ml-auto sm:ml-4">
+                {/* Amount on desktop / tablet */}
+                <div className="hidden sm:block font-mono-numbers font-bold text-base sm:text-lg text-slate-900 ml-auto sm:ml-4 shrink-0">
                   {formatRupiah(item.amount)}
                 </div>
               </div>
 
-              {/* Action / Status Badge */}
-              <div className="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
-                {item.paidAt && (
-                  <span className="text-[11px] text-slate-400 hidden md:inline-block">
-                    {new Date(item.paidAt).toLocaleDateString("id-ID", {
-                      day: "numeric",
-                      month: "short",
-                    })}
-                  </span>
-                )}
+              {/* Mobile amount & Action / Status Badge */}
+              <div className="flex items-center justify-between sm:justify-end gap-2.5 pt-2.5 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+                {/* Amount visible on mobile */}
+                <div className="sm:hidden font-mono-numbers font-bold text-sm text-slate-950">
+                  {formatRupiah(item.amount)}
+                </div>
 
-                {isOwner ? (
-                  <button
-                    onClick={() => handleToggle(item.id)}
-                    disabled={isPending}
-                    className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs sm:text-sm font-semibold transition-all shadow-sm ${
-                      item.isPaid
-                        ? "bg-emerald-600 text-white hover:bg-emerald-700"
-                        : "bg-amber-100 text-amber-900 hover:bg-amber-200 border border-amber-300"
-                    }`}
-                    title="Klik untuk mengubah status lunas"
-                  >
-                    {item.isPaid ? (
-                      <>
-                        <CheckCircle2 className="h-4 w-4" />
-                        <span>Lunas</span>
-                      </>
-                    ) : (
-                      <>
-                        <Clock className="h-4 w-4 text-amber-700" />
-                        <span>Tandai Lunas</span>
-                      </>
-                    )}
-                  </button>
-                ) : (
-                  <span
-                    className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
-                      item.isPaid
-                        ? "bg-emerald-100 text-emerald-800"
-                        : "bg-amber-100 text-amber-800"
-                    }`}
-                  >
-                    {item.isPaid ? (
-                      <>
-                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                        <span>Lunas</span>
-                      </>
-                    ) : (
-                      <>
-                        <Clock className="h-3.5 w-3.5 text-amber-600" />
-                        <span>Belum Lunas</span>
-                      </>
-                    )}
-                  </span>
-                )}
+                <div className="flex items-center gap-2 ml-auto sm:ml-0">
+                  {item.paidAt && (
+                    <span className="text-[10px] sm:text-[11px] text-slate-400 hidden md:inline-block">
+                      {new Date(item.paidAt).toLocaleDateString("id-ID", {
+                        day: "numeric",
+                        month: "short",
+                      })}
+                    </span>
+                  )}
+
+                  {isOwner ? (
+                    <button
+                      onClick={() => handleToggle(item.id)}
+                      disabled={isPending}
+                      className={`inline-flex items-center gap-1.5 rounded-full px-3 sm:px-3.5 py-1.5 text-xs sm:text-sm font-semibold transition-all shadow-sm active:scale-95 ${
+                        item.isPaid
+                          ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                          : "bg-amber-100 text-amber-900 hover:bg-amber-200 border border-amber-300"
+                      }`}
+                      title="Klik untuk mengubah status lunas"
+                    >
+                      {item.isPaid ? (
+                        <>
+                          <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                          <span>Lunas</span>
+                        </>
+                      ) : (
+                        <>
+                          <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-700" />
+                          <span>Tandai Lunas</span>
+                        </>
+                      )}
+                    </button>
+                  ) : (
+                    <span
+                      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
+                        item.isPaid
+                          ? "bg-emerald-100 text-emerald-800"
+                          : "bg-amber-100 text-amber-800"
+                      }`}
+                    >
+                      {item.isPaid ? (
+                        <>
+                          <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                          <span>Lunas</span>
+                        </>
+                      ) : (
+                        <>
+                          <Clock className="h-3.5 w-3.5 text-amber-600" />
+                          <span>Belum Lunas</span>
+                        </>
+                      )}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           );
         })}
+
       </div>
     </div>
   );
