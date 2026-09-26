@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { GoogleLoginButton } from "../../../components/GoogleLoginButton";
-import { Wallet, CheckCircle2, BadgeCheck, ShieldCheck } from "lucide-react";
+import { RegisterForm } from "../../../components/RegisterForm";
+import { Wallet, CheckCircle2, BadgeCheck } from "lucide-react";
 
 interface RegisterPageProps {
   searchParams: Promise<{ error?: string }>;
@@ -50,7 +51,23 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
           )}
 
           <div className="space-y-4 pt-1">
+            {/* Google OAuth (Opsi Instan & Praktis) */}
             <GoogleLoginButton size="large" label="Daftar dengan Akun Google" />
+
+            {/* Pemisah Alternatif Email */}
+            <div className="relative my-2">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200" />
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="bg-white px-3 font-semibold text-slate-400">
+                  atau daftar dengan email
+                </span>
+              </div>
+            </div>
+
+            {/* Alternatif Form Registrasi Email & Password */}
+            <RegisterForm />
 
             {/* Value props list */}
             <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100 space-y-2.5 text-xs text-slate-600">

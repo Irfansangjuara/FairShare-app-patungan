@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { GoogleLoginButton } from "../../../components/GoogleLoginButton";
-import { Wallet, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { LoginForm } from "../../../components/LoginForm";
+import { Wallet, ShieldCheck } from "lucide-react";
 
 interface LoginPageProps {
   searchParams: Promise<{ error?: string }>;
@@ -50,7 +51,23 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           )}
 
           <div className="space-y-4 pt-1">
+            {/* Google OAuth Login */}
             <GoogleLoginButton size="large" label="Masuk dengan Google" />
+
+            {/* Pemisah Alternatif Email */}
+            <div className="relative my-2">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200" />
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="bg-white px-3 font-semibold text-slate-400">
+                  atau masuk dengan email
+                </span>
+              </div>
+            </div>
+
+            {/* Form Masuk dengan Email & Kata Sandi */}
+            <LoginForm />
 
             <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100 text-xs text-slate-600 space-y-2">
               <div className="flex items-center gap-2 font-semibold text-slate-800">
