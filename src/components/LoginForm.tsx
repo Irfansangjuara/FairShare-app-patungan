@@ -2,11 +2,18 @@
 
 import { useActionState, useState } from "react";
 import { loginAction } from "../server/actions/auth";
-import { Loader2, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Loader2, Mail, Lock, Eye, EyeOff, Shield } from "lucide-react";
 
 export function LoginForm() {
   const [state, formAction, isPending] = useActionState(loginAction, null);
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const fillAdminCredentials = () => {
+    setEmail("admin@admin.com");
+    setPassword("admin#123");
+  };
 
   return (
     <form action={formAction} className="space-y-4">
@@ -35,6 +42,8 @@ export function LoginForm() {
             required
             autoComplete="email"
             placeholder="nama@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full rounded-2xl border border-slate-200 bg-white pl-10 pr-4 py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-[#b7e913] transition-all"
           />
         </div>
@@ -59,6 +68,8 @@ export function LoginForm() {
             required
             autoComplete="current-password"
             placeholder="Masukkan kata sandi"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="w-full rounded-2xl border border-slate-200 bg-white pl-10 pr-10 py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-[#b7e913] transition-all"
           />
           <button
@@ -88,6 +99,27 @@ export function LoginForm() {
           <span>Masuk dengan Email</span>
         )}
       </button>
+
+      {/* Box Akses Akun Admin */}
+      <div className="rounded-2xl bg-amber-50/80 p-3.5 border border-amber-200 text-xs text-amber-900 space-y-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5 font-bold text-amber-950">
+            <Shield className="h-3.5 w-3.5 text-amber-700" />
+            <span>Akses Cepat Akun Admin</span>
+          </div>
+          <button
+            type="button"
+            onClick={fillAdminCredentials}
+            className="text-[11px] font-bold text-black bg-[#b7e913] hover:bg-lime-400 px-3 py-1 rounded-full shadow-sm transition-all active:scale-95"
+          >
+            Isi Otomatis
+          </button>
+        </div>
+        <div className="text-[11px] text-amber-900/90 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono">
+          <span>Email: <strong>admin@admin.com</strong></span>
+          <span>Password: <strong>admin#123</strong></span>
+        </div>
+      </div>
     </form>
   );
 }
