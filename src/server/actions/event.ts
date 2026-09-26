@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "../../db";
-import { events } from "../../db/schema";
+import { events, settlements, expenses, members } from "../../db/schema";
 import { eq, and } from "drizzle-orm";
 import { getSessionUser, generateShareToken } from "../../lib/auth";
 import { eventSchema } from "../../lib/validation";
@@ -12,6 +12,8 @@ export interface EventActionState {
   error?: string;
   success?: boolean;
 }
+
+
 
 export async function createEventAction(
   _prevState: EventActionState | null,
@@ -124,13 +126,18 @@ export async function deleteEventAction(eventId: string) {
     redirect("/login");
   }
 
-  await db
-    .delete(events)
-    .where(and(eq(events.id, eventId), eq(events.ownerId, user.id)));
+  // Delete dependencies in order inside a transaction to prevent foreign key restrict violations
+  await db.transaction(async (tx) => {
+    await tx.delete(settlements).where(eq(settlements.eventId, eventId));
+    await tx.delete(expenses).where(eq(expenses.eventId, eventId));
+    await tx.delete(members).where(eq(members.eventId, eventId));
+    await tx.delete(events).where(and(eq(events.id, eventId), eq(events.ownerId, user.id)));
+  });
 
   revalidatePath("/dashboard");
   redirect("/dashboard");
 }
+
 
 export async function regenerateShareTokenAction(eventId: string) {
   const user = await getSessionUser();

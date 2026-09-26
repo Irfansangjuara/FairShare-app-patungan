@@ -23,7 +23,7 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
   return bcrypt.compare(password, hash);
 }
 
-export async function createSession(userId: string): Promise<string> {
+export async function createSession(userId: string): Promise<{ sessionId: string; expiresAt: Date }> {
   const sessionId = crypto.randomBytes(32).toString("hex");
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + SESSION_DURATION_DAYS);
@@ -43,8 +43,9 @@ export async function createSession(userId: string): Promise<string> {
     expires: expiresAt,
   });
 
-  return sessionId;
+  return { sessionId, expiresAt };
 }
+
 
 export async function getSessionUser(): Promise<SessionUser | null> {
   try {

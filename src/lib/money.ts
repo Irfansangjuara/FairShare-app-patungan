@@ -27,7 +27,10 @@ export function formatRupiahWithSign(amount: bigint | number): string {
 }
 
 export function parseRupiahInput(input: string): bigint {
-  const cleaned = input.replace(/[^0-9]/g, "");
+  const trimmed = input.trim();
+  if (trimmed.startsWith("-")) return ZERO;
+  const cleaned = trimmed.replace(/[^0-9]/g, "");
   if (!cleaned) return ZERO;
   return BigInt(cleaned);
 }
+

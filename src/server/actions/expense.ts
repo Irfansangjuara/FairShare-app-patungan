@@ -130,7 +130,17 @@ export async function updateExpenseAction(
     };
   }
 
+  // Verify expense belongs to this event
+  const existingExpense = await db.query.expenses.findFirst({
+    where: and(eq(expenses.id, expenseId), eq(expenses.eventId, eventId)),
+  });
+
+  if (!existingExpense) {
+    return { error: "Pengeluaran tidak ditemukan dalam event ini." };
+  }
+
   const rawTitle = formData.get("title");
+
   const rawAmount = formData.get("amount");
   const rawPayerId = formData.get("paidByMemberId");
 

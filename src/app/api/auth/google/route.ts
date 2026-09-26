@@ -1,11 +1,11 @@
-import { NextRequest } from "next/server";
-import { cookies, headers } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
+import { headers } from "next/headers";
 import crypto from "crypto";
 
 export async function GET(request: NextRequest) {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   if (!clientId) {
-    return Response.json(
+    return NextResponse.json(
       { error: "GOOGLE_CLIENT_ID is not configured in environment variables." },
       { status: 500 }
     );
@@ -24,23 +24,6 @@ export async function GET(request: NextRequest) {
   // Generate random state to protect against CSRF
   const state = crypto.randomBytes(16).toString("hex");
 
-  const cookieStore = await cookies();
-  cookieStore.set("google_oauth_state", state, {
-    httpOnly: true,
-    secure: !isLocal,
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 10, // 10 minutes
-  });
-
-  cookieStore.set("google_oauth_redirect_uri", redirectUri, {
-    httpOnly: true,
-    secure: !isLocal,
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 10,
-  });
-
   const params = new URLSearchParams({
     client_id: clientId,
     redirect_uri: redirectUri,
@@ -52,5 +35,25 @@ export async function GET(request: NextRequest) {
 
   const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
 
-  return Response.redirect(googleAuthUrl);
+  const response = NextResponse.redirect(googleAuthUrl);
+
+  // Set cookies explicitly on the response object
+  response.cookies.set("google_oauth_state", state, {
+    httpOnly: true,
+    secure: !isLocal,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 10, // 10 minutes
+  });
+
+  response.cookies.set("google_oauth_redirect_uri", redirectUri, {
+    httpOnly: true,
+    secure: !isLocal,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 10,
+  });
+
+  return response;
 }
+

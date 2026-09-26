@@ -130,10 +130,21 @@ export async function GET(request: NextRequest) {
     }
 
     // 4. Create local session
-    await createSession(userId);
+    const { sessionId, expiresAt } = await createSession(userId);
 
-    // 5. Redirect to dashboard
-    return NextResponse.redirect(`${baseUrl}/dashboard`);
+    // 5. Redirect to dashboard with explicit session cookie on the response
+    const response = NextResponse.redirect(`${baseUrl}/dashboard`);
+    response.cookies.delete("google_oauth_state");
+    response.cookies.delete("google_oauth_redirect_uri");
+    response.cookies.set("fairshare_session", sessionId, {
+      httpOnly: true,
+      secure: !isLocal,
+      sameSite: "lax",
+      path: "/",
+      expires: expiresAt,
+    });
+
+    return response;
   } catch (err) {
     console.error("Error in Google OAuth callback:", err);
     return NextResponse.redirect(
@@ -141,3 +152,4 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
