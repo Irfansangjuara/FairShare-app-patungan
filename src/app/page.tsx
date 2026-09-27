@@ -78,9 +78,8 @@ export default async function HomePage() {
       <section className="relative isolate pt-6 md:pt-10">
         <div className="px-4 pt-12 md:pt-20 mx-auto max-w-6xl text-center relative z-10">
           <h1 className="mb-8 text-4xl font-medium md:text-7xl lg:text-7xl max-w-[28ch] mx-auto tracking-tight leading-tight">
-            Bereskan Patungan{" "}
-            <span className="px-4 py-0.5 rounded-full bg-theme-500 inline-block">
-              Trip
+            <span className="px-3 sm:px-6 py-0.5 sm:py-1 rounded-2xl md:rounded-full bg-theme-500 inline-block my-1">
+              Bereskan Patungan Trip
             </span>{" "}
             Tanpa Bingung
             <div className="inline-block relative align-middle mx-1.5 sm:mx-2.5">
