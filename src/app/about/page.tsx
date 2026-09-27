@@ -266,11 +266,11 @@ export default async function AboutPage() {
           style={{ backgroundImage: `url('/assets/img/fair-share-cloud.svg')` }}
         >
           <Image
-            className="mx-auto"
+            className="mx-auto w-auto max-w-[522px] max-h-[426px] max-md:max-w-[340px] object-contain drop-shadow-xs"
             src="/assets/img/meong-maskot-6.webp"
             alt="Rumah Fair Share"
-            width={174}
-            height={142}
+            width={522}
+            height={426}
           />
 
           <h2 className="my-8 text-5xl font-medium text-center max-md:text-3xl tracking-tight">
