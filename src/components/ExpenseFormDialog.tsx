@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { createExpenseAction, updateExpenseAction } from "../server/actions/expense";
 import { formatRupiah, parseRupiahInput } from "../lib/money";
-import { Plus, Pencil, X, AlertCircle, Tag, Sparkles } from "lucide-react";
+import { Plus, Pencil, X, AlertCircle, Tag } from "lucide-react";
 
 interface MemberOption {
   id: string;

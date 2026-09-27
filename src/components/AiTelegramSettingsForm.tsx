@@ -20,7 +20,6 @@ import {
   CheckCircle2,
   AlertCircle,
   ExternalLink,
-  Sparkles,
   Info,
 } from "lucide-react";
 

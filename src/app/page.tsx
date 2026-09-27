@@ -8,6 +8,7 @@ import { WhatsAppFloatingButton } from "../components/WhatsAppFloatingButton";
 import SituationTestimonialSlider from "../components/SituationTestimonialSlider";
 import FeatureBadgesSlider from "../components/FeatureBadgesSlider";
 import { getSiteSettings } from "../server/queries";
+import { Receipt, ArrowLeftRight, Share2 } from "lucide-react";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
@@ -110,10 +111,10 @@ export default async function HomePage() {
               </span>
               <div className="inline-block relative align-middle ml-1.5 sm:ml-2.5 shrink-0">
                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none select-none text-center badge-text-pro">
-                  <span className="text-[9px] xs:text-[10px] sm:text-xs md:text-sm lg:text-[15px] font-black tracking-tight text-white leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">
+                  <span className="text-[9px] xs:text-[10px] sm:text-xs md:text-sm lg:text-[15px] font-black tracking-tight text-slate-950 leading-none">
                     100%
                   </span>
-                  <span className="text-[7px] xs:text-[8px] sm:text-[9px] md:text-[10px] lg:text-[11px] font-extrabold uppercase tracking-[0.12em] text-white leading-none mt-0.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">
+                  <span className="text-[7px] xs:text-[8px] sm:text-[9px] md:text-[10px] lg:text-[11px] font-black uppercase tracking-[0.12em] text-slate-900 leading-none mt-0.5">
                     GRATIS
                   </span>
                 </div>
@@ -230,24 +231,18 @@ export default async function HomePage() {
 
         <div className="grid grid-cols-1 gap-6 px-4 mx-auto max-w-5xl md:grid-cols-2">
           {/* Card 1 */}
-          <div className="p-6 text-xl font-medium text-black bg-white rounded-2xl shadow-sm">
+          <div className="p-6 text-xl font-medium text-black bg-white rounded-2xl shadow-sm border border-slate-100/80">
             <div className="flex gap-4 items-start">
               <div className="relative shrink-0">
-                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none select-none text-center badge-text-pro">
-                  <span className="text-xs sm:text-sm font-black tracking-tight text-white leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">
-                    100%
-                  </span>
-                  <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-white leading-none mt-0.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">
-                    GRATIS
-                  </span>
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-950 flex items-center justify-center p-2.5 shadow-sm border border-slate-800 shrink-0">
+                  <Image
+                    src="/assets/img/fair-share-logo.png"
+                    width={48}
+                    height={48}
+                    className="w-full h-full object-contain"
+                    alt="FairShare Hitung Jatah"
+                  />
                 </div>
-                <Image
-                  src="/assets/img/fair-share-badge.svg"
-                  width={80}
-                  height={85}
-                  className="inline-block animate-spin-super-slow drop-shadow-xs"
-                  alt="Badge 100% Gratis"
-                />
               </div>
               <div>
                 <h3 className="text-xl font-bold mb-1">Hitung Jatah Otomatis</h3>
@@ -259,32 +254,12 @@ export default async function HomePage() {
           </div>
 
           {/* Card 2 */}
-          <div className="p-6 text-xl font-medium text-black bg-white rounded-2xl shadow-sm">
+          <div className="p-6 text-xl font-medium text-black bg-white rounded-2xl shadow-sm border border-slate-100/80">
             <div className="flex gap-4 items-start">
               <div className="relative shrink-0">
-                <span className="absolute flex justify-center items-center z-10 text-white h-full w-full">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.8"
-                    stroke="currentColor"
-                    className="size-7"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z"
-                    />
-                  </svg>
-                </span>
-                <Image
-                  src="/assets/img/fair-share-badge.svg"
-                  width={80}
-                  height={85}
-                  className="inline-block animate-spin-super-slow filter hue-rotate-180"
-                  alt=""
-                />
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-950 text-[#b7e913] flex items-center justify-center shadow-sm border border-slate-800 shrink-0">
+                  <Receipt className="size-7 sm:size-8" />
+                </div>
               </div>
               <div>
                 <h3 className="text-xl font-bold mb-1">Tanpa Spreadsheet</h3>
@@ -296,32 +271,12 @@ export default async function HomePage() {
           </div>
 
           {/* Card 3 */}
-          <div className="p-6 text-xl font-medium text-black bg-white rounded-2xl shadow-sm">
+          <div className="p-6 text-xl font-medium text-black bg-white rounded-2xl shadow-sm border border-slate-100/80">
             <div className="flex gap-4 items-start">
               <div className="relative shrink-0">
-                <span className="absolute flex justify-center items-center z-10 text-white h-full w-full">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.8"
-                    stroke="currentColor"
-                    className="size-7"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 0 0-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"
-                    />
-                  </svg>
-                </span>
-                <Image
-                  src="/assets/img/fair-share-badge.svg"
-                  width={80}
-                  height={85}
-                  className="inline-block animate-spin-super-slow filter hue-rotate-30"
-                  alt=""
-                />
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-950 text-[#b7e913] flex items-center justify-center shadow-sm border border-slate-800 shrink-0">
+                  <ArrowLeftRight className="size-7 sm:size-8" />
+                </div>
               </div>
               <div>
                 <h3 className="text-xl font-bold mb-1">Rekomendasi Transfer</h3>
@@ -333,32 +288,12 @@ export default async function HomePage() {
           </div>
 
           {/* Card 4 */}
-          <div className="p-6 text-xl font-medium text-black bg-white rounded-2xl shadow-sm">
+          <div className="p-6 text-xl font-medium text-black bg-white rounded-2xl shadow-sm border border-slate-100/80">
             <div className="flex gap-4 items-start">
               <div className="relative shrink-0">
-                <span className="absolute flex justify-center items-center z-10 text-white h-full w-full">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.8"
-                    stroke="currentColor"
-                    className="size-7"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="m15 11.25-3-3m0 0-3 3m3-3v7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                    />
-                  </svg>
-                </span>
-                <Image
-                  src="/assets/img/fair-share-badge.svg"
-                  width={80}
-                  height={85}
-                  className="inline-block animate-spin-super-slow filter -hue-rotate-60"
-                  alt=""
-                />
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-950 text-[#b7e913] flex items-center justify-center shadow-sm border border-slate-800 shrink-0">
+                  <Share2 className="size-7 sm:size-8" />
+                </div>
               </div>
               <div>
                 <h3 className="text-xl font-bold mb-1">Rekap Siap Dibagikan</h3>

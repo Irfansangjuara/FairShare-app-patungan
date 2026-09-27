@@ -66,18 +66,14 @@ export function DashboardSidebar({
       label: "Pengaturan AI & Bot",
       href: "/dashboard/settings",
       icon: Bot,
-      active: pathname === "/settings" || pathname === "/dashboard/settings",
+      active: pathname === "/dashboard/settings",
       badge: null,
     },
     {
       label: "Token Akses Telegram",
       href: "/dashboard/token",
       icon: Key,
-      active:
-        pathname === "/dashboard/token" ||
-        pathname === "/token" ||
-        pathname === "/developer" ||
-        pathname === "/dashboard/developer",
+      active: pathname === "/dashboard/token",
       badge: "Token",
     },
   ];

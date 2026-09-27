@@ -10,6 +10,8 @@ import {
   maskSecret,
 } from "../../lib/ai/providers";
 import { testTelegramBotToken, setTelegramWebhook } from "../../lib/telegram/bot";
+import { ensureDatabaseSchema } from "../../db/migrate";
+import { revalidatePath } from "next/cache";
 import crypto from "crypto";
 
 export interface AISettingsState {
@@ -18,6 +20,7 @@ export interface AISettingsState {
 }
 
 export async function getUserAiSettings() {
+  await ensureDatabaseSchema();
   const user = await getSessionUser();
   if (!user) return null;
 
@@ -54,6 +57,7 @@ export async function saveUserAiSettingsAction(
   _prevState: AISettingsState | null,
   formData: FormData
 ): Promise<AISettingsState> {
+  await ensureDatabaseSchema();
   const user = await getSessionUser();
   if (!user) {
     return { error: "Silakan masuk terlebih dahulu." };
@@ -98,12 +102,14 @@ export async function saveUserAiSettingsAction(
     botUsername = testResult.bot?.username || null;
     isBotActive = true;
 
-    // Setup webhook
+    // Setup webhook if URL is HTTPS
     const appUrl =
       process.env.NEXT_PUBLIC_APP_URL || "https://fairshare.copilotmarketing.id";
     const webhookSecret = crypto.randomBytes(16).toString("hex");
     const webhookUrl = `${appUrl}/api/telegram/webhook`;
-    await setTelegramWebhook(finalBotToken, webhookUrl, webhookSecret);
+    if (webhookUrl.startsWith("https://")) {
+      await setTelegramWebhook(finalBotToken, webhookUrl, webhookSecret);
+    }
   }
 
   const webhookSecret = existing?.telegramWebhookSecret || crypto.randomBytes(16).toString("hex");
@@ -138,10 +144,13 @@ export async function saveUserAiSettingsAction(
       },
     });
 
+  revalidatePath("/dashboard/settings");
+
   return { success: true };
 }
 
 export async function testTelegramConnectionAction(botToken: string) {
+  await ensureDatabaseSchema();
   const user = await getSessionUser();
   if (!user) {
     return { success: false, error: "Silakan masuk terlebih dahulu." };
@@ -173,6 +182,7 @@ export async function testAiConnectionAction({
   model: string;
   customModelId?: string;
 }) {
+  await ensureDatabaseSchema();
   const user = await getSessionUser();
   if (!user) {
     return { success: false, content: "", error: "Silakan masuk terlebih dahulu." };

@@ -1,11 +1,21 @@
-import { getSessionUser } from "../../../lib/auth";
-import { getUserAiSettings } from "../../../server/actions/aiSettings";
+import { getSessionUser } from "@/lib/auth";
+import { getUserAiSettings } from "@/server/actions/aiSettings";
 import { redirect } from "next/navigation";
-import { AiTelegramSettingsForm } from "../../../components/AiTelegramSettingsForm";
+import { AiTelegramSettingsForm } from "@/components/AiTelegramSettingsForm";
 import Link from "next/link";
-import { Bot, Key, ArrowLeft, Shield } from "lucide-react";
+import { Key, ArrowLeft, Bot } from "lucide-react";
+import { Metadata } from "next";
 
-export default async function SettingsPage() {
+export const metadata: Metadata = {
+  title: "Pengaturan AI & Bot Telegram | FairShare",
+  description:
+    "Kustomisasi bot Telegram, provider model AI (DeepSeek, Claude, Gemini, dll.), dan alur pemrosesan suara FairShare.",
+  alternates: {
+    canonical: "/dashboard/settings",
+  },
+};
+
+export default async function DashboardSettingsPage() {
   const user = await getSessionUser();
   if (!user) {
     redirect("/login?redirect=/dashboard/settings");
@@ -26,6 +36,10 @@ export default async function SettingsPage() {
         </Link>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-sky-100 px-3 py-1 text-xs font-bold text-sky-950 uppercase tracking-wider font-sans mb-2">
+              <Bot className="h-3.5 w-3.5 text-sky-800" />
+              <span>Konfigurasi AI &amp; Telegram Bot</span>
+            </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-950 tracking-tight font-sans">
               Pengaturan AI &amp; Integrasi Telegram
             </h1>

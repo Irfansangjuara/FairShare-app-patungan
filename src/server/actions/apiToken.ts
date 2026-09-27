@@ -6,6 +6,7 @@ import { eq, and, desc } from "drizzle-orm";
 import { getSessionUser } from "../../lib/auth";
 import { generateTokenSecret, hashToken, ApiScope } from "../../lib/api/auth";
 import { apiTokenSchema } from "../../lib/validation";
+import { ensureDatabaseSchema } from "../../db/migrate";
 import { revalidatePath } from "next/cache";
 
 export interface CreateTokenResult {
@@ -16,6 +17,7 @@ export interface CreateTokenResult {
 }
 
 export async function getUserApiTokensAction() {
+  await ensureDatabaseSchema();
   const user = await getSessionUser();
   if (!user) return [];
 
@@ -40,6 +42,7 @@ export async function createApiTokenAction(
   name: string,
   scopes: string[]
 ): Promise<CreateTokenResult> {
+  await ensureDatabaseSchema();
   const user = await getSessionUser();
   if (!user) {
     return { error: "Silakan masuk terlebih dahulu." };
@@ -62,7 +65,6 @@ export async function createApiTokenAction(
 
   revalidatePath("/dashboard/token");
   revalidatePath("/dashboard/settings");
-  revalidatePath("/token");
 
   return {
     success: true,
@@ -72,6 +74,7 @@ export async function createApiTokenAction(
 }
 
 export async function revokeApiTokenAction(tokenId: string) {
+  await ensureDatabaseSchema();
   const user = await getSessionUser();
   if (!user) {
     return { error: "Silakan masuk terlebih dahulu." };
@@ -84,12 +87,12 @@ export async function revokeApiTokenAction(tokenId: string) {
 
   revalidatePath("/dashboard/token");
   revalidatePath("/dashboard/settings");
-  revalidatePath("/token");
 
   return { success: true };
 }
 
 export async function rotateApiTokenAction(tokenId: string): Promise<CreateTokenResult> {
+  await ensureDatabaseSchema();
   const user = await getSessionUser();
   if (!user) {
     return { error: "Silakan masuk terlebih dahulu." };
@@ -122,7 +125,6 @@ export async function rotateApiTokenAction(tokenId: string): Promise<CreateToken
 
   revalidatePath("/dashboard/token");
   revalidatePath("/dashboard/settings");
-  revalidatePath("/token");
 
   return {
     success: true,

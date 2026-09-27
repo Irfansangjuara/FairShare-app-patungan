@@ -7,7 +7,7 @@ import {
   getSavedParticipantsAction,
   SavedParticipantItem,
 } from "../server/actions/member";
-import { UserPlus, Pencil, X, AlertCircle, CreditCard, Sparkles, Check, User, Landmark } from "lucide-react";
+import { UserPlus, Pencil, X, AlertCircle, CreditCard, History, Check, User, Landmark } from "lucide-react";
 
 interface MemberFormDialogProps {
   eventId: string;
@@ -187,8 +187,8 @@ export function MemberFormDialog({
               {/* Suggestions from past campaigns (Feature #3) */}
               {!memberToEdit && filteredSuggestions.length > 0 && (
                 <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
-                  <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-600">
-                    <Sparkles className="h-3.5 w-3.5 text-[#b7e913] fill-[#b7e913]" />
+                  <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-700">
+                    <History className="h-3.5 w-3.5 text-lime-600 shrink-0" />
                     <span>Saran dari Campaign Sebelumnya:</span>
                   </div>
                   <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto pt-0.5">

@@ -56,14 +56,30 @@ export function DeveloperApiManager({ tokens: initialTokens }: DeveloperApiManag
   const [copiedToken, setCopiedToken] = useState(false);
   const [copiedSnippet, setCopiedSnippet] = useState<string | null>(null);
 
-  const handleCopy = (text: string, id?: string) => {
-    navigator.clipboard.writeText(text);
-    if (id) {
-      setCopiedSnippet(id);
-      setTimeout(() => setCopiedSnippet(null), 2000);
-    } else {
-      setCopiedToken(true);
-      setTimeout(() => setCopiedToken(false), 2000);
+  const handleCopy = async (text: string, id?: string) => {
+    try {
+      if (typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+      if (id) {
+        setCopiedSnippet(id);
+        setTimeout(() => setCopiedSnippet(null), 2000);
+      } else {
+        setCopiedToken(true);
+        setTimeout(() => setCopiedToken(false), 2000);
+      }
+    } catch (err) {
+      console.error("Gagal menyalin token:", err);
     }
   };
 
@@ -130,9 +146,23 @@ export function DeveloperApiManager({ tokens: initialTokens }: DeveloperApiManag
             token: res.rawToken,
             name: res.tokenName || name,
           });
-          setTokens((prev) =>
-            prev.map((t) => (t.id === tokenId ? { ...t, isRevoked: true } : t))
-          );
+          setTokens((prev) => {
+            const updated = prev.map((t) => (t.id === tokenId ? { ...t, isRevoked: true } : t));
+            const existingItem = prev.find((t) => t.id === tokenId);
+            return [
+              {
+                id: `temp-${Date.now()}`,
+                name: res.tokenName || `${existingItem?.name || name} (Rotated)`,
+                tokenPrefix: `${res.rawToken?.slice(0, 14)}...`,
+                scopes: existingItem?.scopes || selectedScopes,
+                lastUsedAt: null,
+                expiresAt: null,
+                isRevoked: false,
+                createdAt: new Date(),
+              },
+              ...updated,
+            ];
+          });
         } else if (res.error) {
           alert(res.error);
         }
@@ -330,9 +360,8 @@ export function DeveloperApiManager({ tokens: initialTokens }: DeveloperApiManag
                   {availableScopes.map((scope) => {
                     const isChecked = selectedScopes.includes(scope.id);
                     return (
-                      <div
+                      <label
                         key={scope.id}
-                        onClick={() => handleToggleScope(scope.id)}
                         className={`p-3 rounded-xl border cursor-pointer flex items-start gap-2.5 transition-colors ${
                           isChecked
                             ? "bg-slate-50 border-slate-900"
@@ -342,7 +371,7 @@ export function DeveloperApiManager({ tokens: initialTokens }: DeveloperApiManag
                         <input
                           type="checkbox"
                           checked={isChecked}
-                          onChange={() => {}}
+                          onChange={() => handleToggleScope(scope.id)}
                           className="mt-0.5 rounded border-slate-300 text-slate-900 focus:ring-lime-400"
                         />
                         <div className="space-y-0.5">
@@ -351,7 +380,7 @@ export function DeveloperApiManager({ tokens: initialTokens }: DeveloperApiManag
                           </code>
                           <p className="text-[11px] text-slate-500">{scope.desc}</p>
                         </div>
-                      </div>
+                      </label>
                     );
                   })}
                 </div>

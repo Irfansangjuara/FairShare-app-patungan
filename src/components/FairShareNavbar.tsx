@@ -10,7 +10,6 @@ import {
   Home,
   BookOpen,
   Info,
-  Sparkles,
   LayoutDashboard,
   LogIn,
   UserPlus,
@@ -53,7 +52,7 @@ export function FairShareNavbar({ user }: FairShareNavbarProps) {
           {
             href: "/register",
             label: "Daftar Free",
-            icon: Sparkles,
+            icon: UserPlus,
             badge: "Gratis",
             highlight: true,
             exact: true,

@@ -29,14 +29,8 @@ export function DashboardHeader({
     if (pathname === "/dashboard") return "Dashboard Event";
     if (pathname === "/events/new" || pathname === "/dashboard/events/new") return "Buat Event Baru";
     if (pathname.startsWith("/events/") || pathname.startsWith("/dashboard/events/")) return "Detail Event Patungan";
-    if (pathname === "/settings" || pathname === "/dashboard/settings") return "Pengaturan AI & Bot";
-    if (
-      pathname === "/token" ||
-      pathname === "/dashboard/token" ||
-      pathname === "/developer" ||
-      pathname === "/dashboard/developer"
-    )
-      return "Token Akses Telegram";
+    if (pathname === "/dashboard/settings") return "Pengaturan AI & Bot";
+    if (pathname === "/dashboard/token") return "Token Akses Telegram";
     return "Dashboard";
   };
 

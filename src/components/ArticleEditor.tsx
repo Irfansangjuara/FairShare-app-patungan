@@ -11,7 +11,6 @@ import {
   Eye,
   Search,
   ExternalLink,
-  Sparkles,
   AlertCircle,
   CheckCircle,
 } from "lucide-react";
