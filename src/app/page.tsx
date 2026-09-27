@@ -75,8 +75,8 @@ export default async function HomePage() {
       <FairShareNavbar user={user} />
 
       {/* Hero Section */}
-      <section className="relative pt-6 pb-12">
-        <div className="px-4 pt-8 md:pt-16 mx-auto max-w-6xl text-center relative z-10">
+      <section className="relative isolate pt-6 md:pt-10">
+        <div className="px-4 pt-12 md:pt-20 mx-auto max-w-6xl text-center relative z-10">
           <h1 className="mb-8 text-4xl font-medium md:text-7xl lg:text-7xl max-w-[28ch] mx-auto tracking-tight leading-tight">
             Bereskan Patungan{" "}
             <span className="px-4 py-0.5 rounded-full bg-theme-500 inline-block">
@@ -151,11 +151,12 @@ export default async function HomePage() {
           </div>
         </div>
 
-        <div className="overflow-hidden absolute right-0 left-0 -bottom-20 mx-auto w-full h-full -z-10">
+        {/* Cloud Background Animation */}
+        <div className="overflow-hidden absolute right-0 left-0 -bottom-16 md:-bottom-20 mx-auto w-full h-full pointer-events-none z-0">
           <img
-            className="absolute right-0 bottom-0 left-0 mx-auto md:-bottom-36 animate-slow-cloud"
+            className="absolute right-0 bottom-0 left-0 mx-auto min-w-[900px] md:min-w-[1100px] w-full max-w-[1400px] md:-bottom-36 animate-slow-cloud select-none"
             src="/assets/img/fair-share-cloud.svg"
-            alt=""
+            alt="Awan Fair Share"
           />
         </div>
       </section>
@@ -467,8 +468,8 @@ export default async function HomePage() {
       </section>
 
       {/* 3 Langkah Section */}
-      <section className="relative py-12 bg-gradient-to-t from-gray-100 md:py-20 overflow-hidden">
-        <div className="px-4 mx-auto max-w-6xl">
+      <section className="relative isolate py-12 bg-gradient-to-t from-gray-100 md:py-20 overflow-hidden">
+        <div className="px-4 mx-auto max-w-6xl relative z-10">
           <div className="gap-8 justify-between items-center md:flex">
             <div className="flex flex-col items-center">
               <div className="relative mb-6 text-center max-md:max-w-[220px] inline-block p-4 mx-auto text-white rounded-2xl bg-orange-700 text-sm font-semibold shadow-md">
@@ -547,9 +548,9 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="overflow-hidden absolute right-0 left-0 bottom-10 mx-auto w-full h-full -z-10">
+          <div className="overflow-hidden absolute right-0 left-0 bottom-10 mx-auto w-full h-full pointer-events-none z-0">
             <img
-              className="absolute right-0 left-0 mx-auto animate-slow-cloud"
+              className="absolute right-0 left-0 mx-auto animate-slow-cloud min-w-[900px] md:min-w-[1200px] w-full"
               src="/assets/img/fair-share-cloud2.svg"
               alt=""
             />
