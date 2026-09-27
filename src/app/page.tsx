@@ -83,16 +83,22 @@ export default async function HomePage() {
               Trip
             </span>{" "}
             Tanpa Bingung
-            <div className="inline-block relative align-middle mx-2">
-              <span className="absolute flex justify-center items-center z-10 max-md:text-xs text-sm font-bold text-white h-full w-full !leading-none">
-                100%<br />GRATIS
-              </span>
+            <div className="inline-block relative align-middle mx-1.5 sm:mx-2.5">
+              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none select-none text-center badge-text-pro">
+                <span className="text-xs sm:text-sm md:text-[15px] font-black tracking-tight text-white leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">
+                  100%
+                </span>
+                <span className="text-[9px] sm:text-[10px] md:text-[11px] font-extrabold uppercase tracking-[0.14em] text-white leading-none mt-0.5 sm:mt-1 drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">
+                  GRATIS
+                </span>
+              </div>
               <Image
                 src="/assets/img/fair-share-badge.svg"
                 width={90}
                 height={95}
-                className="inline-block max-md:w-14 animate-spin-super-slow"
+                className="inline-block max-md:w-14 sm:w-20 md:w-[90px] h-auto animate-spin-super-slow drop-shadow-xs"
                 alt="Badge 100% Gratis"
+                priority
               />
             </div>
             Hitung, Lunasi &amp; Beres
@@ -192,15 +198,20 @@ export default async function HomePage() {
           <div className="p-6 text-xl font-medium text-black bg-white rounded-2xl shadow-sm">
             <div className="flex gap-4 items-start">
               <div className="relative shrink-0">
-                <span className="absolute flex justify-center items-center z-10 text-xs font-bold text-white h-full w-full !leading-none">
-                  100%<br />GRATIS
-                </span>
+                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none select-none text-center badge-text-pro">
+                  <span className="text-xs sm:text-sm font-black tracking-tight text-white leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">
+                    100%
+                  </span>
+                  <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-white leading-none mt-0.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">
+                    GRATIS
+                  </span>
+                </div>
                 <Image
                   src="/assets/img/fair-share-badge.svg"
                   width={80}
                   height={85}
-                  className="inline-block animate-spin-super-slow"
-                  alt=""
+                  className="inline-block animate-spin-super-slow drop-shadow-xs"
+                  alt="Badge 100% Gratis"
                 />
               </div>
               <div>

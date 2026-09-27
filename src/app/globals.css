@@ -125,6 +125,11 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+.badge-text-pro,
+.badge-text-pro * {
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+}
+
 /* Custom interactive pill button styles matching Diskon.com design system */
 .btn-pill-primary {
   display: inline-flex;
