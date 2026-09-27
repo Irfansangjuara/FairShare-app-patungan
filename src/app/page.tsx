@@ -11,7 +11,7 @@ import { getSiteSettings } from "../server/queries";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
-  const title = `${settings.siteName} | Bereskan Patungan Trip Tanpa Bingung`;
+  const title = `${settings.siteName} | Bereskan Patungan Hangout Tanpa Bingung`;
   const description =
     settings.defaultDescription ||
     "Fair Share mengubah catatan pengeluaran grup yang tercecer menjadi satu jawaban pasti: siapa membayar siapa, berapa nominal rupiahnya, dan apakah sudah lunas.";
