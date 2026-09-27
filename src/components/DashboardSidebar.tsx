@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTransition } from "react";
 import { logoutAction } from "../server/actions/auth";
@@ -8,15 +9,11 @@ import {
   LayoutDashboard,
   PlusCircle,
   Bot,
-  Code2,
-  BookOpen,
-  Info,
-  ShieldAlert,
+  Key,
   Home,
   LogOut,
   ChevronLeft,
   ChevronRight,
-  Wallet,
   X,
   ExternalLink,
 } from "lucide-react";
@@ -60,51 +57,30 @@ export function DashboardSidebar({
     },
     {
       label: "Buat Event Baru",
-      href: "/events/new",
+      href: "/dashboard/events/new",
       icon: PlusCircle,
-      active: pathname === "/events/new",
+      active: pathname === "/events/new" || pathname === "/dashboard/events/new",
       badge: "Baru",
     },
     {
       label: "Pengaturan AI & Bot",
-      href: "/settings",
+      href: "/dashboard/settings",
       icon: Bot,
-      active: pathname === "/settings",
+      active: pathname === "/settings" || pathname === "/dashboard/settings",
       badge: null,
     },
     {
-      label: "Developer & API Token",
-      href: "/developer",
-      icon: Code2,
-      active: pathname === "/developer",
-      badge: "API",
-    },
-    {
-      label: "Blog & Panduan",
-      href: "/blog",
-      icon: BookOpen,
-      active: pathname.startsWith("/blog"),
-      badge: null,
-    },
-    {
-      label: "Tentang Fair Share",
-      href: "/about",
-      icon: Info,
-      active: pathname === "/about",
-      badge: null,
+      label: "Token Akses Telegram",
+      href: "/token",
+      icon: Key,
+      active:
+        pathname === "/token" ||
+        pathname === "/dashboard/token" ||
+        pathname === "/developer" ||
+        pathname === "/dashboard/developer",
+      badge: "Token",
     },
   ];
-
-  // Optional admin portal link
-  if (user.role === "admin") {
-    navItems.push({
-      label: "Portal Admin",
-      href: "/admin",
-      icon: ShieldAlert,
-      active: pathname.startsWith("/admin"),
-      badge: "Admin",
-    });
-  }
 
   // Sidebar content (shared between desktop and mobile)
   const sidebarContent = (
@@ -117,8 +93,15 @@ export function DashboardSidebar({
             onClick={onCloseMobile}
             className="flex items-center gap-2.5 group overflow-hidden"
           >
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-black text-[#b7e913] shadow-md group-hover:scale-105 transition-transform">
-              <Wallet className="h-5 w-5" />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center">
+              <Image
+                src="/assets/img/logo-fairshare.webp"
+                alt="FairShare"
+                width={40}
+                height={40}
+                className="h-9 w-auto object-contain transition-transform group-hover:scale-105"
+                priority
+              />
             </div>
             {!isCollapsed && (
               <div className="flex flex-col whitespace-nowrap overflow-hidden transition-opacity duration-200">

@@ -103,10 +103,10 @@ export default async function HomePage() {
       <section className="relative isolate pt-6 md:pt-10">
         <div className="px-4 pt-12 md:pt-20 mx-auto max-w-6xl text-center relative z-10">
           <h1 className="mb-8 text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-medium max-w-5xl mx-auto tracking-tight leading-tight sm:leading-tight">
-            {/* Baris 1: Bereskan Patungan Trip + Badge 100% GRATIS tepat di sebelah kanan setelah teks Trip */}
+            {/* Baris 1: Bereskan Patungan Hangout + Badge 100% GRATIS tepat di sebelah kanan setelah teks Hangout */}
             <span className="inline-flex items-center justify-center flex-nowrap whitespace-nowrap max-w-full">
               <span className="px-2.5 xs:px-3 sm:px-5 md:px-6 py-0.5 sm:py-1 rounded-2xl md:rounded-full bg-theme-500 inline-block my-1 whitespace-nowrap">
-                Bereskan Patungan Trip
+                Bereskan Patungan Hangout
               </span>
               <div className="inline-block relative align-middle ml-1.5 sm:ml-2.5 shrink-0">
                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none select-none text-center badge-text-pro">

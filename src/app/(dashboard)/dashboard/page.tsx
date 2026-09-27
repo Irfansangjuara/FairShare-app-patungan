@@ -41,7 +41,7 @@ export default async function DashboardPage() {
             </p>
           </div>
 
-          <Link href="/events/new" className="btn-pill-lime w-full sm:w-auto justify-center py-2.5 px-5 font-bold shadow-sm">
+          <Link href="/dashboard/events/new" className="btn-pill-lime w-full sm:w-auto justify-center py-2.5 px-5 font-bold shadow-sm">
             <Plus className="h-4 w-4" />
             <span>Buat Event Baru</span>
           </Link>
@@ -92,7 +92,7 @@ export default async function DashboardPage() {
                 </p>
               </div>
               <div>
-                <Link href="/events/new" className="btn-pill-lime text-xs sm:text-sm py-2.5 px-5 font-bold">
+                <Link href="/dashboard/events/new" className="btn-pill-lime text-xs sm:text-sm py-2.5 px-5 font-bold">
                   <Plus className="h-4 w-4" />
                   <span>Buat Event Sekarang</span>
                 </Link>

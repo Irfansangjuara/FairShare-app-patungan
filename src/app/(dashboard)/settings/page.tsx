@@ -36,11 +36,11 @@ export default async function SettingsPage() {
 
           <div className="flex items-center gap-2">
             <Link
-              href="/developer"
+              href="/token"
               className="btn-pill-primary text-xs py-2 px-3.5 inline-flex items-center gap-1.5 font-semibold"
             >
               <Key className="h-3.5 w-3.5" />
-              <span>Token &amp; API Agent</span>
+              <span>Token Akses Telegram</span>
             </Link>
           </div>
         </div>

@@ -27,10 +27,16 @@ export function DashboardHeader({
   // Determine current section title
   const getPageTitle = () => {
     if (pathname === "/dashboard") return "Dashboard Event";
-    if (pathname === "/events/new") return "Buat Event Baru";
-    if (pathname.startsWith("/events/")) return "Detail Event Patungan";
-    if (pathname === "/settings") return "Pengaturan AI & Bot";
-    if (pathname === "/developer") return "Dokumentasi API & Token";
+    if (pathname === "/events/new" || pathname === "/dashboard/events/new") return "Buat Event Baru";
+    if (pathname.startsWith("/events/") || pathname.startsWith("/dashboard/events/")) return "Detail Event Patungan";
+    if (pathname === "/settings" || pathname === "/dashboard/settings") return "Pengaturan AI & Bot";
+    if (
+      pathname === "/token" ||
+      pathname === "/dashboard/token" ||
+      pathname === "/developer" ||
+      pathname === "/dashboard/developer"
+    )
+      return "Token Akses Telegram";
     return "Dashboard";
   };
 
@@ -62,7 +68,7 @@ export function DashboardHeader({
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Quick Create Event CTA button */}
           <Link
-            href="/events/new"
+            href="/dashboard/events/new"
             className="btn-pill-lime text-xs sm:text-sm py-2 px-3.5 sm:px-4 font-bold shadow-xs inline-flex items-center gap-1.5"
           >
             <Plus className="h-4 w-4" />
@@ -72,15 +78,15 @@ export function DashboardHeader({
           {/* Quick AI & Developer Links on Desktop */}
           <div className="hidden lg:flex items-center gap-1.5 pl-2 border-l border-slate-200">
             <Link
-              href="/settings"
+              href="/dashboard/settings"
               title="Pengaturan AI & Telegram"
               className="p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
             >
               <Bot className="h-4 w-4" />
             </Link>
             <Link
-              href="/developer"
-              title="Developer API & Token"
+              href="/token"
+              title="Token Akses Telegram"
               className="p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
             >
               <Key className="h-4 w-4" />

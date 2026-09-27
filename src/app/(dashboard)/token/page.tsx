@@ -1,7 +1,7 @@
 import { getSessionUser } from "@/lib/auth";
 import { getUserApiTokensAction } from "@/server/actions/apiToken";
 import { DeveloperApiManager } from "@/components/DeveloperApiManager";
-import { Terminal } from "lucide-react";
+import { Key } from "lucide-react";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function DeveloperPage() {
+export default async function TokenPage() {
   const user = await getSessionUser();
   if (!user) {
     redirect("/login?redirect=/token");
@@ -27,7 +27,7 @@ export default async function DeveloperPage() {
       {/* Header */}
       <div className="space-y-3">
         <div className="inline-flex items-center gap-1.5 rounded-full bg-lime-100 px-3 py-1 text-xs font-bold text-lime-950 uppercase tracking-wider font-sans">
-          <Terminal className="h-3.5 w-3.5 text-lime-800" />
+          <Key className="h-3.5 w-3.5 text-lime-800" />
           <span>Akses &amp; Kredensial Bot Telegram</span>
         </div>
 

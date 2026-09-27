@@ -103,16 +103,13 @@ export default function FeatureBadgesSlider() {
         0: {
           slidesPerView: 1,
         },
-        640: {
-          slidesPerView: 2,
-        },
         768: {
           slidesPerView: 2,
         },
         992: {
           slidesPerView: 3,
         },
-        1200: {
+        1300: {
           slidesPerView: 5,
         },
         1600: {
@@ -137,7 +134,7 @@ export default function FeatureBadgesSlider() {
   return (
     <section
       ref={swiperContainerRef}
-      className="px-4 swiper swiper1 overflow-hidden select-none py-4 relative"
+      className="px-4 swiper swiper1 w-full min-w-0 overflow-hidden select-none py-4 relative"
     >
       <style jsx global>{`
         .feature-bullet {

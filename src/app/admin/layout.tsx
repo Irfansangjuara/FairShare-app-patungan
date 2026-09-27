@@ -1,5 +1,5 @@
 import { getSessionUser } from "@/lib/auth";
-import { AdminNavbar } from "@/components/AdminNavbar";
+import { AdminShell } from "@/components/AdminShell";
 
 export default async function AdminLayout({
   children,
@@ -9,10 +9,9 @@ export default async function AdminLayout({
   const user = await getSessionUser();
   const isAdmin = user?.role === "admin";
 
-  return (
-    <div className="min-h-full flex flex-col bg-[#F8FAFC]">
-      {isAdmin && <AdminNavbar user={user} />}
-      <div className="flex-1">{children}</div>
-    </div>
-  );
+  if (!isAdmin || !user) {
+    return <div className="min-h-screen bg-slate-950">{children}</div>;
+  }
+
+  return <AdminShell user={user}>{children}</AdminShell>;
 }
