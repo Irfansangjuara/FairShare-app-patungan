@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
-import { generateSignedOAuthState } from "@/lib/oauth-state";
+import { generateSignedOAuthState, resolveOAuthRedirectUri } from "@/lib/oauth-state";
 
 export async function GET(request: NextRequest) {
   const headerList = await headers();
@@ -31,24 +31,8 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // Determine exact matching redirect URI
-  let redirectUri: string;
-  if (isLocal) {
-    redirectUri = "http://localhost:3000/api/auth/google/callback";
-  } else if (
-    process.env.GOOGLE_REDIRECT_URI &&
-    !process.env.GOOGLE_REDIRECT_URI.includes("localhost")
-  ) {
-    redirectUri = process.env.GOOGLE_REDIRECT_URI;
-  } else if (host.includes("copilotmarketing.id")) {
-    redirectUri = "https://fairshare.copilotmarketing.id/api/auth/google/callback";
-  } else if (host.includes("www.app-fairshare.vercel.app")) {
-    redirectUri = "https://www.app-fairshare.vercel.app/api/auth/google/callback";
-  } else if (host.includes("vercel.app")) {
-    redirectUri = `https://${host}/api/auth/google/callback`;
-  } else {
-    redirectUri = "https://app-fairshare.vercel.app/api/auth/google/callback";
-  }
+  // Determine exact matching redirect URI synchronized across domains
+  const redirectUri = resolveOAuthRedirectUri(host);
 
   const redirectPath = request.nextUrl.searchParams.get("redirect") || "/dashboard";
 

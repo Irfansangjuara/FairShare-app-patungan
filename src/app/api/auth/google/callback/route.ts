@@ -5,7 +5,11 @@ import { users } from "@/db/schema";
 import { eq, or } from "drizzle-orm";
 import { createSession } from "@/lib/auth";
 import { ensureDatabaseSchema } from "@/db/migrate";
-import { verifySignedOAuthState } from "@/lib/oauth-state";
+import {
+  verifySignedOAuthState,
+  resolveOAuthRedirectUri,
+  createSessionSyncToken,
+} from "@/lib/oauth-state";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -76,16 +80,7 @@ export async function GET(request: NextRequest) {
   const redirectUri =
     verification.payload?.redirectUri ||
     savedRedirectUri ||
-    (isLocal
-      ? "http://localhost:3000/api/auth/google/callback"
-      : process.env.GOOGLE_REDIRECT_URI &&
-        !process.env.GOOGLE_REDIRECT_URI.includes("localhost")
-      ? process.env.GOOGLE_REDIRECT_URI
-      : host.includes("copilotmarketing.id")
-      ? "https://fairshare.copilotmarketing.id/api/auth/google/callback"
-      : host.includes("vercel.app")
-      ? `https://${host}/api/auth/google/callback`
-      : "https://app-fairshare.vercel.app/api/auth/google/callback");
+    resolveOAuthRedirectUri(host);
 
   // Hapus cookie state lama
   cookieStore.delete("google_oauth_state");
@@ -178,34 +173,68 @@ export async function GET(request: NextRequest) {
         .where(eq(users.id, userId));
     } else {
       // User BELUM ada di database: OTOMATIS REGISTER sebagai pengguna baru!
-      const [newUser] = await db
-        .insert(users)
-        .values({
-          googleId,
-          email: normalizedEmail,
-          name: displayName.slice(0, 120),
-          avatarUrl: avatarUrl || null,
-          role: "user",
-        })
-        .returning({ id: users.id });
+      try {
+        const [newUser] = await db
+          .insert(users)
+          .values({
+            googleId,
+            email: normalizedEmail,
+            name: displayName.slice(0, 120),
+            avatarUrl: avatarUrl || null,
+            role: "user",
+          })
+          .returning({ id: users.id });
 
-      userId = newUser.id;
-      console.log("Pengguna baru berhasil ter-register otomatis via Google OAuth:", {
-        userId,
-        email: normalizedEmail,
-      });
+        userId = newUser.id;
+        console.log("✓ Pengguna baru berhasil ter-register otomatis via Google OAuth:", {
+          userId,
+          email: normalizedEmail,
+        });
+      } catch (insertErr) {
+        // Fallback jika terjadi request bersamaan
+        const retryUser = await db.query.users.findFirst({
+          where: or(eq(users.googleId, googleId), eq(users.email, normalizedEmail)),
+        });
+        if (retryUser) {
+          userId = retryUser.id;
+        } else {
+          throw insertErr;
+        }
+      }
     }
 
     // 4. Buat sesi login lokal
     const { sessionId, expiresAt } = await createSession(userId);
 
     // 5. Redirect ke dashboard (atau halaman tujuan yang diinginkan)
-    const targetPath =
+    let targetPath =
       verification.payload?.redirectPath && verification.payload.redirectPath.startsWith("/")
         ? verification.payload.redirectPath
         : "/dashboard";
 
-    const destinationUrl = `${baseUrl}${targetPath}`;
+    // Pastikan tidak me-redirect balik ke halaman login/register
+    if (targetPath === "/login" || targetPath === "/register") {
+      targetPath = "/dashboard";
+    }
+
+    const cleanHost = host.toLowerCase().split(":")[0];
+    const cookieDomain = cleanHost.endsWith("copilotmarketing.id")
+      ? ".copilotmarketing.id"
+      : undefined;
+
+    // Cek apakah baseUrl (origin awal user) berbeda domain dari host callback saat ini
+    const targetOrigin = baseUrl;
+    const isDifferentOrigin = targetOrigin && !targetOrigin.includes(cleanHost);
+
+    let destinationUrl: string;
+    if (isDifferentOrigin) {
+      // Sinkronisasi sesi otomatis lintas domain dengan token berumur pendek (2 menit)
+      const syncToken = createSessionSyncToken(sessionId);
+      destinationUrl = `${targetOrigin}/api/auth/session-sync?token=${syncToken}&redirect=${encodeURIComponent(targetPath)}`;
+    } else {
+      destinationUrl = `${targetOrigin}${targetPath}`;
+    }
+
     const response = NextResponse.redirect(destinationUrl);
 
     // Bersihkan cookie OAuth lama
@@ -219,6 +248,7 @@ export async function GET(request: NextRequest) {
       sameSite: "lax",
       path: "/",
       expires: expiresAt,
+      ...(cookieDomain ? { domain: cookieDomain } : {}),
     });
 
     return response;

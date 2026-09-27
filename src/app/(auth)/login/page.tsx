@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { getSessionUser } from "../../../lib/auth";
 import { FairShareNavbar } from "../../../components/FairShareNavbar";
 import { PublicFooter } from "../../../components/PublicFooter";
@@ -8,7 +9,7 @@ import { LoginForm } from "../../../components/LoginForm";
 import { getSiteSettings } from "../../../server/queries";
 
 interface LoginPageProps {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; redirect?: string }>;
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -50,8 +51,16 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const user = await getSessionUser();
+  if (user) {
+    redirect("/dashboard");
+  }
+
   const resolvedParams = searchParams ? await searchParams : {};
   const error = resolvedParams?.error ? decodeURIComponent(resolvedParams.error) : undefined;
+  const redirectTarget = resolvedParams?.redirect && resolvedParams.redirect.startsWith("/")
+    ? resolvedParams.redirect
+    : "/dashboard";
+  const googleOAuthUrl = `/api/auth/google?redirect=${encodeURIComponent(redirectTarget)}`;
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900 font-sans">
@@ -73,7 +82,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
                   <div className="mt-5">
                     {/* Google OAuth Button */}
                     <a
-                      href="/api/auth/google"
+                      href={googleOAuthUrl}
                       className="w-full btn shadow-xs flex items-center justify-center gap-3 border border-gray-200 hover:bg-gray-50"
                     >
                       <svg

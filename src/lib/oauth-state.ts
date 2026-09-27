@@ -86,3 +86,107 @@ export function verifySignedOAuthState(
 
   return { valid: false };
 }
+
+/**
+ * Resolves the exact Google OAuth redirect URI based on the request host.
+ * Synchronized with the 4 production domains + localhost registered in Google Cloud Console:
+ * 1. https://fairshare.copilotmarketing.id/api/auth/google/callback
+ * 2. https://www.fairshare.copilotmarketing.id/api/auth/google/callback
+ * 3. https://app-fairshare.vercel.app/api/auth/google/callback
+ * 4. https://www.app-fairshare.vercel.app/api/auth/google/callback
+ * 5. http://localhost:3000/api/auth/google/callback
+ */
+export function resolveOAuthRedirectUri(host: string): string {
+  const isLocal =
+    host.includes("localhost") ||
+    host.includes("127.0.0.1") ||
+    host.startsWith("0.0.0.0");
+  if (isLocal) {
+    return "http://localhost:3000/api/auth/google/callback";
+  }
+
+  const cleanHost = host.toLowerCase().split(":")[0];
+
+  if (cleanHost === "www.fairshare.copilotmarketing.id") {
+    return "https://www.fairshare.copilotmarketing.id/api/auth/google/callback";
+  }
+  if (cleanHost === "fairshare.copilotmarketing.id") {
+    return "https://fairshare.copilotmarketing.id/api/auth/google/callback";
+  }
+  if (cleanHost === "www.app-fairshare.vercel.app") {
+    return "https://www.app-fairshare.vercel.app/api/auth/google/callback";
+  }
+  if (cleanHost === "app-fairshare.vercel.app") {
+    return "https://app-fairshare.vercel.app/api/auth/google/callback";
+  }
+
+  // Any other subdomain of copilotmarketing.id
+  if (cleanHost.endsWith("copilotmarketing.id")) {
+    return `https://${cleanHost}/api/auth/google/callback`;
+  }
+
+  // If explicit GOOGLE_REDIRECT_URI environment variable is provided and not localhost
+  if (
+    process.env.GOOGLE_REDIRECT_URI &&
+    !process.env.GOOGLE_REDIRECT_URI.includes("localhost")
+  ) {
+    return process.env.GOOGLE_REDIRECT_URI;
+  }
+
+  // Fallback to dynamic host
+  return `https://${cleanHost}/api/auth/google/callback`;
+}
+
+/**
+ * Creates a short-lived (2 minutes) cryptographically signed token for transferring
+ * session safely across domains (e.g. from app-fairshare.vercel.app to fairshare.copilotmarketing.id).
+ */
+export function createSessionSyncToken(sessionId: string): string {
+  const payload = {
+    sessionId,
+    timestamp: Date.now(),
+    nonce: crypto.randomBytes(12).toString("hex"),
+  };
+  const serialized = Buffer.from(JSON.stringify(payload)).toString("base64url");
+  const signature = crypto
+    .createHmac("sha256", OAUTH_SECRET)
+    .update(serialized)
+    .digest("base64url");
+  return `${serialized}.${signature}`;
+}
+
+/**
+ * Validates a cross-domain session transfer token.
+ */
+export function verifySessionSyncToken(
+  token: string | null
+): { valid: boolean; sessionId?: string } {
+  if (!token) return { valid: false };
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 2) return { valid: false };
+    const [serialized, signature] = parts;
+    const expectedSig = crypto
+      .createHmac("sha256", OAUTH_SECRET)
+      .update(serialized)
+      .digest("base64url");
+
+    const sigBuf = Buffer.from(signature);
+    const expBuf = Buffer.from(expectedSig);
+
+    if (sigBuf.length !== expBuf.length || !crypto.timingSafeEqual(sigBuf, expBuf)) {
+      return { valid: false };
+    }
+
+    const payload = JSON.parse(Buffer.from(serialized, "base64url").toString());
+    // Valid for up to 2 minutes
+    const isFresh = Date.now() - payload.timestamp < 2 * 60 * 1000;
+    if (isFresh && payload.sessionId) {
+      return { valid: true, sessionId: payload.sessionId };
+    }
+  } catch (err) {
+    console.error("verifySessionSyncToken error:", err);
+  }
+  return { valid: false };
+}
+
