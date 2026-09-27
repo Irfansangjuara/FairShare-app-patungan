@@ -52,13 +52,7 @@ export const metadata: Metadata = {
       {
         url: "/assets/img/fair-share-cover.webp",
         width: 1200,
-        height: 630,
-        alt: "FairShare — Aplikasi Patungan & Pelunasan Cerdas",
-      },
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
+        height: 605,
         alt: "FairShare — Aplikasi Patungan & Pelunasan Cerdas",
       },
     ],
