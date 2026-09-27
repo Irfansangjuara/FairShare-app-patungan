@@ -186,14 +186,6 @@ export default async function HomePage() {
             Hitung, Lunasi &amp; Beres
           </h1>
 
-          <Image
-            src="/assets/img/fair-share-server.webp"
-            width={208}
-            height={189}
-            className="absolute max-w-52 right-[10%] top-[30%] -z-10 max-xl:hidden animate-slow-cloud-up object-contain"
-            alt="Server cloud Fair Share"
-          />
-
           <p className="mx-auto max-w-xl text-lg sm:text-xl text-gray-500 mb-8 sm:mb-16 leading-relaxed">
             Fair Share mengubah catatan pengeluaran grup yang tercecer menjadi satu jawaban pasti: siapa membayar siapa, berapa nominal rupiahnya, dan apakah sudah lunas.
           </p>
