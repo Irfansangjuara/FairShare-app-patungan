@@ -77,30 +77,36 @@ export default async function HomePage() {
       {/* Hero Section */}
       <section className="relative isolate pt-6 md:pt-10">
         <div className="px-4 pt-12 md:pt-20 mx-auto max-w-6xl text-center relative z-10">
-          <h1 className="mb-8 text-4xl font-medium md:text-7xl lg:text-7xl max-w-[28ch] mx-auto tracking-tight leading-tight">
-            <span className="px-3 sm:px-6 py-0.5 sm:py-1 rounded-2xl md:rounded-full bg-theme-500 inline-block my-1">
-              Bereskan Patungan Trip
-            </span>{" "}
-            Tanpa Bingung
-            <div className="inline-block relative align-middle mx-1.5 sm:mx-2.5">
-              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none select-none text-center badge-text-pro">
-                <span className="text-xs sm:text-sm md:text-[15px] font-black tracking-tight text-white leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">
-                  100%
-                </span>
-                <span className="text-[9px] sm:text-[10px] md:text-[11px] font-extrabold uppercase tracking-[0.14em] text-white leading-none mt-0.5 sm:mt-1 drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">
-                  GRATIS
-                </span>
+          <h1 className="mb-8 text-4xl font-medium md:text-7xl lg:text-7xl max-w-5xl mx-auto tracking-tight leading-tight">
+            {/* Baris 1: Bereskan Patungan Trip + Badge 100% GRATIS tepat di sebelah kanan setelah teks Trip */}
+            <span className="inline-flex items-center justify-center flex-wrap">
+              <span className="px-3 sm:px-6 py-0.5 sm:py-1 rounded-2xl md:rounded-full bg-theme-500 inline-block my-1">
+                Bereskan Patungan Trip
+              </span>
+              <div className="inline-block relative align-middle mx-1.5 sm:mx-2.5 shrink-0">
+                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none select-none text-center badge-text-pro">
+                  <span className="text-xs sm:text-sm md:text-[15px] font-black tracking-tight text-white leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">
+                    100%
+                  </span>
+                  <span className="text-[9px] sm:text-[10px] md:text-[11px] font-extrabold uppercase tracking-[0.14em] text-white leading-none mt-0.5 sm:mt-1 drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">
+                    GRATIS
+                  </span>
+                </div>
+                <Image
+                  src="/assets/img/fair-share-badge.svg"
+                  width={90}
+                  height={95}
+                  className="inline-block max-md:w-14 sm:w-20 md:w-[90px] h-auto animate-spin-super-slow drop-shadow-xs"
+                  alt="Badge 100% Gratis"
+                  priority
+                />
               </div>
-              <Image
-                src="/assets/img/fair-share-badge.svg"
-                width={90}
-                height={95}
-                className="inline-block max-md:w-14 sm:w-20 md:w-[90px] h-auto animate-spin-super-slow drop-shadow-xs"
-                alt="Badge 100% Gratis"
-                priority
-              />
-            </div>
-            Hitung, Lunasi &amp; Beres
+            </span>
+
+            {/* Baris 2: Tanpa Bingung Hitung Manual, Lunasi & Beres */}
+            <span className="block mt-1 sm:mt-2">
+              Tanpa Bingung Hitung Manual, Lunasi &amp; Beres
+            </span>
           </h1>
 
           <p className="mx-auto max-w-xl text-lg sm:text-xl text-gray-500 mb-8 sm:mb-16 leading-relaxed">
