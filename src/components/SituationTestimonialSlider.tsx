@@ -10,6 +10,7 @@ export interface TestimonialItem {
   id: number;
   quote: string;
   author: string;
+  role?: string;
   avatar: string;
 }
 
@@ -17,37 +18,43 @@ const testimonials: TestimonialItem[] = [
   {
     id: 1,
     quote: "Checklist lunasnya bikin tenang. Gak perlu tanya satu-satu siapa yang sudah transfer.",
-    author: "Simulasi Panitia Event",
+    author: "Aditya Permana",
+    role: "Panitia Event",
     avatar: "/assets/img/fair-share-p5.jpg",
   },
   {
     id: 2,
     quote: "Cocok buat trip rame-rame. Bahkan sisa Rp 1 tetap dibagi dengan jelas dan konsisten.",
-    author: "Simulasi Perjalanan Grup",
+    author: "Kevin Sanjaya",
+    role: "Perjalanan Grup",
     avatar: "/assets/img/fair-share-p6.jpg",
   },
   {
     id: 3,
     quote: "Semua pengeluaran trip langsung kelihatan. Gak ada lagi yang bingung harus transfer ke siapa.",
-    author: "Simulasi Trip Kantor",
+    author: "Rizky Ramadhan",
+    role: "Trip Kantor",
     avatar: "/assets/img/fair-share-p1.jpg",
   },
   {
     id: 4,
     quote: "Rekapnya rapi banget buat dibagikan ke grup. Tinggal salin, kirim, lalu semua langsung paham.",
-    author: "Simulasi Grup Teman",
+    author: "Nadia Safitri",
+    role: "Grup Teman",
     avatar: "/assets/img/fair-share-p2.jpg",
   },
   {
     id: 5,
     quote: "Biasanya aku hitung ulang berkali-kali. Sekarang jatah dan saldo tiap orang langsung jelas.",
-    author: "Simulasi Liburan Keluarga",
+    author: "Bayu Pratama",
+    role: "Liburan Keluarga",
     avatar: "/assets/img/fair-share-p3.jpg",
   },
   {
     id: 6,
     quote: "Tambah anggota dan pengeluaran gampang banget. Hasil pelunasannya langsung siap dicek.",
-    author: "Simulasi Acara Komunitas",
+    author: "Clarissa Putri",
+    role: "Acara Komunitas",
     avatar: "/assets/img/fair-share-p4.jpg",
   },
 ];
@@ -146,11 +153,18 @@ export default function SituationTestimonialSlider() {
 
               {/* Author & Avatar */}
               <div className="flex justify-between items-center pt-2">
-                <div className="font-semibold text-gray-900 text-base">
-                  {item.author}
+                <div>
+                  <div className="font-semibold text-gray-900 text-base">
+                    {item.author}
+                  </div>
+                  {item.role && (
+                    <div className="text-xs text-gray-500 font-normal mt-0.5">
+                      {item.role}
+                    </div>
+                  )}
                 </div>
                 <img
-                  className="rounded-full w-[50px] h-[50px] object-cover shrink-0"
+                  className="rounded-full w-[50px] h-[50px] object-cover shrink-0 border border-slate-100 shadow-2xs"
                   src={item.avatar}
                   width={50}
                   height={50}

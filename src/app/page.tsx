@@ -558,7 +558,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials / Simulasi Pengalaman */}
+      {/* Testimonials Pengguna */}
       <section className="relative py-8 bg-gradient-to-b from-gray-100 md:py-16">
         <div className="px-4 mx-auto max-w-6xl">
           <div>
