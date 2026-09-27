@@ -108,8 +108,8 @@ export default async function AboutPage() {
         </h2>
         <div className="flex justify-center">
           <Image
-            src="/assets/img/fair-share-org.webp"
-            alt="Bagan tim Fair Share"
+            src="/assets/img/fair-share-rumah-internet.webp"
+            alt="Fair Share"
             width={800}
             height={400}
             className="mx-auto rounded-2xl shadow-xs object-contain"
