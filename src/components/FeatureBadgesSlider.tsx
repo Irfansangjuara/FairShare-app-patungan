@@ -2,8 +2,9 @@
 
 import React, { useEffect, useRef } from "react";
 import Swiper from "swiper";
-import { Autoplay } from "swiper/modules";
+import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
+import "swiper/css/pagination";
 
 export interface FeatureCard {
   id: number;
@@ -72,24 +73,36 @@ const featureCards: FeatureCard[] = [
   },
 ];
 
+// Gandakan cards (16 item) agar Swiper loop mode memiliki cukup slide di semua breakpoint (bahkan di desktop 1600px+ dengan slidesPerView: 6)
+const displayCards = [...featureCards, ...featureCards];
+
 export default function FeatureBadgesSlider() {
-  const swiperContainerRef = useRef<HTMLDivElement>(null);
+  const swiperContainerRef = useRef<HTMLElement>(null);
+  const paginationRef = useRef<HTMLDivElement>(null);
   const swiperInstanceRef = useRef<Swiper | null>(null);
 
   useEffect(() => {
     if (!swiperContainerRef.current) return;
 
     swiperInstanceRef.current = new Swiper(swiperContainerRef.current, {
-      modules: [Autoplay],
+      modules: [Autoplay, Pagination],
       direction: "horizontal",
       loop: true,
       centeredSlides: true,
       slidesPerView: 1,
       spaceBetween: 30,
+      observer: true,
+      observeParents: true,
       autoplay: {
         delay: 2500,
         disableOnInteraction: false,
       },
+      pagination: paginationRef.current
+        ? {
+            el: paginationRef.current,
+            clickable: true,
+          }
+        : undefined,
       breakpoints: {
         0: {
           slidesPerView: 1,
@@ -109,7 +122,12 @@ export default function FeatureBadgesSlider() {
       },
     });
 
+    const timer = setTimeout(() => {
+      swiperInstanceRef.current?.update();
+    }, 150);
+
     return () => {
+      clearTimeout(timer);
       if (swiperInstanceRef.current) {
         swiperInstanceRef.current.destroy(true, true);
         swiperInstanceRef.current = null;
@@ -118,26 +136,48 @@ export default function FeatureBadgesSlider() {
   }, []);
 
   return (
-    <section className="px-4 swiper swiper1 overflow-hidden select-none py-4">
-      <div ref={swiperContainerRef} className="swiper-container w-full overflow-hidden">
-        <div className="flex items-center pb-8 w-full md:pb-16 swiper-wrapper">
-          {featureCards.map((card) => (
-            <div key={card.id} className="overflow-hidden p-1 swiper-slide">
-              <div
-                className={`flex relative flex-col gap-4 justify-center items-center px-4 py-8 text-white ${card.bg} rounded-3xl before:w-20 before:h-20 before:rounded-full before:bg-white before:-left-12 before:absolute after:w-20 after:h-20 after:rounded-full after:bg-white after:-right-12 after:absolute shadow-sm`}
-              >
-                <div className="text-base font-normal">{card.title}</div>
-                <div className="px-4 text-2xl font-medium text-center max-md:text-xl leading-snug">
-                  {card.subtitle}
-                </div>
-                <div className="px-4 py-2 rounded-full bg-black/10 text-sm font-medium">
-                  {card.tag}
-                </div>
+    <section
+      ref={swiperContainerRef}
+      className="px-4 swiper swiper1 overflow-hidden select-none py-4 relative"
+    >
+      <style jsx global>{`
+        .swiper1 .swiper-pagination-bullet {
+          width: 8px;
+          height: 8px;
+          display: inline-block;
+          border-radius: 9999px;
+          background: #cbd5e1;
+          opacity: 1;
+          margin: 0 4px;
+          transition: all 0.25s ease-in-out;
+          cursor: pointer;
+        }
+        .swiper1 .swiper-pagination-bullet-active {
+          background: #007aff !important;
+          width: 24px;
+          border-radius: 9999px;
+        }
+      `}</style>
+
+      <div className="flex items-center pb-8 w-full md:pb-16 swiper-wrapper">
+        {displayCards.map((card, idx) => (
+          <div key={`${card.id}-${idx}`} className="overflow-hidden p-1 swiper-slide">
+            <div
+              className={`flex relative flex-col gap-4 justify-center items-center px-4 py-8 text-white ${card.bg} rounded-3xl before:w-20 before:h-20 before:rounded-full before:bg-white before:-left-12 before:absolute after:w-20 after:h-20 after:rounded-full after:bg-white after:-right-12 after:absolute shadow-sm`}
+            >
+              <div className="text-base font-normal">{card.title}</div>
+              <div className="px-4 text-2xl font-medium text-center max-md:text-xl leading-snug">
+                {card.subtitle}
+              </div>
+              <div className="px-4 py-2 rounded-full bg-black/10 text-sm font-medium">
+                {card.tag}
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
+
+      <div ref={paginationRef} className="swiper-pagination text-center mt-2"></div>
     </section>
   );
 }
