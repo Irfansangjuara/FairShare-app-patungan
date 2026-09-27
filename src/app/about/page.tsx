@@ -91,13 +91,11 @@ export default async function AboutPage() {
             </div>
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 w-full h-full mx-auto overflow-hidden -z-10 pointer-events-none">
-            <Image
-              className="absolute left-0 right-0 mx-auto animate-slow-cloud bottom-0"
+          <div className="absolute bottom-0 left-0 right-0 w-full h-full mx-auto overflow-hidden -z-10">
+            <img
+              className="absolute left-0 right-0 mx-auto animate-slow-cloud"
               src="/assets/img/fair-share-cloud2.svg"
               alt=""
-              width={1400}
-              height={300}
             />
           </div>
         </div>

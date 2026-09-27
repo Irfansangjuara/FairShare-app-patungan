@@ -22,6 +22,10 @@ const config: Config = {
         13: "3.25rem",
         15: "3.75rem",
       },
+      fontFamily: {
+        sans: ["var(--font-fredoka)", "Fredoka", "sans-serif"],
+        fredoka: ["var(--font-fredoka)", "Fredoka", "sans-serif"],
+      },
     },
   },
   plugins: [],

@@ -105,13 +105,11 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
           </div>
 
           {/* Cloud Background Layer */}
-          <div className="overflow-hidden absolute right-0 bottom-0 left-0 mx-auto w-full h-full -z-10 pointer-events-none">
-            <Image
-              className="absolute right-0 left-0 mx-auto animate-slow-cloud bottom-0"
+          <div className="overflow-hidden absolute right-0 bottom-0 left-0 mx-auto w-full h-full -z-10">
+            <img
+              className="absolute right-0 left-0 mx-auto animate-slow-cloud"
               src="/assets/img/fair-share-cloud2.svg"
               alt=""
-              width={1400}
-              height={300}
             />
           </div>
         </div>

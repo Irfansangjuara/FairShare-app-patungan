@@ -163,7 +163,7 @@ export default async function HomePage() {
       <FairShareNavbar user={user} />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-6 pb-12">
+      <section className="relative pt-6 pb-12">
         <div className="px-4 pt-8 md:pt-16 mx-auto max-w-6xl text-center relative z-10">
           <h1 className="mb-8 text-4xl font-medium md:text-7xl lg:text-7xl max-w-[28ch] mx-auto tracking-tight leading-tight">
             Bereskan Patungan{" "}
@@ -239,13 +239,11 @@ export default async function HomePage() {
           </div>
         </div>
 
-        <div className="overflow-hidden absolute right-0 left-0 -bottom-20 mx-auto w-full h-full -z-10 pointer-events-none">
-          <Image
+        <div className="overflow-hidden absolute right-0 left-0 -bottom-20 mx-auto w-full h-full -z-10">
+          <img
             className="absolute right-0 bottom-0 left-0 mx-auto md:-bottom-36 animate-slow-cloud"
             src="/assets/img/fair-share-cloud.svg"
             alt=""
-            width={1400}
-            height={300}
           />
         </div>
       </section>
@@ -494,9 +492,9 @@ export default async function HomePage() {
       </section>
 
       {/* Teman & Keluarga Section with Cloud Animation */}
-      <section className="relative py-12 text-center bg-gray-100 md:py-20 overflow-hidden">
-        <div className="px-4 mx-auto mb-10 max-w-6xl text-center">
-          <h2 className="text-4xl md:text-5xl font-medium tracking-tight">
+      <section className="relative py-8 text-center bg-gray-100 md:py-16">
+        <div className="px-4 mx-auto mb-16 max-w-6xl text-center">
+          <h2 className="text-5xl font-medium max-md:text-3xl">
             Teman &amp; Keluarga
             <br />
             Bisa Patungan Lebih Rapi
@@ -504,15 +502,13 @@ export default async function HomePage() {
         </div>
 
         <div
-          className="px-4 bg-scroll bg-center bg-repeat-x animate-bg-scroll py-6"
+          className="px-4 bg-scroll bg-center bg-repeat-x animate-bg-scroll"
           style={{ backgroundImage: `url('/assets/img/fair-share-cloud.svg')` }}
         >
-          <Image
-            className="mx-auto w-full max-w-3xl object-contain"
+          <img
+            className="mx-auto w-full max-w-3xl"
             src="/assets/img/fair-share-rumah-internet.webp"
-            alt="Rumah internet patungan"
-            width={768}
-            height={400}
+            alt="Teman & Keluarga Bisa Patungan Lebih Rapi"
           />
         </div>
       </section>
@@ -657,13 +653,11 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="overflow-hidden absolute right-0 left-0 bottom-6 mx-auto w-full h-full -z-10 pointer-events-none">
-            <Image
-              className="absolute right-0 left-0 mx-auto animate-slow-cloud bottom-0"
+          <div className="overflow-hidden absolute right-0 left-0 bottom-10 mx-auto w-full h-full -z-10">
+            <img
+              className="absolute right-0 left-0 mx-auto animate-slow-cloud"
               src="/assets/img/fair-share-cloud2.svg"
               alt=""
-              width={1400}
-              height={300}
             />
           </div>
         </div>
