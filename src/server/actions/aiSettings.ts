@@ -92,6 +92,7 @@ export async function saveUserAiSettingsAction(
 
   let botUsername = existing?.telegramBotUsername || null;
   let isBotActive = existing?.isBotActive || false;
+  const webhookSecret = existing?.telegramWebhookSecret || crypto.randomBytes(16).toString("hex");
 
   // If a new bot token is provided, verify it
   if (finalBotToken && finalBotToken !== existing?.telegramBotToken) {
@@ -105,14 +106,11 @@ export async function saveUserAiSettingsAction(
     // Setup webhook if URL is HTTPS
     const appUrl =
       process.env.NEXT_PUBLIC_APP_URL || "https://fairshare.copilotmarketing.id";
-    const webhookSecret = crypto.randomBytes(16).toString("hex");
     const webhookUrl = `${appUrl}/api/telegram/webhook`;
     if (webhookUrl.startsWith("https://")) {
       await setTelegramWebhook(finalBotToken, webhookUrl, webhookSecret);
     }
   }
-
-  const webhookSecret = existing?.telegramWebhookSecret || crypto.randomBytes(16).toString("hex");
 
   await db
     .insert(userAiSettings)
@@ -145,6 +143,7 @@ export async function saveUserAiSettingsAction(
     });
 
   revalidatePath("/dashboard/settings");
+  revalidatePath("/dashboard/token");
 
   return { success: true };
 }

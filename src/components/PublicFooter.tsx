@@ -73,7 +73,7 @@ export function PublicFooter() {
                 <li>
                   <Link
                     className="inline-flex py-1.5 text-sm text-gray-300 transition-colors hover:text-white"
-                    href="/terms"
+                    href="/#hero"
                   >
                     Kebijakan Penggunaan
                   </Link>
@@ -81,7 +81,7 @@ export function PublicFooter() {
                 <li>
                   <Link
                     className="inline-flex py-1.5 text-sm text-gray-300 transition-colors hover:text-white"
-                    href="/terms"
+                    href="/#hero"
                   >
                     Perjanjian Pengguna
                   </Link>
@@ -102,7 +102,7 @@ export function PublicFooter() {
                 <li>
                   <Link
                     className="inline-flex py-1.5 text-sm text-gray-300 transition-colors hover:text-white"
-                    href="/about"
+                    href="/contact"
                   >
                     Hubungi Kami
                   </Link>
@@ -128,7 +128,7 @@ export function PublicFooter() {
           <div className="fs-footer__social flex items-center gap-2">
             <a
               className="inline-flex size-9 items-center justify-center rounded-full bg-white/5 text-gray-300 transition hover:bg-white/10 hover:text-white focus:outline-hidden focus:ring-2 focus:ring-white/30"
-              href="#"
+              href="/#hero"
               aria-label="Kunjungi Instagram kami"
             >
               <svg
@@ -145,7 +145,7 @@ export function PublicFooter() {
 
             <a
               className="inline-flex size-9 items-center justify-center rounded-full bg-white/5 text-gray-300 transition hover:bg-white/10 hover:text-white focus:outline-hidden focus:ring-2 focus:ring-white/30"
-              href="#"
+              href="/#hero"
               aria-label="Kunjungi Facebook kami"
             >
               <svg
@@ -162,7 +162,7 @@ export function PublicFooter() {
 
             <a
               className="inline-flex size-9 items-center justify-center rounded-full bg-white/5 text-gray-300 transition hover:bg-white/10 hover:text-white focus:outline-hidden focus:ring-2 focus:ring-white/30"
-              href="#"
+              href="/#hero"
               aria-label="Kunjungi Tiktok kami"
             >
               <svg
@@ -179,9 +179,7 @@ export function PublicFooter() {
 
             <a
               className="inline-flex size-9 items-center justify-center rounded-full bg-white/5 text-gray-300 transition hover:bg-white/10 hover:text-white focus:outline-hidden focus:ring-2 focus:ring-white/30"
-              target="_blank"
-              rel="noopener noreferrer"
-              href="#"
+              href="/#hero"
               aria-label="Kunjungi X kami"
             >
               <svg

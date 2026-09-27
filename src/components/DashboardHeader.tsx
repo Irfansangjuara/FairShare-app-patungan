@@ -65,14 +65,22 @@ export function DashboardHeader({
             <Link
               href="/dashboard/settings"
               title="Pengaturan AI & Telegram"
-              className="p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+              className={`p-2 rounded-xl transition-all ${
+                pathname === "/dashboard/settings"
+                  ? "bg-slate-950 text-[#b7e913] shadow-xs"
+                  : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+              }`}
             >
               <Bot className="h-4 w-4" />
             </Link>
             <Link
               href="/dashboard/token"
               title="Token Akses Telegram"
-              className="p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+              className={`p-2 rounded-xl transition-all ${
+                pathname === "/dashboard/token"
+                  ? "bg-slate-950 text-[#b7e913] shadow-xs"
+                  : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+              }`}
             >
               <Key className="h-4 w-4" />
             </Link>

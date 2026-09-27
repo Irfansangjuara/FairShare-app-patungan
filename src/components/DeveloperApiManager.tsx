@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import {
   createApiTokenAction,
   revokeApiTokenAction,
@@ -37,6 +38,7 @@ interface DeveloperApiManagerProps {
 }
 
 export function DeveloperApiManager({ tokens: initialTokens }: DeveloperApiManagerProps) {
+  const router = useRouter();
   const [tokens, setTokens] = useState<ApiTokenItem[]>(initialTokens);
   const [isPending, startTransition] = useTransition();
 
@@ -120,6 +122,7 @@ export function DeveloperApiManager({ tokens: initialTokens }: DeveloperApiManag
           },
           ...prev,
         ]);
+        router.refresh();
       } else if (res.error) {
         alert(res.error);
       }
@@ -133,6 +136,7 @@ export function DeveloperApiManager({ tokens: initialTokens }: DeveloperApiManag
         setTokens((prev) =>
           prev.map((t) => (t.id === tokenId ? { ...t, isRevoked: true } : t))
         );
+        router.refresh();
       });
     }
   };
@@ -163,6 +167,7 @@ export function DeveloperApiManager({ tokens: initialTokens }: DeveloperApiManag
               ...updated,
             ];
           });
+          router.refresh();
         } else if (res.error) {
           alert(res.error);
         }

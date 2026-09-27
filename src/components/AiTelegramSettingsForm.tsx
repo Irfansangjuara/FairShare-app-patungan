@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import {
   saveUserAiSettingsAction,
   testTelegramConnectionAction,
@@ -42,6 +43,7 @@ interface AiTelegramSettingsFormProps {
 export function AiTelegramSettingsForm({
   initialSettings,
 }: AiTelegramSettingsFormProps) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   // Telegram states
@@ -178,6 +180,7 @@ export function AiTelegramSettingsForm({
         setSaveStatus({ error: res.error });
       } else {
         setSaveStatus({ success: true });
+        router.refresh();
       }
     });
   };

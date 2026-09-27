@@ -101,7 +101,7 @@ export default async function HomePage() {
       <FairShareNavbar user={user} />
 
       {/* Hero Section */}
-      <section className="relative isolate pt-6 md:pt-10">
+      <section id="hero" className="relative isolate pt-6 md:pt-10">
         <div className="px-4 pt-12 md:pt-20 mx-auto max-w-6xl text-center relative z-10">
           <h1 className="mb-8 text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-medium max-w-5xl mx-auto tracking-tight leading-tight sm:leading-tight">
             {/* Baris 1: Bereskan Patungan Hangout + Badge 100% GRATIS tepat di sebelah kanan setelah teks Hangout */}
@@ -207,7 +207,7 @@ export default async function HomePage() {
       <FeatureBadgesSlider />
 
       {/* Apa Itu Fair Share Section */}
-      <section className="mt-8 py-12 md:py-16 rounded-t-3xl md:rounded-t-[50px] bg-gradient-to-b from-blue-50">
+      <section id="cara-kerja" className="mt-8 py-12 md:py-16 rounded-t-3xl md:rounded-t-[50px] bg-gradient-to-b from-blue-50">
         <div className="px-4 mx-auto mb-8 max-w-6xl text-center md:mb-12">
           <h2 className="text-4xl md:text-5xl font-medium tracking-tight">
             Apa Itu Fair Share?
@@ -598,7 +598,7 @@ export default async function HomePage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-12 md:py-20 bg-gradient-to-b from-blue-50/50">
+      <section id="faq" className="py-12 md:py-20 bg-gradient-to-b from-blue-50/50">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-10 px-4">
           <div className="md:w-2/5 flex flex-col items-center md:items-start text-center md:text-left">
             <Image
