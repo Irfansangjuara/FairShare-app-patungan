@@ -116,11 +116,11 @@ export function DashboardSidebar({
             )}
           </Link>
 
-          {/* Mobile close button */}
+          {/* Mobile & Tablet close button */}
           <button
             type="button"
             onClick={onCloseMobile}
-            className="md:hidden text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-100"
+            className="lg:hidden text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-100"
             aria-label="Tutup menu"
           >
             <X className="h-5 w-5" />
@@ -241,7 +241,7 @@ export function DashboardSidebar({
           type="button"
           onClick={onToggleCollapse}
           title={isCollapsed ? "Perbesar Menu (Maximize)" : "Perkecil Menu (Minimize)"}
-          className={`hidden md:flex items-center gap-2.5 w-full rounded-xl px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-white hover:text-slate-950 border border-transparent hover:border-slate-200 transition-all ${
+          className={`hidden lg:flex items-center gap-2.5 w-full rounded-xl px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-white hover:text-slate-950 border border-transparent hover:border-slate-200 transition-all ${
             isCollapsed ? "justify-center px-2" : ""
           }`}
         >
@@ -276,16 +276,16 @@ export function DashboardSidebar({
     <>
       {/* Desktop Sidebar (Collapsible) */}
       <aside
-        className={`hidden md:flex flex-col bg-white border-r border-slate-200/90 h-screen sticky top-0 transition-all duration-300 ease-in-out z-30 shrink-0 ${
+        className={`hidden lg:flex flex-col bg-white border-r border-slate-200/90 h-screen sticky top-0 transition-all duration-300 ease-in-out z-30 shrink-0 ${
           isCollapsed ? "w-20" : "w-64"
         }`}
       >
         {sidebarContent}
       </aside>
 
-      {/* Mobile Drawer (Off-Canvas) */}
+      {/* Mobile & Tablet Drawer (Off-Canvas) */}
       {isMobileOpen && (
-        <div className="fixed inset-0 z-50 md:hidden flex">
+        <div className="fixed inset-0 z-50 lg:hidden flex">
           {/* Backdrop */}
           <div
             className="fixed inset-0 bg-slate-950/40 backdrop-blur-xs transition-opacity"

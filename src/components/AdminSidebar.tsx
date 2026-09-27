@@ -136,11 +136,11 @@ export function AdminSidebar({
             )}
           </Link>
 
-          {/* Mobile close button */}
+          {/* Mobile & Tablet close button */}
           <button
             type="button"
             onClick={onCloseMobile}
-            className="md:hidden text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800"
+            className="lg:hidden text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800"
             aria-label="Tutup menu admin"
           >
             <X className="h-5 w-5" />
@@ -285,7 +285,7 @@ export function AdminSidebar({
           type="button"
           onClick={onToggleCollapse}
           title={isCollapsed ? "Perbesar Menu (Maximize)" : "Perkecil Menu (Minimize)"}
-          className={`hidden md:flex items-center gap-2.5 w-full rounded-xl px-3 py-2 text-xs font-semibold text-slate-400 hover:bg-slate-800 hover:text-white border border-transparent hover:border-slate-700 transition-all ${
+          className={`hidden lg:flex items-center gap-2.5 w-full rounded-xl px-3 py-2 text-xs font-semibold text-slate-400 hover:bg-slate-800 hover:text-white border border-transparent hover:border-slate-700 transition-all ${
             isCollapsed ? "justify-center px-2" : ""
           }`}
         >
@@ -322,16 +322,16 @@ export function AdminSidebar({
     <>
       {/* Desktop Sidebar (Collapsible: w-20 vs w-64) */}
       <aside
-        className={`hidden md:flex flex-col bg-slate-950 border-r border-slate-800 h-screen sticky top-0 transition-all duration-300 ease-in-out z-30 shrink-0 ${
+        className={`hidden lg:flex flex-col bg-slate-950 border-r border-slate-800 h-screen sticky top-0 transition-all duration-300 ease-in-out z-30 shrink-0 ${
           isCollapsed ? "w-20" : "w-64"
         }`}
       >
         {sidebarContent}
       </aside>
 
-      {/* Mobile Drawer (Off-Canvas) */}
+      {/* Mobile & Tablet Drawer (Off-Canvas) */}
       {isMobileOpen && (
-        <div className="fixed inset-0 z-50 md:hidden flex">
+        <div className="fixed inset-0 z-50 lg:hidden flex">
           {/* Backdrop */}
           <div
             className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity"

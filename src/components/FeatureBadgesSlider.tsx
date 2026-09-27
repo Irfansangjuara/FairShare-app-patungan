@@ -71,6 +71,34 @@ const featureCards: FeatureCard[] = [
     tag: "Tanpa Ribet",
     bg: "bg-emerald-400",
   },
+  {
+    id: 9,
+    title: "Hitung Jatah Otomatis",
+    subtitle: "Pembagian Adil",
+    tag: "Tepat Rupiah",
+    bg: "bg-indigo-400",
+  },
+  {
+    id: 10,
+    title: "Tanpa Spreadsheet",
+    subtitle: "Semua Otomatis",
+    tag: "Lebih Praktis",
+    bg: "bg-rose-400",
+  },
+  {
+    id: 11,
+    title: "Rekomendasi Transfer",
+    subtitle: "Urutan Pelunasan",
+    tag: "Gak Bingung",
+    bg: "bg-cyan-400",
+  },
+  {
+    id: 12,
+    title: "Rekap Siap Dibagikan",
+    subtitle: "Ke Grup WhatsApp",
+    tag: "Sekali Klik",
+    bg: "bg-lime-400",
+  },
 ];
 
 export default function FeatureBadgesSlider() {
@@ -92,6 +120,7 @@ export default function FeatureBadgesSlider() {
       autoplay: {
         delay: 2500,
         disableOnInteraction: false,
+        pauseOnMouseEnter: false,
       },
       pagination: {
         el: ".swiper-pagination-features",

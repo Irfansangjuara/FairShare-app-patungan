@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, Plus, Wallet, ExternalLink, Bot, Key, ChevronRight } from "lucide-react";
+import { Menu, Plus, Bot, Key, ChevronRight } from "lucide-react";
 
 interface DashboardHeaderProps {
   user: {
@@ -43,12 +44,29 @@ export function DashboardHeader({
   return (
     <header className="sticky top-0 z-20 w-full border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Left: Mobile Toggle & Page Breadcrumb */}
-        <div className="flex items-center gap-3">
+        {/* Left: Logo & Mobile Toggle & Page Breadcrumb */}
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          {/* Logo on mobile & tablet (pojok kiri) */}
+          <Link
+            href="/dashboard"
+            className="lg:hidden flex items-center gap-1.5 mr-0.5 hover:opacity-90 transition-opacity"
+            aria-label="FairShare Dashboard"
+          >
+            <Image
+              src="/assets/img/logo-fairshare.webp"
+              alt="FairShare"
+              width={34}
+              height={34}
+              className="h-8 w-auto object-contain"
+              priority
+            />
+          </Link>
+
+          {/* Hamburger Icon to toggle sidebar menu */}
           <button
             type="button"
             onClick={onOpenMobile}
-            className="md:hidden flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:outline-hidden"
+            className="lg:hidden flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:outline-hidden transition-colors"
             aria-label="Buka menu navigasi"
           >
             <Menu className="h-5 w-5" />
