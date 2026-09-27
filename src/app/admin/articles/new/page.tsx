@@ -1,6 +1,8 @@
 import { ArticleEditor } from "../../../../components/ArticleEditor";
+import { requireAdmin } from "@/lib/auth";
 
-export default function NewArticlePage() {
+export default async function NewArticlePage() {
+  await requireAdmin();
   return (
     <main className="mx-auto max-w-7xl w-full px-4 sm:px-6 py-8 sm:py-10 space-y-6">
       <div>

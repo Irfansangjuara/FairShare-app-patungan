@@ -1,9 +1,11 @@
 import { getAllArticlesAdmin } from "../../../server/queries";
+import { requireAdmin } from "@/lib/auth";
 import Link from "next/link";
 import { Plus, FileText, Pencil, ExternalLink, Calendar, Trash2 } from "lucide-react";
 import { DeleteArticleButton } from "./DeleteArticleButton";
 
 export default async function AdminArticlesPage() {
+  await requireAdmin();
   const articles = await getAllArticlesAdmin();
 
   return (

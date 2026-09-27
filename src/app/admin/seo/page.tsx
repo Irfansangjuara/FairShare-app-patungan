@@ -1,7 +1,9 @@
 import { getSiteSettings } from "../../../server/queries";
 import { GlobalSeoForm } from "../../../components/GlobalSeoForm";
+import { requireAdmin } from "@/lib/auth";
 
 export default async function AdminSeoPage() {
+  await requireAdmin();
   const settings = await getSiteSettings();
 
   return (

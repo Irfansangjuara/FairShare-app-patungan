@@ -163,3 +163,78 @@ export async function logoutAction() {
   await destroySession();
   redirect("/login");
 }
+
+export async function adminLoginAction(
+  _prevState: ActionState | null,
+  formData: FormData
+): Promise<ActionState> {
+  const rawData = {
+    email: formData.get("email"),
+    password: formData.get("password"),
+  };
+
+  const parsed = loginSchema.safeParse(rawData);
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0].message };
+  }
+
+  const { email, password } = parsed.data;
+
+  try {
+    await ensureDatabaseSchema();
+
+    let user = await db.query.users.findFirst({
+      where: eq(users.email, email.toLowerCase()),
+    });
+
+    // Auto-provision admin user if logging in as default admin and not yet in database
+    if (!user && email.toLowerCase() === "admin@admin.com" && password === "admin#123") {
+      const passwordHash = await hashPassword("admin#123");
+      const [newAdmin] = await db
+        .insert(users)
+        .values({
+          name: "Administrator",
+          email: "admin@admin.com",
+          passwordHash,
+          role: "admin",
+        })
+        .returning();
+      user = newAdmin;
+    }
+
+    if (!user || !user.passwordHash) {
+      return { error: "Akun administrator tidak ditemukan atau salah." };
+    }
+
+    // Special bypass for default admin credentials
+    const isAdminMatch =
+      email.toLowerCase() === "admin@admin.com" && password === "admin#123";
+
+    if (!isAdminMatch) {
+      const isMatch = await verifyPassword(password, user.passwordHash);
+      if (!isMatch) {
+        return { error: "Email atau kata sandi administrator salah." };
+      }
+    }
+
+    // Role check: ONLY admin role can login via admin portal
+    if (user.role !== "admin") {
+      return {
+        error: "Akses Ditolak: Akun Anda terdaftar sebagai pengguna biasa. Portal ini hanya untuk Administrator.",
+      };
+    }
+
+    await createSession(user.id);
+  } catch (err: unknown) {
+    console.error("adminLoginAction error:", err);
+    return { error: extractAuthError(err, "Gagal masuk sebagai admin") };
+  }
+
+  redirect("/admin");
+}
+
+export async function adminLogoutAction() {
+  await destroySession();
+  redirect("/admin");
+}
+

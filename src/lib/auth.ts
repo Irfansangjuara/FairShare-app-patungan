@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { db } from "../db";
 import { users, sessions } from "../db/schema";
 import { eq, gt, and } from "drizzle-orm";
@@ -104,4 +105,20 @@ export async function destroySession(): Promise<void> {
 
 export function generateShareToken(): string {
   return crypto.randomBytes(16).toString("hex");
+}
+
+export async function requireUser(): Promise<SessionUser> {
+  const user = await getSessionUser();
+  if (!user) {
+    redirect("/login");
+  }
+  return user;
+}
+
+export async function requireAdmin(): Promise<SessionUser> {
+  const user = await getSessionUser();
+  if (!user || user.role !== "admin") {
+    redirect("/admin");
+  }
+  return user;
 }

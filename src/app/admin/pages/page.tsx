@@ -1,8 +1,10 @@
 import { getAllSitePagesAdmin } from "../../../server/queries";
+import { requireAdmin } from "@/lib/auth";
 import Link from "next/link";
 import { Globe, Pencil, ExternalLink, Eye, EyeOff } from "lucide-react";
 
 export default async function AdminPagesListPage() {
+  await requireAdmin();
   const pages = await getAllSitePagesAdmin();
 
   return (

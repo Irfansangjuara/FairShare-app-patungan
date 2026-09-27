@@ -1,12 +1,14 @@
 import { getSitePageByKey } from "../../../../../server/queries";
 import { notFound } from "next/navigation";
 import { PageEditor } from "../../../../../components/PageEditor";
+import { requireAdmin } from "@/lib/auth";
 
 interface EditStandardPageProps {
   params: Promise<{ key: string }>;
 }
 
 export default async function EditStandardPage({ params }: EditStandardPageProps) {
+  await requireAdmin();
   const { key } = await params;
   const page = await getSitePageByKey(key);
 

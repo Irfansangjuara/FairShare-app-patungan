@@ -237,3 +237,89 @@ export async function getAllSitePagesAdmin() {
     return [];
   }
 }
+
+export async function getAdminOverviewStats() {
+  try {
+    const allUsers = await db.query.users.findMany({
+      orderBy: [desc(users.createdAt)],
+      with: {
+        events: {
+          columns: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    const allArticles = await db.query.articles.findMany({
+      orderBy: [desc(articles.createdAt)],
+      with: {
+        author: {
+          columns: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    const allEvents = await db.query.events.findMany({
+      columns: {
+        id: true,
+      },
+    });
+
+    const allPages = await db.query.sitePages.findMany({
+      columns: {
+        id: true,
+        isPublished: true,
+      },
+    });
+
+    const adminCount = allUsers.filter((u) => u.role === "admin").length;
+    const regularUserCount = allUsers.filter((u) => u.role !== "admin").length;
+    const publishedArticleCount = allArticles.filter((a) => a.status === "published").length;
+    const draftArticleCount = allArticles.filter((a) => a.status !== "published").length;
+
+    return {
+      totalUsers: allUsers.length,
+      adminCount,
+      regularUserCount,
+      totalEvents: allEvents.length,
+      totalArticles: allArticles.length,
+      publishedArticleCount,
+      draftArticleCount,
+      totalPages: allPages.length,
+      recentUsers: allUsers.slice(0, 5).map((u) => ({
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        role: u.role || "user",
+        createdAt: u.createdAt,
+        eventCount: u.events ? u.events.length : 0,
+      })),
+      recentArticles: allArticles.slice(0, 5).map((a) => ({
+        id: a.id,
+        title: a.title,
+        slug: a.slug,
+        status: a.status,
+        authorName: a.author?.name || "Admin",
+        createdAt: a.createdAt,
+      })),
+    };
+  } catch (err) {
+    console.error("Error fetching admin stats:", err);
+    return {
+      totalUsers: 0,
+      adminCount: 0,
+      regularUserCount: 0,
+      totalEvents: 0,
+      totalArticles: 0,
+      publishedArticleCount: 0,
+      draftArticleCount: 0,
+      totalPages: 0,
+      recentUsers: [],
+      recentArticles: [],
+    };
+  }
+}
+

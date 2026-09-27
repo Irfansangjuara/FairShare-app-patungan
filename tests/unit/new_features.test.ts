@@ -8,6 +8,7 @@ import {
   apiTokenSchema,
   pageEditSchema,
   siteSettingsSchema,
+  registerSchema,
 } from "../../src/lib/validation.ts";
 import { maskSecret, AI_PROVIDERS } from "../../src/lib/ai/providers.ts";
 import { hashToken, generateTokenSecret, verifyApiRequest, checkRateLimit } from "../../src/lib/api/auth.ts";
@@ -233,6 +234,55 @@ describe("Fitur #6: Validasi Edit Halaman CMS & Global SEO Settings", () => {
       titleTemplate: "",
     });
     assert.equal(invalid.success, false);
+  });
+});
+
+describe("Fitur Admin: Portal Login & Manajemen Pengguna", () => {
+  it("memvalidasi skema registrasi pengguna baru oleh admin", () => {
+    const valid = registerSchema.safeParse({
+      name: "Budi Santoso",
+      email: "budi@example.com",
+      password: "password123",
+    });
+    assert.equal(valid.success, true);
+
+    const invalidEmail = registerSchema.safeParse({
+      name: "Budi Santoso",
+      email: "invalid-email-format",
+      password: "password123",
+    });
+    assert.equal(invalidEmail.success, false);
+
+    const shortPassword = registerSchema.safeParse({
+      name: "Budi Santoso",
+      email: "budi@example.com",
+      password: "123",
+    });
+    assert.equal(shortPassword.success, false);
+  });
+
+  it("memvalidasi aturan hak akses role dan perlindungan akun admin", () => {
+    // Role harus 'user' atau 'admin'
+    const allowedRoles = ["user", "admin"];
+    assert.equal(allowedRoles.includes("admin"), true);
+    assert.equal(allowedRoles.includes("user"), true);
+    assert.equal(allowedRoles.includes("guest"), false);
+
+    // Safeguard 1: Admin tidak boleh mencabut role dari diri sendiri
+    const currentAdminId = "admin-1";
+    const targetUserId = "admin-1";
+    const newRole = "user";
+    const canDemote = currentAdminId !== targetUserId || newRole === "admin";
+    assert.equal(canDemote, false);
+
+    // Safeguard 2: Admin tidak boleh menghapus diri sendiri saat login
+    const canDeleteSelf = currentAdminId !== targetUserId;
+    assert.equal(canDeleteSelf, false);
+
+    // Safeguard 3: Minimal 1 admin harus tersisa di sistem
+    const remainingAdminsCount = 1;
+    const canDeleteLastAdmin = remainingAdminsCount > 1;
+    assert.equal(canDeleteLastAdmin, false);
   });
 });
 

@@ -3,12 +3,14 @@ import { articles } from "../../../../../db/schema";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { ArticleEditor } from "../../../../../components/ArticleEditor";
+import { requireAdmin } from "@/lib/auth";
 
 interface EditArticlePageProps {
   params: Promise<{ id: string }>;
 }
 
 export default async function EditArticlePage({ params }: EditArticlePageProps) {
+  await requireAdmin();
   const { id } = await params;
 
   const article = await db.query.articles.findFirst({
