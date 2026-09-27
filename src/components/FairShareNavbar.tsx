@@ -19,8 +19,12 @@ export function FairShareNavbar({ user }: FairShareNavbarProps) {
 
   return (
     <header className="sticky top-3 sm:top-5 inset-x-0 z-50 flex justify-center px-4 w-full pointer-events-none">
-      <nav className="pointer-events-auto relative mx-auto w-full md:w-auto bg-white/95 backdrop-blur-md rounded-2xl md:rounded-full border border-gray-200/90 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.08)] py-1.5 md:py-2 px-3 md:px-5 transition-all">
-        <div className="flex items-center justify-between md:justify-center gap-3 md:gap-5 lg:gap-6">
+      <nav
+        className={`pointer-events-auto relative mx-auto w-fit max-w-[calc(100vw-2rem)] bg-white/95 backdrop-blur-md ${
+          isOpen ? "rounded-2xl" : "rounded-full"
+        } border border-gray-200/90 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.08)] py-1.5 md:py-2 px-3.5 md:px-5 transition-all`}
+      >
+        <div className="flex items-center justify-center gap-2.5 sm:gap-3 md:gap-4 lg:gap-5">
           {/* Brand Logo */}
           <Link
             className="inline-flex items-center flex-none rounded-md focus:outline-hidden hover:opacity-90 transition-opacity"
