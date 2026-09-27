@@ -1,5 +1,5 @@
 import { db } from "../db";
-import { events, members, expenses, settlements, users } from "../db/schema";
+import { events, members, expenses, settlements, users, siteSettings, sitePages, articles } from "../db/schema";
 import { eq, and, desc, asc, isNull } from "drizzle-orm";
 import { calculateSplitAndSettlements } from "../lib/settlement";
 
@@ -125,4 +125,115 @@ export async function getEventByShareToken(token: string) {
     unpaidCount,
     isOwner: false,
   };
+}
+
+export async function getSiteSettings() {
+  try {
+    const settings = await db.query.siteSettings.findFirst({
+      where: eq(siteSettings.key, "global"),
+    });
+    return settings || {
+      id: "global",
+      key: "global",
+      siteName: "FairShare",
+      defaultDescription: "Aplikasi patungan dan pelunasan trip cerdas.",
+      defaultOgImage: null,
+      titleTemplate: "%s | FairShare",
+    };
+  } catch (err) {
+    return {
+      id: "global",
+      key: "global",
+      siteName: "FairShare",
+      defaultDescription: "Aplikasi patungan dan pelunasan trip cerdas.",
+      defaultOgImage: null,
+      titleTemplate: "%s | FairShare",
+    };
+  }
+}
+
+export async function getSitePageByKey(key: string) {
+  try {
+    return await db.query.sitePages.findFirst({
+      where: eq(sitePages.key, key),
+    });
+  } catch (err) {
+    return null;
+  }
+}
+
+export async function getSitePageBySlug(slug: string) {
+  try {
+    return await db.query.sitePages.findFirst({
+      where: eq(sitePages.slug, slug),
+    });
+  } catch (err) {
+    return null;
+  }
+}
+
+export async function getPublishedArticles() {
+  try {
+    return await db.query.articles.findMany({
+      where: eq(articles.status, "published"),
+      orderBy: [desc(articles.publishedAt), desc(articles.createdAt)],
+      with: {
+        author: {
+          columns: {
+            name: true,
+          },
+        },
+      },
+    });
+  } catch (err) {
+    return [];
+  }
+}
+
+export async function getArticleBySlug(slug: string, allowDraft = false) {
+  try {
+    const article = await db.query.articles.findFirst({
+      where: allowDraft
+        ? eq(articles.slug, slug)
+        : and(eq(articles.slug, slug), eq(articles.status, "published")),
+      with: {
+        author: {
+          columns: {
+            name: true,
+          },
+        },
+      },
+    });
+    return article || null;
+  } catch (err) {
+    return null;
+  }
+}
+
+export async function getAllArticlesAdmin() {
+  try {
+    return await db.query.articles.findMany({
+      orderBy: [desc(articles.createdAt)],
+      with: {
+        author: {
+          columns: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+  } catch (err) {
+    return [];
+  }
+}
+
+export async function getAllSitePagesAdmin() {
+  try {
+    return await db.query.sitePages.findMany({
+      orderBy: [asc(sitePages.navOrder)],
+    });
+  } catch (err) {
+    return [];
+  }
 }

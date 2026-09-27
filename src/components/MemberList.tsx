@@ -1,13 +1,14 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { deleteMemberAction } from "../server/actions/member";
 import { MemberFormDialog } from "./MemberFormDialog";
-import { Trash2, User, AlertCircle } from "lucide-react";
+import { Trash2, CreditCard, AlertCircle, Copy, Check } from "lucide-react";
 
 interface MemberItem {
   id: string;
   name: string;
+  bankAccount?: string | null;
   createdAt: Date | string;
 }
 
@@ -25,6 +26,13 @@ export function MemberList({
   isOwner,
 }: MemberListProps) {
   const [isPending, startTransition] = useTransition();
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const handleCopy = (id: string, text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
 
   const handleDelete = (memberId: string, name: string) => {
     if (expenseCount > 0) {
@@ -51,7 +59,7 @@ export function MemberList({
           <AlertCircle className="h-4 w-4 text-slate-500 shrink-0" />
           <span>
             Daftar peserta dikunci karena pengeluaran sudah dicatat. Anda tetap dapat mengedit nama
-            peserta bila ada salah ketik.
+            atau nomor rekening peserta.
           </span>
         </div>
       )}
@@ -60,48 +68,75 @@ export function MemberList({
         {members.map((member, idx) => (
           <div
             key={member.id}
-            className="card-diskon p-3 sm:p-4 flex items-center justify-between gap-2.5 sm:gap-3 bg-white"
+            className="card-diskon p-3 sm:p-4 flex flex-col justify-between gap-2 bg-white"
           >
-            <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-              <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-black text-[#b7e913] text-xs font-bold shrink-0">
-                {idx + 1}
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-black text-[#b7e913] text-xs font-bold shrink-0">
+                  {idx + 1}
+                </div>
+                <div className="min-w-0">
+                  <span className="font-semibold text-xs sm:text-sm text-slate-900 block truncate">
+                    {member.name}
+                  </span>
+                  <span className="text-[10px] sm:text-[11px] text-slate-400 block">
+                    Peserta #{idx + 1}
+                  </span>
+                </div>
               </div>
-              <div className="min-w-0">
-                <span className="font-semibold text-xs sm:text-sm text-slate-900 block truncate">
-                  {member.name}
-                </span>
-                <span className="text-[10px] sm:text-[11px] text-slate-400 block">
-                  Peserta #{idx + 1}
-                </span>
-              </div>
+
+              {isOwner && (
+                <div className="flex items-center gap-0.5 shrink-0">
+                  <MemberFormDialog
+                    eventId={eventId}
+                    expenseCount={expenseCount}
+                    memberToEdit={member}
+                  />
+
+                  <button
+                    onClick={() => handleDelete(member.id, member.name)}
+                    disabled={isPending || expenseCount > 0}
+                    className="p-1 sm:p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-400"
+                    title={
+                      expenseCount > 0
+                        ? "Tidak dapat dihapus karena sudah ada pengeluaran"
+                        : "Hapus Peserta"
+                    }
+                  >
+                    <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  </button>
+                </div>
+              )}
             </div>
 
-            {isOwner && (
-              <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
-                <MemberFormDialog
-                  eventId={eventId}
-                  expenseCount={expenseCount}
-                  memberToEdit={member}
-                />
-
+            {/* Nomor Rekening Display */}
+            {member.bankAccount ? (
+              <div className="mt-1 pt-2 border-t border-slate-100 flex items-center justify-between gap-2 text-[11px] text-slate-600 bg-slate-50 px-2.5 py-1.5 rounded-lg">
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <CreditCard className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                  <span className="font-mono truncate">{member.bankAccount}</span>
+                </div>
                 <button
-                  onClick={() => handleDelete(member.id, member.name)}
-                  disabled={isPending || expenseCount > 0}
-                  className="p-1 sm:p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-400"
-                  title={
-                    expenseCount > 0
-                      ? "Tidak dapat dihapus karena sudah ada pengeluaran"
-                      : "Hapus Peserta"
-                  }
+                  type="button"
+                  onClick={() => handleCopy(member.id, member.bankAccount!)}
+                  className="text-slate-400 hover:text-slate-800 shrink-0 p-0.5"
+                  title="Salin nomor rekening"
                 >
-                  <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  {copiedId === member.id ? (
+                    <Check className="h-3 w-3 text-emerald-600" />
+                  ) : (
+                    <Copy className="h-3 w-3" />
+                  )}
                 </button>
+              </div>
+            ) : (
+              <div className="mt-1 pt-1.5 border-t border-slate-100 text-[10px] text-slate-400 italic">
+                Belum ada nomor rekening
               </div>
             )}
           </div>
         ))}
       </div>
-
     </div>
   );
 }

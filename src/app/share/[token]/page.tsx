@@ -34,13 +34,14 @@ export default async function SharePage({ params }: SharePageProps) {
 
   const { event, splitResult, unpaidCount } = eventData;
 
-  const memberMap = new Map(event.members.map((m) => [m.id, m.name]));
+  const memberMap = new Map(event.members.map((m) => [m.id, { name: m.name, bankAccount: m.bankAccount }]));
   const settlementsWithStatus = event.settlements.map((s) => ({
     id: s.id,
     fromMemberId: s.fromMemberId,
     toMemberId: s.toMemberId,
-    fromMemberName: memberMap.get(s.fromMemberId) || "Peserta",
-    toMemberName: memberMap.get(s.toMemberId) || "Peserta",
+    fromMemberName: memberMap.get(s.fromMemberId)?.name || "Peserta",
+    toMemberName: memberMap.get(s.toMemberId)?.name || "Peserta",
+    toMemberBankAccount: memberMap.get(s.toMemberId)?.bankAccount || null,
     amount: s.amount,
     isPaid: s.isPaid,
     paidAt: s.paidAt,
@@ -56,6 +57,7 @@ export default async function SharePage({ params }: SharePageProps) {
     settlementsWithStatus: settlementsWithStatus.map((s) => ({
       fromName: s.fromMemberName,
       toName: s.toMemberName,
+      toBankAccount: s.toMemberBankAccount,
       amount: s.amount,
       isPaid: s.isPaid,
     })),

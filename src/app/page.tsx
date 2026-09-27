@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getSessionUser } from "../lib/auth";
 import { Navbar } from "../components/Navbar";
+import { PublicFooter } from "../components/PublicFooter";
 import {
   Wallet,
   ArrowRight,
@@ -267,10 +268,7 @@ export default async function HomePage() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-200 bg-slate-50 py-8 px-4 text-center text-xs text-slate-600 font-medium">
-        <p>FairShare © {new Date().getFullYear()} — Aplikasi Patungan & Pelunasan Cerdas</p>
-      </footer>
+      <PublicFooter />
     </div>
   );
 }

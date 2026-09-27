@@ -1,8 +1,13 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { addMemberAction, updateMemberAction } from "../server/actions/member";
-import { UserPlus, Pencil, X, AlertCircle } from "lucide-react";
+import { useState, useEffect, useTransition } from "react";
+import {
+  addMemberAction,
+  updateMemberAction,
+  getSavedParticipantsAction,
+  SavedParticipantItem,
+} from "../server/actions/member";
+import { UserPlus, Pencil, X, AlertCircle, CreditCard, Sparkles, Check } from "lucide-react";
 
 interface MemberFormDialogProps {
   eventId: string;
@@ -10,6 +15,7 @@ interface MemberFormDialogProps {
   memberToEdit?: {
     id: string;
     name: string;
+    bankAccount?: string | null;
   } | null;
   triggerButton?: React.ReactNode;
 }
@@ -22,13 +28,32 @@ export function MemberFormDialog({
 }: MemberFormDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState(memberToEdit?.name || "");
+  const [bankAccount, setBankAccount] = useState(memberToEdit?.bankAccount || "");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [suggestions, setSuggestions] = useState<SavedParticipantItem[]>([]);
   const [isPending, startTransition] = useTransition();
 
   const handleOpen = () => {
     setName(memberToEdit?.name || "");
+    setBankAccount(memberToEdit?.bankAccount || "");
     setErrorMsg(null);
     setIsOpen(true);
+  };
+
+  // Load suggestions when opening in add mode
+  useEffect(() => {
+    if (isOpen && !memberToEdit) {
+      getSavedParticipantsAction().then((list) => {
+        setSuggestions(list);
+      });
+    }
+  }, [isOpen, memberToEdit]);
+
+  const handleSelectSuggestion = (item: SavedParticipantItem) => {
+    setName(item.name);
+    if (item.bankAccount) {
+      setBankAccount(item.bankAccount);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -43,6 +68,9 @@ export function MemberFormDialog({
 
     const formData = new FormData();
     formData.append("name", trimmed);
+    if (bankAccount.trim()) {
+      formData.append("bankAccount", bankAccount.trim());
+    }
 
     startTransition(async () => {
       let res;
@@ -56,12 +84,23 @@ export function MemberFormDialog({
         setErrorMsg(res.error);
       } else {
         setIsOpen(false);
-        if (!memberToEdit) setName("");
+        if (!memberToEdit) {
+          setName("");
+          setBankAccount("");
+        }
       }
     });
   };
 
   const isAddBlocked = !memberToEdit && expenseCount > 0;
+
+  // Filter suggestions matching current input
+  const filteredSuggestions = suggestions.filter(
+    (s) =>
+      !name ||
+      s.name.toLowerCase().includes(name.toLowerCase()) ||
+      (s.bankAccount && s.bankAccount.toLowerCase().includes(name.toLowerCase()))
+  );
 
   return (
     <>
@@ -71,7 +110,7 @@ export function MemberFormDialog({
         <button
           onClick={handleOpen}
           className="p-1.5 text-slate-500 hover:text-slate-900 rounded-lg hover:bg-slate-100"
-          title="Ubah Nama Peserta"
+          title="Ubah Data Peserta"
         >
           <Pencil className="h-4 w-4" />
         </button>
@@ -96,7 +135,7 @@ export function MemberFormDialog({
           <div className="card-diskon w-full max-w-md max-h-[90vh] overflow-y-auto p-5 sm:p-6 bg-white space-y-4">
             <div className="flex items-center justify-between border-b pb-3">
               <h3 className="text-base sm:text-lg font-bold text-slate-900">
-                {memberToEdit ? "Ubah Nama Peserta" : "Tambah Peserta Baru"}
+                {memberToEdit ? "Ubah Data Peserta" : "Tambah Peserta Baru"}
               </h3>
               <button
                 onClick={() => setIsOpen(false)}
@@ -105,7 +144,6 @@ export function MemberFormDialog({
                 <X className="h-5 w-5" />
               </button>
             </div>
-
 
             {isAddBlocked && (
               <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-xs flex items-start gap-2">
@@ -138,6 +176,51 @@ export function MemberFormDialog({
                   disabled={isAddBlocked}
                   className="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-lime-400 disabled:bg-slate-100 disabled:opacity-60"
                 />
+              </div>
+
+              {/* Suggestions from past campaigns (Feature #3) */}
+              {!memberToEdit && filteredSuggestions.length > 0 && (
+                <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
+                  <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-600">
+                    <Sparkles className="h-3.5 w-3.5 text-[#b7e913] fill-[#b7e913]" />
+                    <span>Saran dari Campaign Sebelumnya:</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto pt-0.5">
+                    {filteredSuggestions.slice(0, 6).map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => handleSelectSuggestion(item)}
+                        className="inline-flex items-center gap-1 text-[11px] bg-white border border-slate-300 hover:border-slate-900 hover:bg-slate-100 px-2 py-1 rounded-full text-slate-800 transition-colors"
+                        title={item.bankAccount ? `Rekening: ${item.bankAccount}` : undefined}
+                      >
+                        <span className="font-medium">{item.name}</span>
+                        {item.bankAccount && (
+                          <span className="text-[10px] text-slate-400">💳</span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Nomor Rekening / E-Wallet (Opsional)
+                </label>
+                <div className="relative">
+                  <CreditCard className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                  <input
+                    type="text"
+                    placeholder="Contoh: BCA 1234567890 a.n Budi atau GoPay 0812..."
+                    value={bankAccount}
+                    onChange={(e) => setBankAccount(e.target.value)}
+                    className="w-full rounded-xl border border-slate-300 pl-10 pr-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-lime-400"
+                  />
+                </div>
+                <span className="text-[11px] text-slate-400 block mt-1">
+                  Nomor rekening akan ditampilkan saat anggota lain ingin mentransfer pelunasan.
+                </span>
               </div>
 
               <div className="flex justify-end gap-2 pt-3 border-t">

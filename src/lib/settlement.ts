@@ -237,6 +237,7 @@ export function generateWhatsAppRecap({
   settlementsWithStatus: Array<{
     fromName: string;
     toName: string;
+    toBankAccount?: string | null;
     amount: bigint;
     isPaid: boolean;
   }>;
@@ -296,8 +297,9 @@ export function generateWhatsAppRecap({
     for (let i = 0; i < settlementsWithStatus.length; i++) {
       const s = settlementsWithStatus[i];
       const statusIcon = s.isPaid ? "✅ *[LUNAS]*" : "⏳ *[BELUM LUNAS]*";
+      const bankInfo = s.toBankAccount ? `\n   💳 Rek: ${s.toBankAccount}` : "";
       lines.push(
-        `${i + 1}. ${s.fromName} ➡️ ${s.toName}: *${formatRp(s.amount)}* — ${statusIcon}`
+        `${i + 1}. ${s.fromName} ➡️ ${s.toName}: *${formatRp(s.amount)}* — ${statusIcon}${bankInfo}`
       );
     }
   }

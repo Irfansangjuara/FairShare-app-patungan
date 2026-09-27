@@ -12,6 +12,7 @@ export interface SessionUser {
   id: string;
   email: string;
   name: string;
+  role: string;
 }
 
 export async function hashPassword(password: string): Promise<string> {
@@ -64,6 +65,7 @@ export async function getSessionUser(): Promise<SessionUser | null> {
           id: users.id,
           email: users.email,
           name: users.name,
+          role: users.role,
         },
       })
       .from(sessions)

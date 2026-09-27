@@ -83,11 +83,15 @@ export async function createExpenseAction(
     return { error: "Peserta pembayar tidak ditemukan dalam event ini." };
   }
 
+  const rawCategory = formData.get("category");
+  const categoryStr = typeof rawCategory === "string" && rawCategory.trim() ? rawCategory.trim() : "Umum";
+
   // Insert expense
   await db.insert(expenses).values({
     eventId,
     paidByMemberId: payerIdStr,
     title: titleStr,
+    category: categoryStr,
     amount: amountBigInt,
   });
 
@@ -165,10 +169,14 @@ export async function updateExpenseAction(
     return { error: "Peserta pembayar tidak ditemukan dalam event ini." };
   }
 
+  const rawCategory = formData.get("category");
+  const categoryStr = typeof rawCategory === "string" && rawCategory.trim() ? rawCategory.trim() : "Umum";
+
   await db
     .update(expenses)
     .set({
       title: titleStr,
+      category: categoryStr,
       amount: amountBigInt,
       paidByMemberId: payerIdStr,
       updatedAt: new Date(),
