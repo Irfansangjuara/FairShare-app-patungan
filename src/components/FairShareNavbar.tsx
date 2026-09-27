@@ -18,8 +18,8 @@ export function FairShareNavbar({ user }: FairShareNavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="flex sticky inset-x-0 top-0 z-50 flex-wrap px-4 mx-auto w-full md:w-[500px] md:justify-start md:flex-nowrap md:mt-6">
-      <nav className="relative mx-auto mt-2 md:mt-4 w-full bg-white/95 backdrop-blur-sm rounded-3xl border border-gray-200 md:max-w-md md:flex md:items-center md:justify-between py-2 md:pl-8 md:px-2 shadow-sm">
+    <header className="flex sticky inset-x-0 top-0 z-50 flex-wrap px-4 mx-auto w-full md:w-[620px] max-w-full md:justify-center md:flex-nowrap md:mt-6">
+      <nav className="relative mx-auto mt-2 md:mt-4 w-full bg-white/95 backdrop-blur-sm rounded-3xl border border-gray-200 md:flex md:items-center md:justify-between py-2 px-3 md:pl-5 md:pr-2 shadow-sm">
         <div className="flex justify-between items-center px-4 md:px-0">
           <div className="flex items-center">
             <Link
@@ -94,16 +94,34 @@ export function FairShareNavbar({ user }: FairShareNavbarProps) {
             {!user ? (
               <>
                 <Link
-                  className={`py-0.5 md:py-3 md:px-1 hover:text-gray-900 transition-colors focus:outline-hidden md:ml-auto ${
-                    pathname === "/register" ? "text-gray-950 font-semibold" : "text-gray-600"
+                  className={`py-0.5 md:py-2 md:px-1 hover:text-gray-900 transition-colors focus:outline-hidden md:ml-auto ${
+                    pathname === "/" ? "text-gray-950 font-semibold" : "text-gray-600"
+                  }`}
+                  href="/"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Home
+                </Link>
+                <Link
+                  className={`py-0.5 md:py-2 md:px-1 font-bold transition-colors focus:outline-hidden ${
+                    pathname === "/register" ? "text-black" : "text-gray-900 hover:text-black"
                   }`}
                   href="/register"
                   onClick={() => setIsOpen(false)}
                 >
-                  Daftar
+                  Daftar Free
                 </Link>
                 <Link
-                  className={`py-0.5 md:py-3 md:px-1 hover:text-gray-900 transition-colors focus:outline-hidden md:mr-auto md:ml-auto ${
+                  className={`py-0.5 md:py-2 md:px-1 hover:text-gray-900 transition-colors focus:outline-hidden ${
+                    pathname.startsWith("/blog") ? "text-gray-950 font-semibold" : "text-gray-600"
+                  }`}
+                  href="/blog"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Blog
+                </Link>
+                <Link
+                  className={`py-0.5 md:py-2 md:px-1 hover:text-gray-900 transition-colors focus:outline-hidden ${
                     pathname === "/about" ? "text-gray-950 font-semibold" : "text-gray-600"
                   }`}
                   href="/about"
@@ -112,7 +130,7 @@ export function FairShareNavbar({ user }: FairShareNavbarProps) {
                   Tentang
                 </Link>
                 <Link
-                  className="btn btn-sm accent"
+                  className="btn btn-sm accent shrink-0"
                   href="/login"
                   onClick={() => setIsOpen(false)}
                 >
@@ -122,16 +140,16 @@ export function FairShareNavbar({ user }: FairShareNavbarProps) {
             ) : (
               <>
                 <Link
-                  className={`py-0.5 md:py-3 md:px-1 hover:text-gray-900 transition-colors focus:outline-hidden md:ml-auto ${
-                    pathname === "/about" ? "text-gray-950 font-semibold" : "text-gray-600"
+                  className={`py-0.5 md:py-2 md:px-1 hover:text-gray-900 transition-colors focus:outline-hidden md:ml-auto ${
+                    pathname === "/" ? "text-gray-950 font-semibold" : "text-gray-600"
                   }`}
-                  href="/about"
+                  href="/"
                   onClick={() => setIsOpen(false)}
                 >
-                  Tentang
+                  Home
                 </Link>
                 <Link
-                  className={`py-0.5 md:py-3 md:px-1 hover:text-gray-900 transition-colors focus:outline-hidden ${
+                  className={`py-0.5 md:py-2 md:px-1 hover:text-gray-900 transition-colors focus:outline-hidden ${
                     pathname.startsWith("/blog") ? "text-gray-950 font-semibold" : "text-gray-600"
                   }`}
                   href="/blog"
@@ -140,7 +158,16 @@ export function FairShareNavbar({ user }: FairShareNavbarProps) {
                   Blog
                 </Link>
                 <Link
-                  className="btn btn-sm accent"
+                  className={`py-0.5 md:py-2 md:px-1 hover:text-gray-900 transition-colors focus:outline-hidden ${
+                    pathname === "/about" ? "text-gray-950 font-semibold" : "text-gray-600"
+                  }`}
+                  href="/about"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Tentang
+                </Link>
+                <Link
+                  className="btn btn-sm accent shrink-0"
                   href="/dashboard"
                   onClick={() => setIsOpen(false)}
                 >
