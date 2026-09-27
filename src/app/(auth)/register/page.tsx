@@ -95,7 +95,7 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
                     className="ml-auto w-4/5 max-md:hidden animate-slow-cloud-up object-contain"
                     width={230}
                     height={281}
-                    src="/assets/img/fair-share-maskot5.webp"
+                    src="/assets/img/meong-maskot-5.webp"
                     alt="Maskot Fair Share"
                     priority
                   />

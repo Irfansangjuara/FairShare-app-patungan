@@ -1,4 +1,4 @@
-import { Navbar } from "./Navbar";
+import { FairShareNavbar } from "./FairShareNavbar";
 import { PublicFooter } from "./PublicFooter";
 import { getSessionUser } from "../lib/auth";
 import Link from "next/link";
@@ -48,7 +48,7 @@ export async function StandardPageView({ page }: StandardPageViewProps) {
 
   return (
     <div className="min-h-full flex flex-col bg-[#F8FAFC]">
-      <Navbar user={user} />
+      <FairShareNavbar user={user} />
 
       <main className="flex-1 mx-auto max-w-4xl w-full px-4 sm:px-6 py-8 sm:py-12">
         <Link

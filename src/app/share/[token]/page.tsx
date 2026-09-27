@@ -1,6 +1,6 @@
 import { getEventByShareToken } from "../../../server/queries";
 import { notFound } from "next/navigation";
-import { Navbar } from "../../../components/Navbar";
+import { FairShareNavbar } from "../../../components/FairShareNavbar";
 import { SummaryCards } from "../../../components/SummaryCards";
 import { SettlementList } from "../../../components/SettlementList";
 import { BalanceTable } from "../../../components/BalanceTable";
@@ -65,25 +65,17 @@ export default async function SharePage({ params }: SharePageProps) {
 
   return (
     <div className="min-h-full flex flex-col bg-[#F8FAFC]">
-      {/* Read-only banner header */}
-      <header className="sticky top-0 z-40 w-full border-b border-slate-200 bg-white/90 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-3.5 sm:px-6">
-          <Link href="/" className="flex items-center gap-2 sm:gap-2.5">
-            <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-2xl bg-black text-[#b7e913] shadow-md">
-              <Wallet className="h-5 w-5" />
-            </div>
-            <span className="text-lg sm:text-xl font-bold tracking-tight text-slate-950">FairShare</span>
-          </Link>
-
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 border border-slate-200 px-2.5 sm:px-3 py-1 text-xs font-semibold text-slate-700">
-            <Shield className="h-3.5 w-3.5 text-blue-600 shrink-0" />
-            <span className="hidden sm:inline">Tautan Baca-Saja (Publik)</span>
-            <span className="sm:hidden font-medium">Baca-Saja</span>
-          </div>
-        </div>
-      </header>
+      <FairShareNavbar user={null} />
 
       <main className="flex-1 mx-auto max-w-6xl w-full px-3.5 sm:px-6 py-5 sm:py-8 space-y-5 sm:space-y-8">
+        {/* Read-only notice badge */}
+        <div className="flex justify-end">
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-700 shadow-2xs">
+            <Shield className="h-3.5 w-3.5 text-blue-600 shrink-0" />
+            <span>Tautan Publik (Baca-Saja)</span>
+          </div>
+        </div>
+
         {/* Event Title & Details */}
         <div className="card-diskon p-4 sm:p-6 bg-white border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">

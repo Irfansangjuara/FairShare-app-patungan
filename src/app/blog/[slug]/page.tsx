@@ -1,6 +1,6 @@
 import { getArticleBySlug, getSiteSettings } from "../../../server/queries";
 import { getSessionUser } from "../../../lib/auth";
-import { Navbar } from "../../../components/Navbar";
+import { FairShareNavbar } from "../../../components/FairShareNavbar";
 import { PublicFooter } from "../../../components/PublicFooter";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -99,7 +99,7 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
 
   return (
     <div className="min-h-full flex flex-col bg-[#F8FAFC]">
-      <Navbar user={user} />
+      <FairShareNavbar user={user} />
 
       <main className="flex-1 mx-auto max-w-4xl w-full px-4 sm:px-6 py-8 sm:py-12">
         {/* Navigation Breadcrumb */}

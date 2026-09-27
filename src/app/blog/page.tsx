@@ -1,6 +1,6 @@
 import { getPublishedArticles, getSiteSettings } from "../../server/queries";
 import { getSessionUser } from "../../lib/auth";
-import { Navbar } from "../../components/Navbar";
+import { FairShareNavbar } from "../../components/FairShareNavbar";
 import { PublicFooter } from "../../components/PublicFooter";
 import Link from "next/link";
 import { Calendar, ArrowRight, BookOpen, Clock, Tag } from "lucide-react";
@@ -23,7 +23,7 @@ export default async function BlogIndexPage() {
 
   return (
     <div className="min-h-full flex flex-col bg-[#F8FAFC]">
-      <Navbar user={user} />
+      <FairShareNavbar user={user} />
 
       <main className="flex-1 mx-auto max-w-6xl w-full px-4 sm:px-6 py-8 sm:py-14">
         {/* Header */}

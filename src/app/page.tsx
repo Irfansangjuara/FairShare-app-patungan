@@ -112,7 +112,7 @@ export default async function HomePage() {
               className="max-md:max-w-24 max-sm:mb-6 mx-auto max-w-[230px] w-full object-contain"
               width={230}
               height={281}
-              src="/assets/img/fair-share-maskot1.webp"
+              src="/assets/img/meong-maskot-10.webp"
               alt="Maskot Fair Share 1"
               priority
             />
@@ -149,7 +149,7 @@ export default async function HomePage() {
               className="max-w-[230px] w-full max-sm:hidden mx-auto max-md:max-w-24 object-contain"
               width={230}
               height={281}
-              src="/assets/img/fair-share-maskot2.webp"
+              src="/assets/img/meong-maskot-14.webp"
               alt="Maskot Fair Share 2"
               priority
             />
@@ -186,7 +186,7 @@ export default async function HomePage() {
               className="object-contain"
               width={220}
               height={220}
-              src="/assets/img/fair-share-maskot9.webp"
+              src="/assets/img/meong-maskot-13.webp"
               alt="Maskot Fair Share penjelasan"
             />
           </div>
@@ -352,7 +352,7 @@ export default async function HomePage() {
               className="object-contain"
               width={260}
               height={220}
-              src="/assets/img/fair-share-udang.webp"
+              src="/assets/img/meong-maskot-12.webp"
               alt="Udang di balik batu patungan"
             />
           </div>
@@ -412,7 +412,7 @@ export default async function HomePage() {
         >
           <img
             className="mx-auto w-full max-w-3xl"
-            src="/assets/img/fair-share-rumah-internet.webp"
+            src="/assets/img/meong-maskot-9.webp"
             alt="Teman & Keluarga Bisa Patungan Lebih Rapi"
           />
         </div>
@@ -469,7 +469,7 @@ export default async function HomePage() {
                 className="w-full max-w-md max-md:mx-auto object-contain"
                 width={394}
                 height={374}
-                src="/assets/img/fair-share-maskot3.webp"
+                src="/assets/img/meong-maskot-6.webp"
                 alt="Maskot Fair Share 3"
               />
             </div>
@@ -487,10 +487,10 @@ export default async function HomePage() {
               </div>
 
               <Image
-                className="mx-auto mb-6 max-w-xs w-full max-md:max-w-[120px] object-contain"
+                className="mx-auto mb-6 max-w-xs w-full max-md:max-w-[120px] object-contain relative z-20"
                 width={320}
                 height={335}
-                src="/assets/img/fair-share-maskot4.webp"
+                src="/assets/img/meong-maskot-11.webp"
                 alt="Maskot Fair Share langkah"
               />
             </div>
@@ -619,7 +619,7 @@ export default async function HomePage() {
               className="object-contain"
               width={230}
               height={230}
-              src="/assets/img/fair-share-maskot2.webp"
+              src="/assets/img/meong-maskot-14.webp"
               alt="Maskot Fair Share transparan"
             />
           </div>
@@ -634,7 +634,7 @@ export default async function HomePage() {
               className="mb-6 object-contain"
               width={200}
               height={200}
-              src="/assets/img/fair-share-maskot10.webp"
+              src="/assets/img/meong-maskot-12.webp"
               alt="Maskot Fair Share FAQ"
             />
             <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-4">

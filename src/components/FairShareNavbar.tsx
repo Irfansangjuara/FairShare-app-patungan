@@ -18,32 +18,106 @@ export function FairShareNavbar({ user }: FairShareNavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="flex sticky inset-x-0 top-0 z-50 flex-wrap px-4 mx-auto w-full md:w-[620px] max-w-full md:justify-center md:flex-nowrap md:mt-6">
-      <nav className="relative mx-auto mt-2 md:mt-4 w-full bg-white/95 backdrop-blur-sm rounded-3xl border border-gray-200 md:flex md:items-center md:justify-between py-2 px-3 md:pl-5 md:pr-2 shadow-sm">
-        <div className="flex justify-between items-center px-4 md:px-0">
-          <div className="flex items-center">
+    <header className="sticky top-3 sm:top-5 inset-x-0 z-50 flex justify-center px-4 w-full pointer-events-none">
+      <nav className="pointer-events-auto relative mx-auto w-full md:w-auto bg-white/95 backdrop-blur-md rounded-2xl md:rounded-full border border-gray-200/90 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.08)] py-1.5 md:py-2 px-3 md:px-5 transition-all">
+        <div className="flex items-center justify-between md:justify-center gap-3 md:gap-5 lg:gap-6">
+          {/* Brand Logo */}
+          <Link
+            className="inline-flex items-center flex-none rounded-md focus:outline-hidden hover:opacity-90 transition-opacity"
+            href="/"
+            aria-label="Fair Share, beranda"
+          >
+            <Image
+              src="/assets/img/meong-maskot-1.webp"
+              alt="Fair Share"
+              className="h-9 md:h-10 w-auto object-contain"
+              width={40}
+              height={40}
+              priority
+            />
+          </Link>
+
+          {/* Subtle Vertical Divider on Desktop */}
+          <div className="hidden md:block h-4 w-px bg-gray-200" />
+
+          {/* Desktop Menu Links - Rata Tengah & Profesional */}
+          <div className="hidden md:flex items-center gap-1 lg:gap-2 text-[15px]">
             <Link
-              className="inline-block flex-none text-2xl font-semibold rounded-md focus:outline-hidden focus:opacity-80"
               href="/"
-              aria-label="Fair Share, beranda"
+              className={`px-3 py-1.5 rounded-full transition-colors font-normal no-underline hover:no-underline ${
+                pathname === "/"
+                  ? "text-gray-950 font-normal"
+                  : "text-gray-600 hover:text-gray-950"
+              }`}
+              style={{ textDecoration: "none" }}
             >
-              <Image
-                src="/assets/img/fair-share-logo.png"
-                alt="Fair Share"
-                className="h-10 w-auto"
-                width={105}
-                height={40}
-                priority
-              />
+              Home
             </Link>
-            <div className="ms-1 sm:ms-2"></div>
+
+            {!user && (
+              <Link
+                href="/register"
+                className={`px-3 py-1.5 rounded-full transition-colors font-bold no-underline hover:no-underline ${
+                  pathname === "/register"
+                    ? "text-black"
+                    : "text-gray-900 hover:text-black"
+                }`}
+                style={{ textDecoration: "none" }}
+              >
+                Daftar Free
+              </Link>
+            )}
+
+            <Link
+              href="/blog"
+              className={`px-3 py-1.5 rounded-full transition-colors font-normal no-underline hover:no-underline ${
+                pathname.startsWith("/blog")
+                  ? "text-gray-950 font-normal"
+                  : "text-gray-600 hover:text-gray-950"
+              }`}
+              style={{ textDecoration: "none" }}
+            >
+              Blog
+            </Link>
+
+            <Link
+              href="/about"
+              className={`px-3 py-1.5 rounded-full transition-colors font-normal no-underline hover:no-underline ${
+                pathname === "/about"
+                  ? "text-gray-950 font-normal"
+                  : "text-gray-600 hover:text-gray-950"
+              }`}
+              style={{ textDecoration: "none" }}
+            >
+              Tentang
+            </Link>
           </div>
 
+          {/* Desktop Action Button */}
+          <div className="hidden md:flex items-center pl-1">
+            {user ? (
+              <Link
+                href="/dashboard"
+                className="btn btn-sm accent shrink-0 shadow-xs"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="btn btn-sm accent shrink-0 shadow-xs"
+              >
+                Masuk
+              </Link>
+            )}
+          </div>
+
+          {/* Mobile Toggle Button */}
           <div className="md:hidden">
             <button
               type="button"
               onClick={() => setIsOpen(!isOpen)}
-              className="flex justify-center items-center text-gray-500 rounded-full border border-gray-200 size-8 hover:bg-gray-100 focus:outline-hidden"
+              className="flex justify-center items-center text-gray-500 rounded-full border border-gray-200 size-8 hover:bg-gray-100 focus:outline-hidden transition-colors"
               aria-expanded={isOpen}
               aria-label="Toggle navigation"
             >
@@ -85,98 +159,70 @@ export function FairShareNavbar({ user }: FairShareNavbarProps) {
           </div>
         </div>
 
-        <div
-          className={`${
-            isOpen ? "block" : "hidden"
-          } overflow-hidden transition-all duration-300 basis-full grow md:block`}
-        >
-          <div className="flex flex-col gap-2 px-2 py-2 mt-3 max-md:text-center md:flex-row md:items-center md:gap-3 md:mt-0 md:py-0 md:ps-4">
-            {!user ? (
-              <>
+        {/* Mobile Collapsible Menu */}
+        {isOpen && (
+          <div className="md:hidden mt-3 pt-3 border-t border-gray-100 flex flex-col items-center gap-1 pb-1 text-center animate-in fade-in duration-200">
+            <Link
+              href="/"
+              onClick={() => setIsOpen(false)}
+              className={`w-full py-1.5 font-normal no-underline hover:no-underline ${
+                pathname === "/" ? "text-gray-950 font-normal" : "text-gray-600"
+              }`}
+              style={{ textDecoration: "none" }}
+            >
+              Home
+            </Link>
+
+            {!user && (
+              <Link
+                href="/register"
+                onClick={() => setIsOpen(false)}
+                className="w-full py-1.5 font-bold text-gray-900 hover:text-black no-underline hover:no-underline"
+                style={{ textDecoration: "none" }}
+              >
+                Daftar Free
+              </Link>
+            )}
+
+            <Link
+              href="/blog"
+              onClick={() => setIsOpen(false)}
+              className="w-full py-1.5 font-normal text-gray-600 hover:text-gray-950 no-underline hover:no-underline"
+              style={{ textDecoration: "none" }}
+            >
+              Blog
+            </Link>
+
+            <Link
+              href="/about"
+              onClick={() => setIsOpen(false)}
+              className="w-full py-1.5 font-normal text-gray-600 hover:text-gray-950 no-underline hover:no-underline"
+              style={{ textDecoration: "none" }}
+            >
+              Tentang
+            </Link>
+
+            <div className="w-full pt-2">
+              {user ? (
                 <Link
-                  className={`py-0.5 md:py-2 md:px-1 hover:text-gray-900 transition-colors focus:outline-hidden md:ml-auto ${
-                    pathname === "/" ? "text-gray-950 font-semibold" : "text-gray-600"
-                  }`}
-                  href="/"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Home
-                </Link>
-                <Link
-                  className={`py-0.5 md:py-2 md:px-1 font-bold transition-colors focus:outline-hidden ${
-                    pathname === "/register" ? "text-black" : "text-gray-900 hover:text-black"
-                  }`}
-                  href="/register"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Daftar Free
-                </Link>
-                <Link
-                  className={`py-0.5 md:py-2 md:px-1 hover:text-gray-900 transition-colors focus:outline-hidden ${
-                    pathname.startsWith("/blog") ? "text-gray-950 font-semibold" : "text-gray-600"
-                  }`}
-                  href="/blog"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Blog
-                </Link>
-                <Link
-                  className={`py-0.5 md:py-2 md:px-1 hover:text-gray-900 transition-colors focus:outline-hidden ${
-                    pathname === "/about" ? "text-gray-950 font-semibold" : "text-gray-600"
-                  }`}
-                  href="/about"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Tentang
-                </Link>
-                <Link
-                  className="btn btn-sm accent shrink-0"
-                  href="/login"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Masuk
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link
-                  className={`py-0.5 md:py-2 md:px-1 hover:text-gray-900 transition-colors focus:outline-hidden md:ml-auto ${
-                    pathname === "/" ? "text-gray-950 font-semibold" : "text-gray-600"
-                  }`}
-                  href="/"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Home
-                </Link>
-                <Link
-                  className={`py-0.5 md:py-2 md:px-1 hover:text-gray-900 transition-colors focus:outline-hidden ${
-                    pathname.startsWith("/blog") ? "text-gray-950 font-semibold" : "text-gray-600"
-                  }`}
-                  href="/blog"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Blog
-                </Link>
-                <Link
-                  className={`py-0.5 md:py-2 md:px-1 hover:text-gray-900 transition-colors focus:outline-hidden ${
-                    pathname === "/about" ? "text-gray-950 font-semibold" : "text-gray-600"
-                  }`}
-                  href="/about"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Tentang
-                </Link>
-                <Link
-                  className="btn btn-sm accent shrink-0"
                   href="/dashboard"
                   onClick={() => setIsOpen(false)}
+                  className="btn btn-sm accent w-full justify-center"
                 >
                   Dashboard
                 </Link>
-              </>
-            )}
+              ) : (
+                <Link
+                  href="/login"
+                  onClick={() => setIsOpen(false)}
+                  className="btn btn-sm accent w-full justify-center"
+                >
+                  Masuk
+                </Link>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </nav>
     </header>
   );

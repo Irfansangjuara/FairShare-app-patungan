@@ -79,7 +79,7 @@ export default async function AboutPage() {
 
                 <div className="flex justify-center md:justify-end">
                   <Image
-                    src="/assets/img/fair-share-tentang-kami.webp"
+                    src="/assets/img/meong-maskot-7.webp"
                     alt="Tentang Fair Share"
                     width={359}
                     height={367}
@@ -108,7 +108,7 @@ export default async function AboutPage() {
         </h2>
         <div className="flex justify-center">
           <Image
-            src="/assets/img/fair-share-rumah-internet.webp"
+            src="/assets/img/meong-maskot-9.webp"
             alt="Fair Share"
             width={800}
             height={400}
@@ -126,7 +126,7 @@ export default async function AboutPage() {
                 className="max-w-[230px] mb-8 mx-auto w-full max-md:max-w-[120px] object-contain animate-slow-cloud-up"
                 width={230}
                 height={281}
-                src="/assets/img/fair-share-maskot1.webp"
+                src="/assets/img/meong-maskot-3.webp"
                 alt="Maskot Fair Share"
               />
             </div>
@@ -172,7 +172,7 @@ export default async function AboutPage() {
                 className="w-full max-md:mx-auto object-contain"
                 width={230}
                 height={281}
-                src="/assets/img/fair-share-orang-duduk.webp"
+                src="/assets/img/meong-maskot-untitled-2.webp"
                 alt="Pengguna duduk santai"
               />
             </div>
@@ -185,7 +185,7 @@ export default async function AboutPage() {
                 className="w-full max-md:mx-auto max-w-[230px] max-md:max-w-[128px] object-contain animate-slow-cloud-up"
                 width={230}
                 height={281}
-                src="/assets/img/fair-share-maskot7.webp"
+                src="/assets/img/meong-maskot-5.webp"
                 alt="Maskot Fair Share empati"
               />
             </div>
@@ -227,7 +227,7 @@ export default async function AboutPage() {
                 className="max-w-[230px] max-md:mx-auto w-full max-md:max-w-[180px] object-contain"
                 width={230}
                 height={281}
-                src="/assets/img/fair-share-maskot8.webp"
+                src="/assets/img/meong-maskot-11.webp"
                 alt="Maskot teman beresin patungan"
               />
             </div>
@@ -243,7 +243,7 @@ export default async function AboutPage() {
         >
           <Image
             className="mx-auto"
-            src="/assets/img/fair-share-rumah.webp"
+            src="/assets/img/meong-maskot-6.webp"
             alt="Rumah Fair Share"
             width={174}
             height={142}
