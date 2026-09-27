@@ -187,14 +187,19 @@ export async function adminLoginAction(
       where: eq(users.email, email.toLowerCase()),
     });
 
-    // Auto-provision admin user if logging in as default admin and not yet in database
-    if (!user && email.toLowerCase() === "admin@admin.com" && password === "admin#123") {
-      const passwordHash = await hashPassword("admin#123");
+    // Auto-provision admin user if logging in as requested admin or default admin and not yet in database
+    const isNewOfficialAdmin =
+      email.toLowerCase() === "admin@fairshare.copilotmarketing.id" && password === "#@Cusn77";
+    const isLegacyAdmin =
+      email.toLowerCase() === "admin@admin.com" && password === "admin#123";
+
+    if (!user && (isNewOfficialAdmin || isLegacyAdmin)) {
+      const passwordHash = await hashPassword(password);
       const [newAdmin] = await db
         .insert(users)
         .values({
-          name: "Administrator",
-          email: "admin@admin.com",
+          name: isNewOfficialAdmin ? "Admin FairShare" : "Administrator",
+          email: email.toLowerCase(),
           passwordHash,
           role: "admin",
         })
@@ -202,13 +207,19 @@ export async function adminLoginAction(
       user = newAdmin;
     }
 
+    if (user && isNewOfficialAdmin) {
+      if (user.role !== "admin") {
+        await db.update(users).set({ role: "admin" }).where(eq(users.id, user.id));
+        user.role = "admin";
+      }
+    }
+
     if (!user || !user.passwordHash) {
       return { error: "Akun administrator tidak ditemukan atau salah." };
     }
 
     // Special bypass for default admin credentials
-    const isAdminMatch =
-      email.toLowerCase() === "admin@admin.com" && password === "admin#123";
+    const isAdminMatch = isNewOfficialAdmin || isLegacyAdmin;
 
     if (!isAdminMatch) {
       const isMatch = await verifyPassword(password, user.passwordHash);

@@ -14,6 +14,7 @@ import {
   UserCheck,
   ExternalLink,
   ChevronRight,
+  Bot,
 } from "lucide-react";
 
 export const metadata = {
@@ -77,7 +78,7 @@ export default async function AdminPage() {
             <span>Kelola Pengguna</span>
           </Link>
           <Link
-            href="/admin/articles/new"
+            href="/admin/blog/new"
             className="inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-900 hover:bg-slate-800 px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white transition-colors"
           >
             <Plus className="h-4 w-4" />
@@ -147,7 +148,7 @@ export default async function AdminPage() {
               {stats.publishedArticleCount} Tayang &bull; {stats.draftArticleCount} Draft
             </span>
             <Link
-              href="/admin/articles"
+              href="/admin/blog"
               className="text-slate-500 hover:text-slate-900 inline-flex items-center gap-0.5 font-bold"
             >
               <span>Lihat</span>
@@ -311,7 +312,7 @@ export default async function AdminPage() {
                 </div>
               </div>
               <Link
-                href="/admin/articles"
+                href="/admin/blog"
                 className="text-xs font-bold text-slate-700 hover:text-black inline-flex items-center gap-1 bg-slate-100 hover:bg-slate-200 px-3 py-1 rounded-full transition-colors"
               >
                 <span>Lihat Semua</span>
@@ -348,7 +349,7 @@ export default async function AdminPage() {
                         {art.status === "published" ? "Tayang" : "Draft"}
                       </span>
                       <Link
-                        href={`/admin/articles/${art.id}/edit`}
+                        href={`/admin/blog/${art.id}/edit`}
                         className="text-xs font-bold text-slate-600 hover:text-black p-1 hover:bg-slate-200 rounded"
                         title="Edit artikel"
                       >
@@ -363,14 +364,14 @@ export default async function AdminPage() {
 
           <div className="flex items-center gap-2">
             <Link
-              href="/admin/articles/new"
+              href="/admin/blog/new"
               className="btn-pill-lime text-xs py-2 px-4 flex-1 justify-center"
             >
               <Plus className="h-3.5 w-3.5" />
               <span>Tulis Artikel Baru</span>
             </Link>
             <Link
-              href="/admin/articles"
+              href="/admin/blog"
               className="btn-pill-secondary text-xs py-2 px-4 justify-center"
             >
               <span>Semua Artikel</span>
@@ -380,7 +381,7 @@ export default async function AdminPage() {
       </div>
 
       {/* Fast Navigation Modules */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         <div className="card-diskon p-5 bg-white border border-slate-200 flex flex-col justify-between space-y-3 shadow-sm hover:border-slate-300 transition-all">
           <div className="space-y-2">
             <div className="w-9 h-9 rounded-xl bg-purple-100 text-purple-900 flex items-center justify-center font-bold">
@@ -388,14 +389,52 @@ export default async function AdminPage() {
             </div>
             <h3 className="text-sm font-bold text-slate-950">Manajemen Pengguna</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Atur hak akses admin/user, reset password pengguna, tambah akun baru, dan audit keanggotaan.
+              Atur hak akses admin/user, reset password pengguna, dan audit keanggotaan.
             </p>
           </div>
           <Link
             href="/admin/users"
             className="text-xs font-bold text-purple-700 hover:text-purple-900 inline-flex items-center gap-1 pt-1"
           >
-            <span>Buka Manajemen Pengguna</span>
+            <span>Buka Pengguna</span>
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+
+        <div className="card-diskon p-5 bg-white border border-slate-200 flex flex-col justify-between space-y-3 shadow-sm hover:border-slate-300 transition-all">
+          <div className="space-y-2">
+            <div className="w-9 h-9 rounded-xl bg-lime-100 text-lime-950 flex items-center justify-center font-bold">
+              <FileText className="h-4 w-4" />
+            </div>
+            <h3 className="text-sm font-bold text-slate-950">Artikel Blog & SEO</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Tulis konten edukasi baru dan publikasikan panduan finansial di /blog.
+            </p>
+          </div>
+          <Link
+            href="/admin/blog"
+            className="text-xs font-bold text-lime-800 hover:text-black inline-flex items-center gap-1 pt-1"
+          >
+            <span>Kelola Artikel</span>
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+
+        <div className="card-diskon p-5 bg-white border border-slate-200 flex flex-col justify-between space-y-3 shadow-sm hover:border-slate-300 transition-all">
+          <div className="space-y-2">
+            <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-950 flex items-center justify-center font-bold">
+              <Bot className="h-4 w-4" />
+            </div>
+            <h3 className="text-sm font-bold text-slate-950">AI Agent & API Token</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Kredensial token untuk AI Agent mengupdate artikel dan memantau dashboard.
+            </p>
+          </div>
+          <Link
+            href="/admin/agent"
+            className="text-xs font-bold text-emerald-800 hover:text-black inline-flex items-center gap-1 pt-1"
+          >
+            <span>Buka AI Agent</span>
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
@@ -407,33 +446,14 @@ export default async function AdminPage() {
             </div>
             <h3 className="text-sm font-bold text-slate-950">Halaman Standar CMS</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Sesuaikan teks halaman publik Beranda, Tentang Kami, Kontak, Kebijakan Privasi, dan Syarat Layanan.
+              Sesuaikan teks halaman publik Beranda, Tentang Kami, Privasi, & Syarat.
             </p>
           </div>
           <Link
             href="/admin/pages"
             className="text-xs font-bold text-blue-700 hover:text-blue-900 inline-flex items-center gap-1 pt-1"
           >
-            <span>Buka Editor Halaman</span>
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        </div>
-
-        <div className="card-diskon p-5 bg-white border border-slate-200 flex flex-col justify-between space-y-3 shadow-sm hover:border-slate-300 transition-all">
-          <div className="space-y-2">
-            <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-900 flex items-center justify-center font-bold">
-              <Settings className="h-4 w-4" />
-            </div>
-            <h3 className="text-sm font-bold text-slate-950">Pengaturan SEO Global</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Konfigurasi meta tag, title template Google, deskripsi SERP default, dan Open Graph social preview.
-            </p>
-          </div>
-          <Link
-            href="/admin/seo"
-            className="text-xs font-bold text-emerald-700 hover:text-emerald-900 inline-flex items-center gap-1 pt-1"
-          >
-            <span>Kelola SEO Global</span>
+            <span>Buka Editor CMS</span>
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>

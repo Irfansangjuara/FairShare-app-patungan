@@ -52,7 +52,7 @@ export default async function BlogIndexPage() {
             </p>
             {user?.role === "admin" && (
               <Link
-                href="/admin/articles/new"
+                href="/admin/blog/new"
                 className="btn-pill-lime text-xs py-2 px-4 inline-flex items-center gap-1.5 font-bold"
               >
                 <span>Tulis Artikel Pertama</span>

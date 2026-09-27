@@ -88,6 +88,7 @@ export async function createArticleAction(
   });
 
   revalidatePath("/blog");
+  revalidatePath("/admin/blog");
   revalidatePath("/admin/articles");
   return { success: true, slug };
 }
@@ -184,6 +185,7 @@ export async function updateArticleAction(
 
   revalidatePath("/blog");
   revalidatePath(`/blog/${slug}`);
+  revalidatePath("/admin/blog");
   revalidatePath("/admin/articles");
   return { success: true, slug };
 }
@@ -199,6 +201,7 @@ export async function deleteArticleAction(
   await db.delete(articles).where(eq(articles.id, articleId));
 
   revalidatePath("/blog");
+  revalidatePath("/admin/blog");
   revalidatePath("/admin/articles");
   return { success: true };
 }

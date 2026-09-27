@@ -47,6 +47,7 @@ export async function generateMetadata({
 export default async function ArticleDetailPage({ params }: ArticleDetailPageProps) {
   const user = await getSessionUser();
   const { slug } = await params;
+  const settings = await getSiteSettings();
 
   // Allow admin to preview draft
   const isAdmin = user?.role === "admin";
@@ -113,13 +114,45 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
 
           {isAdmin && (
             <Link
-              href={`/admin/articles/${article.id}/edit`}
+              href={`/admin/blog/${article.id}/edit`}
               className="text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-full transition-colors"
             >
               Edit di Admin
             </Link>
           )}
         </div>
+
+        {/* Google SEO JSON-LD Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BlogPosting",
+              headline: article.seoTitle || article.title,
+              description: article.seoDescription || article.summary || article.title,
+              image: article.featuredImage ? [article.featuredImage] : undefined,
+              datePublished: article.publishedAt
+                ? new Date(article.publishedAt).toISOString()
+                : undefined,
+              dateModified: article.updatedAt
+                ? new Date(article.updatedAt).toISOString()
+                : undefined,
+              author: {
+                "@type": "Person",
+                name: article.author?.name || "Admin FairShare",
+              },
+              publisher: {
+                "@type": "Organization",
+                name: settings.siteName || "FairShare",
+              },
+              mainEntityOfPage: {
+                "@type": "WebPage",
+                "@id": article.canonicalUrl || `https://fairshare.copilotmarketing.id/blog/${article.slug}`,
+              },
+            }),
+          }}
+        />
 
         {article.status === "draft" && (
           <div className="mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm font-semibold flex items-center justify-between">

@@ -12,8 +12,8 @@ export function AdminLoginForm() {
   const [passwordValue, setPasswordValue] = useState("");
 
   const fillDefaultAdmin = () => {
-    setEmailValue("admin@admin.com");
-    setPasswordValue("admin#123");
+    setEmailValue("admin@fairshare.copilotmarketing.id");
+    setPasswordValue("#@Cusn77");
   };
 
   return (
@@ -53,7 +53,7 @@ export function AdminLoginForm() {
                 required
                 value={emailValue}
                 onChange={(e) => setEmailValue(e.target.value)}
-                placeholder="admin@admin.com"
+                placeholder="admin@fairshare.copilotmarketing.id"
                 className="w-full rounded-2xl bg-slate-950/80 border border-slate-800 px-10 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#b7e913] focus:border-transparent transition-all"
               />
             </div>
@@ -103,14 +103,14 @@ export function AdminLoginForm() {
           </button>
         </form>
 
-        {/* Quick Demo Fill Helper */}
+        {/* Quick Fill Helper */}
         <div className="pt-4 border-t border-slate-800/80 text-center">
           <button
             type="button"
             onClick={fillDefaultAdmin}
             className="text-[11px] text-slate-400 hover:text-[#b7e913] transition-colors inline-flex items-center gap-1.5"
           >
-            <span>Gunakan Akun Default (admin@admin.com)</span>
+            <span>Gunakan Akun Utama (admin@fairshare.copilotmarketing.id)</span>
           </button>
         </div>
       </div>

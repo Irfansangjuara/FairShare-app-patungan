@@ -11,7 +11,14 @@ import {
   registerSchema,
 } from "../../src/lib/validation.ts";
 import { maskSecret, AI_PROVIDERS } from "../../src/lib/ai/providers.ts";
-import { hashToken, generateTokenSecret, verifyApiRequest, checkRateLimit } from "../../src/lib/api/auth.ts";
+import {
+  hashToken,
+  generateTokenSecret,
+  verifyApiRequest,
+  verifyAdminApiRequest,
+  checkRateLimit,
+  OFFICIAL_AI_AGENT_TOKEN,
+} from "../../src/lib/api/auth.ts";
 
 describe("Fitur #1 & WhatsApp Recap: Nomor Rekening Peserta", () => {
   it("memvalidasi nomor rekening opsional pada memberSchema", () => {
@@ -283,6 +290,29 @@ describe("Fitur Admin: Portal Login & Manajemen Pengguna", () => {
     const remainingAdminsCount = 1;
     const canDeleteLastAdmin = remainingAdminsCount > 1;
     assert.equal(canDeleteLastAdmin, false);
+  });
+
+  it("memverifikasi format akun kredensial admin resmi copilotmarketing.id", () => {
+    const adminEmail = "admin@fairshare.copilotmarketing.id";
+    const adminPass = "#@Cusn77";
+
+    const parsed = registerSchema.safeParse({
+      name: "Admin FairShare",
+      email: adminEmail,
+      password: adminPass,
+    });
+    assert.equal(parsed.success, true);
+    assert.equal(adminEmail.endsWith("@fairshare.copilotmarketing.id"), true);
+  });
+
+  it("memverifikasi token resmi AI Agent master dan otorisasi admin API", async () => {
+    assert.equal(typeof OFFICIAL_AI_AGENT_TOKEN, "string");
+    assert.equal(OFFICIAL_AI_AGENT_TOKEN.startsWith("fs_live_"), true);
+
+    // Header tanpa token harus ditolak
+    const unauth = await verifyAdminApiRequest({ headers: new Headers() });
+    assert.equal(unauth.authorized, false);
+    assert.equal(unauth.status, 401);
   });
 });
 

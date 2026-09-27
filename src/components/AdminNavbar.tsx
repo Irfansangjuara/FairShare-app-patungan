@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShieldCheck, FileText, Globe, Settings, ArrowLeft, ExternalLink, Users, LogOut } from "lucide-react";
+import { ShieldCheck, FileText, Globe, Settings, ArrowLeft, ExternalLink, Users, LogOut, Bot } from "lucide-react";
 import { adminLogoutAction } from "@/server/actions/auth";
 
 interface AdminNavbarProps {
@@ -20,7 +20,8 @@ export function AdminNavbar({ user }: AdminNavbarProps) {
   const navLinks = [
     { href: "/admin", label: "Overview", icon: ShieldCheck, exact: true },
     { href: "/admin/users", label: "Pengguna", icon: Users, exact: false },
-    { href: "/admin/articles", label: "Artikel Blog", icon: FileText, exact: false },
+    { href: "/admin/blog", label: "Artikel Blog", icon: FileText, exact: false },
+    { href: "/admin/agent", label: "AI Agent & API", icon: Bot, exact: false },
     { href: "/admin/pages", label: "Halaman CMS", icon: Globe, exact: false },
     { href: "/admin/seo", label: "SEO Global", icon: Settings, exact: false },
   ];

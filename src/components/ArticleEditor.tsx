@@ -103,7 +103,7 @@ export function ArticleEditor({ initialData }: ArticleEditorProps) {
             : "Draft artikel berhasil disimpan!"
         );
         setTimeout(() => {
-          router.push("/admin/articles");
+          router.push("/admin/blog");
         }, 1200);
       }
     });
@@ -123,7 +123,7 @@ export function ArticleEditor({ initialData }: ArticleEditorProps) {
       {/* Top action bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <Link
-          href="/admin/articles"
+          href="/admin/blog"
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-900"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
