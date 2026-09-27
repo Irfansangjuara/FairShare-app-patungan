@@ -247,7 +247,7 @@ Menciptakan transparansi dan keadilan finansial dalam setiap kegiatan bersama de
 
 ### Saluran Komunikasi
 - **Email Dukungan**: support@copilotmarketing.id
-- **WhatsApp Support**: +62 812-3456-7890
+- **WhatsApp Support**: +62 823-5020-3300
 - **Jam Operasional**: Senin – Jumat, 09:00 – 17:00 WIB
 
 Silakan tinggalkan pesan kapan saja, dan kami akan merespons dalam waktu 1x24 jam kerja.`,
@@ -321,6 +321,13 @@ Kami berusaha memastikan sistem perhitungan akurat dan bebas dari kesalahan algo
         ON CONFLICT (key) DO NOTHING;
       `);
     }
+
+    // Update existing contact page content if it has the old phone number
+    await db.execute(sql`
+      UPDATE site_pages 
+      SET content = REPLACE(content, '+62 812-3456-7890', '+62 823-5020-3300') 
+      WHERE content LIKE '%+62 812-3456-7890%';
+    `);
 
     isSchemaEnsured = true;
     console.log("✓ Database schema, admin user, and default CMS pages verified successfully");

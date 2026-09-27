@@ -54,7 +54,7 @@ export default async function ContactPage() {
 
 ### Saluran Komunikasi
 - **Email Dukungan**: support@copilotmarketing.id
-- **WhatsApp Support**: +62 812-3456-7890
+- **WhatsApp Support**: +62 823-5020-3300
 - **Jam Operasional**: Senin – Jumat, 09:00 – 17:00 WIB
 
 Silakan tinggalkan pesan kapan saja, dan kami akan merespons dalam waktu 1x24 jam kerja.`,
