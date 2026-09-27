@@ -37,9 +37,22 @@ export async function generateMetadata({
     openGraph: {
       title: article.seoTitle || article.title,
       description: article.seoDescription || article.summary || article.title,
-      images: article.featuredImage ? [article.featuredImage] : undefined,
+      images: [
+        {
+          url: article.featuredImage || settings.defaultOgImage || "/assets/img/fair-share-cover.webp",
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        },
+      ],
       type: "article",
       publishedTime: article.publishedAt ? new Date(article.publishedAt).toISOString() : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: article.seoTitle || article.title,
+      description: article.seoDescription || article.summary || article.title,
+      images: [article.featuredImage || settings.defaultOgImage || "/assets/img/fair-share-cover.webp"],
     },
   };
 }

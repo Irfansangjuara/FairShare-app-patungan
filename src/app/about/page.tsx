@@ -10,18 +10,42 @@ import { WhatsAppFloatingButton } from "../../components/WhatsAppFloatingButton"
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getSitePageByKey("about");
   const settings = await getSiteSettings();
+  const title = page?.seoTitle || `Tentang Fair Share | Kelola Patungan & Pelunasan Adil`;
+  const description =
+    page?.seoDescription ||
+    "Bukan sekadar bagi tagihan, Fair Share bikin patungan trip, makan bareng, dan liburan terasa adil tanpa drama spreadsheet.";
+  const ogImageUrl = page?.ogImage || settings.defaultOgImage || "/assets/img/fair-share-cover.webp";
 
   return {
-    title: page?.seoTitle || `Tentang Fair Share | Kelola Patungan & Pelunasan Adil`,
-    description:
-      page?.seoDescription ||
-      "Bukan sekadar bagi tagihan, Fair Share bikin patungan trip, makan bareng, dan liburan terasa adil tanpa drama spreadsheet.",
+    title,
+    description,
     alternates: {
       canonical: page?.canonicalUrl || "/about",
     },
     robots: {
       index: !page?.isNoindex,
       follow: !page?.isNoindex,
+    },
+    openGraph: {
+      title,
+      description,
+      url: "https://app-fairshare.vercel.app/about",
+      siteName: settings.siteName,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImageUrl],
     },
   };
 }

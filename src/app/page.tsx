@@ -11,14 +11,39 @@ import { getSiteSettings } from "../server/queries";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
+  const title = `${settings.siteName} | Bereskan Patungan Trip Tanpa Bingung`;
+  const description =
+    settings.defaultDescription ||
+    "Fair Share mengubah catatan pengeluaran grup yang tercecer menjadi satu jawaban pasti: siapa membayar siapa, berapa nominal rupiahnya, dan apakah sudah lunas.";
+  const ogImageUrl = settings.defaultOgImage || "/assets/img/fair-share-cover.webp";
 
   return {
-    title: `${settings.siteName} | Bereskan Patungan Trip Tanpa Bingung`,
-    description:
-      settings.defaultDescription ||
-      "Fair Share mengubah catatan pengeluaran grup yang tercecer menjadi satu jawaban pasti: siapa membayar siapa, berapa nominal rupiahnya, dan apakah sudah lunas.",
+    title,
+    description,
     alternates: {
       canonical: "/",
+    },
+    openGraph: {
+      title,
+      description,
+      url: "https://app-fairshare.vercel.app",
+      siteName: settings.siteName,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: "FairShare — Aplikasi Patungan & Pelunasan Cerdas",
+        },
+      ],
+      type: "website",
+      locale: "id_ID",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImageUrl],
     },
   };
 }

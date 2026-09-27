@@ -8,11 +8,36 @@ import { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
+  const title = `Blog & Panduan Finansial Trip | ${settings.siteName}`;
+  const description = "Tips, panduan, dan artikel seputar cara mudah mengelola patungan, liburan hemat, dan keuangan bersama.";
+  const ogImageUrl = settings.defaultOgImage || "/assets/img/fair-share-cover.webp";
+
   return {
-    title: `Blog & Panduan Finansial Trip | ${settings.siteName}`,
-    description: "Tips, panduan, dan artikel seputar cara mudah mengelola patungan, liburan hemat, dan keuangan bersama.",
+    title,
+    description,
     alternates: {
       canonical: "/blog",
+    },
+    openGraph: {
+      title,
+      description,
+      url: "https://app-fairshare.vercel.app/blog",
+      siteName: settings.siteName,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImageUrl],
     },
   };
 }

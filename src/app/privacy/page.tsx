@@ -5,16 +5,40 @@ import { Metadata } from "next";
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getSitePageByKey("privacy");
   const settings = await getSiteSettings();
+  const title = page?.seoTitle || `Kebijakan Privasi | ${settings.siteName}`;
+  const description = page?.seoDescription || "Kebijakan privasi dan perlindungan data pengguna FairShare.";
+  const ogImageUrl = page?.ogImage || settings.defaultOgImage || "/assets/img/fair-share-cover.webp";
 
   return {
-    title: page?.seoTitle || `Kebijakan Privasi | ${settings.siteName}`,
-    description: page?.seoDescription || "Kebijakan privasi dan perlindungan data pengguna FairShare.",
+    title,
+    description,
     alternates: {
       canonical: page?.canonicalUrl || "/privacy",
     },
     robots: {
       index: !page?.isNoindex,
       follow: !page?.isNoindex,
+    },
+    openGraph: {
+      title,
+      description,
+      url: "https://app-fairshare.vercel.app/privacy",
+      siteName: settings.siteName,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImageUrl],
     },
   };
 }

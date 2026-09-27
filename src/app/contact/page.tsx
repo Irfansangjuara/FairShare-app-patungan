@@ -5,16 +5,40 @@ import { Metadata } from "next";
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getSitePageByKey("contact");
   const settings = await getSiteSettings();
+  const title = page?.seoTitle || `Kontak & Bantuan | ${settings.siteName}`;
+  const description = page?.seoDescription || "Hubungi tim FairShare untuk bantuan, saran fitur, dan konsultasi.";
+  const ogImageUrl = page?.ogImage || settings.defaultOgImage || "/assets/img/fair-share-cover.webp";
 
   return {
-    title: page?.seoTitle || `Kontak & Bantuan | ${settings.siteName}`,
-    description: page?.seoDescription || "Hubungi tim FairShare untuk bantuan, saran fitur, dan konsultasi.",
+    title,
+    description,
     alternates: {
       canonical: page?.canonicalUrl || "/contact",
     },
     robots: {
       index: !page?.isNoindex,
       follow: !page?.isNoindex,
+    },
+    openGraph: {
+      title,
+      description,
+      url: "https://app-fairshare.vercel.app/contact",
+      siteName: settings.siteName,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImageUrl],
     },
   };
 }

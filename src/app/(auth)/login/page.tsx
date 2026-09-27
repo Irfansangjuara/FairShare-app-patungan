@@ -13,13 +13,37 @@ interface LoginPageProps {
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
+  const title = `Masuk Fair Share | Kelola Patungan & Pelunasan`;
+  const description =
+    "Masuk ke Fair Share untuk kelola patungan, cek saldo anggota, dan pantau status pelunasan grup.";
+  const ogImageUrl = settings.defaultOgImage || "/assets/img/fair-share-cover.webp";
 
   return {
-    title: `Masuk Fair Share | Kelola Patungan & Pelunasan`,
-    description:
-      "Masuk ke Fair Share untuk kelola patungan, cek saldo anggota, dan pantau status pelunasan grup.",
+    title,
+    description,
     alternates: {
       canonical: "/login",
+    },
+    openGraph: {
+      title,
+      description,
+      url: "https://app-fairshare.vercel.app/login",
+      siteName: settings.siteName,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImageUrl],
     },
   };
 }

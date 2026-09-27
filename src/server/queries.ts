@@ -137,7 +137,7 @@ export async function getSiteSettings() {
       key: "global",
       siteName: "FairShare",
       defaultDescription: "Aplikasi patungan dan pelunasan trip cerdas.",
-      defaultOgImage: null,
+      defaultOgImage: "/assets/img/fair-share-cover.webp",
       titleTemplate: "%s | FairShare",
     };
   } catch (err) {
@@ -146,7 +146,7 @@ export async function getSiteSettings() {
       key: "global",
       siteName: "FairShare",
       defaultDescription: "Aplikasi patungan dan pelunasan trip cerdas.",
-      defaultOgImage: null,
+      defaultOgImage: "/assets/img/fair-share-cover.webp",
       titleTemplate: "%s | FairShare",
     };
   }

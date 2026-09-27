@@ -13,13 +13,37 @@ interface RegisterPageProps {
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
+  const title = `Daftar Fair Share | Mulai Patungan Gratis`;
+  const description =
+    "Daftar Fair Share dan mulai kelola patungan trip secara adil, rapi, dan bebas pusing.";
+  const ogImageUrl = settings.defaultOgImage || "/assets/img/fair-share-cover.webp";
 
   return {
-    title: `Daftar Fair Share | Mulai Patungan Gratis`,
-    description:
-      "Daftar Fair Share dan mulai kelola patungan trip secara adil, rapi, dan bebas pusing.",
+    title,
+    description,
     alternates: {
       canonical: "/register",
+    },
+    openGraph: {
+      title,
+      description,
+      url: "https://app-fairshare.vercel.app/register",
+      siteName: settings.siteName,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImageUrl],
     },
   };
 }

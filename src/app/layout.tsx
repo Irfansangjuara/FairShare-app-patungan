@@ -48,6 +48,20 @@ export const metadata: Metadata = {
       "Hitung jatah patungan, saldo anggota, rekomendasi transfer pelunasan, checklist lunas, dan salin rekap siap kirim ke WhatsApp.",
     url: "https://app-fairshare.vercel.app",
     siteName: "FairShare",
+    images: [
+      {
+        url: "/assets/img/fair-share-cover.webp",
+        width: 1200,
+        height: 630,
+        alt: "FairShare — Aplikasi Patungan & Pelunasan Cerdas",
+      },
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "FairShare — Aplikasi Patungan & Pelunasan Cerdas",
+      },
+    ],
     locale: "id_ID",
     type: "website",
   },
@@ -56,6 +70,7 @@ export const metadata: Metadata = {
     title: "FairShare — Aplikasi Patungan & Pelunasan Cerdas",
     description:
       "Hitung jatah patungan, saldo anggota, dan rekomendasi transfer pelunasan otomatis.",
+    images: ["/assets/img/fair-share-cover.webp"],
   },
   alternates: {
     canonical: "/",

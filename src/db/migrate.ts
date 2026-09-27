@@ -208,15 +208,17 @@ export async function ensureDatabaseSchema(): Promise<void> {
 
     // 4. Seed default site settings if not exists
     await db.execute(sql`
-      INSERT INTO site_settings (id, key, site_name, default_description, title_template)
+      INSERT INTO site_settings (id, key, site_name, default_description, title_template, default_og_image)
       VALUES (
         gen_random_uuid(),
         'global',
         'FairShare',
         'Aplikasi kalkulator patungan dan pelunasan pengeluaran trip cerdas tanpa selisih Rp 1 pun.',
-        '%s | FairShare'
+        '%s | FairShare',
+        '/assets/img/fair-share-cover.webp'
       )
-      ON CONFLICT (key) DO NOTHING;
+      ON CONFLICT (key) DO UPDATE SET 
+        default_og_image = COALESCE(site_settings.default_og_image, '/assets/img/fair-share-cover.webp');
     `);
 
     // 5. Seed default standard pages if not exist
