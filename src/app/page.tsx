@@ -5,6 +5,7 @@ import { getSessionUser } from "../lib/auth";
 import { FairShareNavbar } from "../components/FairShareNavbar";
 import { PublicFooter } from "../components/PublicFooter";
 import { WhatsAppFloatingButton } from "../components/WhatsAppFloatingButton";
+import SituationTestimonialSlider from "../components/SituationTestimonialSlider";
 import { getSiteSettings } from "../server/queries";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -72,45 +73,6 @@ export default async function HomePage() {
       subtitle: "Mulai Sekarang",
       tag: "Tanpa Ribet",
       bg: "bg-emerald-400",
-    },
-  ];
-
-  const testimonials = [
-    {
-      quote:
-        "Semua pengeluaran trip langsung kelihatan. Gak ada lagi yang bingung harus transfer ke siapa.",
-      author: "Simulasi Trip Kantor",
-      avatar: "/assets/img/fair-share-p1.jpg",
-    },
-    {
-      quote:
-        "Rekapnya rapi banget buat dibagikan ke grup. Tinggal salin, kirim, lalu semua langsung paham.",
-      author: "Simulasi Grup Teman",
-      avatar: "/assets/img/fair-share-p2.jpg",
-    },
-    {
-      quote:
-        "Biasanya aku hitung ulang berkali-kali. Sekarang jatah dan saldo tiap orang langsung jelas.",
-      author: "Simulasi Liburan Keluarga",
-      avatar: "/assets/img/fair-share-p3.jpg",
-    },
-    {
-      quote:
-        "Tambah anggota dan pengeluaran gampang banget. Hasil pelunasannya langsung siap dicek.",
-      author: "Simulasi Acara Komunitas",
-      avatar: "/assets/img/fair-share-p4.jpg",
-    },
-    {
-      quote:
-        "Checklist lunasnya bikin tenang. Gak perlu tanya satu-satu siapa yang sudah transfer.",
-      author: "Simulasi Panitia Event",
-      avatar: "/assets/img/fair-share-p5.jpg",
-    },
-    {
-      quote:
-        "Cocok buat trip rame-rame. Bahkan sisa Rp 1 tetap dibagi dengan jelas dan konsisten.",
-      author: "Simulasi Perjalanan Grup",
-      avatar: "/assets/img/fair-share-p6.jpg",
     },
   ];
 
@@ -664,54 +626,14 @@ export default async function HomePage() {
       </section>
 
       {/* Testimonials / Simulasi Pengalaman */}
-      <section className="relative py-12 bg-gradient-to-b from-gray-100 md:py-20">
+      <section className="relative py-8 bg-gradient-to-b from-gray-100 md:py-16">
         <div className="px-4 mx-auto max-w-6xl">
-          <h2 className="mb-10 text-4xl md:text-5xl font-medium text-center tracking-tight">
-            Contoh Situasi Patungan yang Lebih Rapi
-          </h2>
+          <div>
+            <h2 className="mb-8 text-5xl font-medium text-center md:mb-16 max-md:text-3xl">
+              Contoh Situasi Patungan yang Lebih Rapi
+            </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {testimonials.map((item, idx) => (
-              <div
-                key={idx}
-                className="flex flex-col justify-between gap-4 p-6 bg-white rounded-3xl shadow-xs border border-gray-100"
-              >
-                <div className="flex gap-1 text-yellow-400">
-                  {[...Array(5)].map((_, starIdx) => (
-                    <svg
-                      key={starIdx}
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="size-5"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  ))}
-                </div>
-
-                <p className="text-gray-700 leading-relaxed text-sm">
-                  &ldquo;{item.quote}&rdquo;
-                </p>
-
-                <div className="flex justify-between items-center pt-2 border-t border-gray-100">
-                  <div className="font-semibold text-xs text-gray-900">
-                    {item.author}
-                  </div>
-                  <Image
-                    className="rounded-full object-cover"
-                    src={item.avatar}
-                    width={40}
-                    height={40}
-                    alt={item.author}
-                  />
-                </div>
-              </div>
-            ))}
+            <SituationTestimonialSlider />
           </div>
         </div>
       </section>
