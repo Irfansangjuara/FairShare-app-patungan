@@ -516,9 +516,9 @@ export default async function HomePage() {
       {/* 3 Langkah Section */}
       <section className="relative isolate py-12 bg-gradient-to-t from-gray-100 md:py-20 overflow-hidden">
         <div className="px-4 mx-auto max-w-6xl relative z-10">
-          <div className="gap-8 justify-between items-center md:flex">
-            <div className="flex flex-col items-center">
-              <div className="relative mb-6 text-center max-md:max-w-[220px] inline-block p-4 mx-auto text-white rounded-2xl bg-orange-700 text-sm font-semibold shadow-md">
+          <div className="gap-8 justify-between items-center md:flex relative z-20">
+            <div className="flex flex-col items-center relative z-20">
+              <div className="relative mb-6 text-center max-md:max-w-[220px] inline-block p-4 mx-auto text-white rounded-2xl bg-orange-700 text-sm font-semibold shadow-md after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-[6px] after:border-r-[6px] after:border-t-[6px] after:border-l-transparent after:border-b-transparent after:border-r-transparent after:border-t-orange-700">
                 Gak perlu spreadsheet. Gak perlu debat.
               </div>
 
@@ -531,15 +531,15 @@ export default async function HomePage() {
               />
             </div>
 
-            <div className="mb-8 w-full max-w-2xl">
+            <div className="mb-8 w-full max-w-2xl relative z-20">
               <h2 className="mb-8 text-4xl md:text-5xl font-medium text-center tracking-tight leading-tight">
                 3 Langkah
                 <br />
                 Patungan Langsung Beres
               </h2>
 
-              <div className="grid overflow-hidden grid-cols-1 mb-8 rounded-3xl md:grid-cols-3 md:gap-4 gap-3">
-                <div className="p-6 text-center bg-white shadow-xs rounded-2xl border border-gray-100">
+              <div className="grid grid-cols-1 mb-8 rounded-3xl md:grid-cols-3 md:gap-4 gap-3 relative z-30">
+                <div className="p-6 text-center bg-white shadow-md rounded-2xl border border-gray-100 relative z-30">
                   <div className="flex items-center justify-center mx-auto mb-3 w-8 h-8 font-bold text-gray-900 rounded-full bg-theme-500">
                     1
                   </div>
@@ -548,7 +548,7 @@ export default async function HomePage() {
                   </div>
                 </div>
 
-                <div className="p-6 text-center bg-white shadow-xs rounded-2xl border border-gray-100">
+                <div className="p-6 text-center bg-white shadow-md rounded-2xl border border-gray-100 relative z-30">
                   <div className="flex items-center justify-center mx-auto mb-3 w-8 h-8 font-bold text-gray-900 rounded-full bg-theme-500">
                     2
                   </div>
@@ -557,7 +557,7 @@ export default async function HomePage() {
                   </div>
                 </div>
 
-                <div className="p-6 text-center bg-white shadow-xs rounded-2xl border border-gray-100">
+                <div className="p-6 text-center bg-white shadow-md rounded-2xl border border-gray-100 relative z-30">
                   <div className="flex items-center justify-center mx-auto mb-3 w-8 h-8 font-bold text-gray-900 rounded-full bg-theme-500">
                     3
                   </div>
@@ -567,7 +567,7 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              <div className="flex justify-center">
+              <div className="flex justify-center relative z-20">
                 <Link
                   href={user ? "/dashboard" : "/register"}
                   className="btn primary btn-lg group shadow-sm"
@@ -594,7 +594,7 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="overflow-hidden absolute right-0 left-0 bottom-10 mx-auto w-full h-full pointer-events-none z-0">
+          <div className="overflow-hidden absolute right-0 left-0 bottom-10 mx-auto w-full h-full pointer-events-none -z-10">
             <img
               className="absolute right-0 left-0 mx-auto animate-slow-cloud min-w-[900px] md:min-w-[1200px] w-full"
               src="/assets/img/fair-share-cloud2.svg"
