@@ -1,101 +1,127 @@
-import Link from "next/link";
-import { GoogleLoginButton } from "../../../components/GoogleLoginButton";
+import Image from "next/image";
+import { Metadata } from "next";
+import { getSessionUser } from "../../../lib/auth";
+import { FairShareNavbar } from "../../../components/FairShareNavbar";
+import { PublicFooter } from "../../../components/PublicFooter";
+import { WhatsAppFloatingButton } from "../../../components/WhatsAppFloatingButton";
 import { LoginForm } from "../../../components/LoginForm";
-import { Wallet, ShieldCheck } from "lucide-react";
+import { getSiteSettings } from "../../../server/queries";
 
 interface LoginPageProps {
   searchParams: Promise<{ error?: string }>;
 }
 
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+
+  return {
+    title: `Masuk Fair Share | Kelola Patungan & Pelunasan`,
+    description:
+      "Masuk ke Fair Share untuk kelola patungan, cek saldo anggota, dan pantau status pelunasan grup.",
+    alternates: {
+      canonical: "/login",
+    },
+  };
+}
+
 export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const user = await getSessionUser();
   const resolvedParams = searchParams ? await searchParams : {};
-  const error = resolvedParams?.error;
+  const error = resolvedParams?.error ? decodeURIComponent(resolvedParams.error) : undefined;
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center px-3.5 sm:px-6 py-8 sm:py-12 bg-[#F8FAFC]">
-      <div className="w-full max-w-md space-y-5 sm:space-y-6">
-        {/* Brand header */}
-        <div className="text-center space-y-2">
-          <Link href="/" className="inline-flex items-center gap-2 mb-1 group">
-            <div className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-black text-[#b7e913] shadow-md group-hover:scale-105 transition-transform">
-              <Wallet className="h-5 w-5 sm:h-6 sm:w-6" />
-            </div>
-            <span className="text-2xl font-bold tracking-tight text-slate-950">FairShare</span>
-          </Link>
-          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900">
-            Masuk ke Akun Anda
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-500 max-w-xs mx-auto">
-            Akses instan untuk kelola patungan dan pantau status pelunasan trip
-          </p>
-        </div>
+    <div className="min-h-screen flex flex-col bg-white text-gray-900 font-sans">
+      {/* Floating Header */}
+      <FairShareNavbar user={user} />
 
-        {/* Card Form */}
-        <div className="card-diskon p-5 sm:p-8 bg-white border border-slate-200 space-y-5">
-          {/* Segmented Switcher Masuk / Daftar */}
-          <div className="grid grid-cols-2 p-1 rounded-2xl bg-slate-100 border border-slate-200/80 text-xs sm:text-sm font-semibold">
-            <div className="py-2 text-center rounded-xl bg-white text-slate-900 shadow-sm font-bold">
-              Masuk
+      {/* Main Login Section */}
+      <section className="relative py-8 bg-gradient-to-t from-white md:py-16 overflow-hidden flex-1">
+        <div className="px-4 mx-auto max-w-6xl">
+          <div className="gap-4 justify-between items-center md:flex">
+            <div className="mx-auto mb-8 w-full max-w-4xl">
+              <h1 className="mb-8 text-4xl font-medium text-center md:mb-16 max-md:text-3xl tracking-tight">
+                Masuk ke Akun Fair Share
+              </h1>
+
+              <div className="justify-between items-center mx-auto w-full max-w-4xl md:flex gap-8">
+                {/* Form Column */}
+                <div className="md:w-1/2">
+                  <div className="mt-5">
+                    {/* Google OAuth Button */}
+                    <a
+                      href="/api/auth/google"
+                      className="w-full btn shadow-xs flex items-center justify-center gap-3 border border-gray-200 hover:bg-gray-50"
+                    >
+                      <svg
+                        className="w-5 h-auto shrink-0"
+                        width="46"
+                        height="47"
+                        viewBox="0 0 46 47"
+                        fill="none"
+                      >
+                        <path
+                          d="M46 24.0287C46 22.09 45.8533 20.68 45.5013 19.2112H23.4694V27.9356H36.4069C36.1429 30.1094 34.7347 33.37 31.5957 35.5731L31.5663 35.8669L38.5191 41.2719L38.9885 41.3306C43.4477 37.2181 46 31.1669 46 24.0287Z"
+                          fill="#4285F4"
+                        />
+                        <path
+                          d="M23.4694 47C29.8061 47 35.1161 44.9144 39.0179 41.3012L31.625 35.5437C29.6301 36.9244 26.9898 37.8937 23.4987 37.8937C17.2793 37.8937 12.0281 33.7812 10.1505 28.1412L9.88649 28.1706L2.61097 33.7812L2.52296 34.0456C6.36608 41.7125 14.287 47 23.4694 47Z"
+                          fill="#34A853"
+                        />
+                        <path
+                          d="M10.1212 28.1413C9.62245 26.6725 9.32908 25.1156 9.32908 23.5C9.32908 21.8844 9.62245 20.3275 10.0918 18.8588V18.5356L2.75765 12.8369L2.52296 12.9544C0.909439 16.1269 0 19.7106 0 23.5C0 27.2894 0.909439 30.8731 2.49362 34.0456L10.1212 28.1413Z"
+                          fill="#FBBC05"
+                        />
+                        <path
+                          d="M23.4694 9.07688C27.8699 9.07688 30.8622 10.9863 32.5344 12.5725L39.1645 6.11C35.0867 2.32063 29.8061 0 23.4694 0C14.287 0 6.36607 5.2875 2.49362 12.9544L10.0918 18.8588C11.9987 13.1894 17.25 9.07688 23.4694 9.07688Z"
+                          fill="#EB4335"
+                        />
+                      </svg>
+                      <span className="font-medium text-gray-700">Lanjutkan dengan Google</span>
+                    </a>
+
+                    {/* Divider */}
+                    <div className="flex items-center py-6 text-sm text-gray-400 before:flex-1 before:border-t before:border-gray-200 before:me-6 after:flex-1 after:border-t after:border-gray-200 after:ms-6">
+                      Atau masuk dengan email atau WhatsApp
+                    </div>
+
+                    {/* Login Form */}
+                    <LoginForm initialError={error} />
+                  </div>
+                </div>
+
+                {/* Mascot Column */}
+                <div className="md:w-1/2 flex justify-center">
+                  <Image
+                    className="ml-auto w-4/5 max-md:hidden animate-slow-cloud-up object-contain"
+                    width={230}
+                    height={281}
+                    src="/assets/img/fair-share-maskot5.webp"
+                    alt="Maskot Fair Share"
+                    priority
+                  />
+                </div>
+              </div>
             </div>
-            <Link
-              href="/register"
-              className="py-2 text-center rounded-xl text-slate-600 hover:text-slate-950 transition-colors"
-            >
-              Daftar Baru
-            </Link>
           </div>
 
-          {error && (
-            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-800">
-              {decodeURIComponent(error)}
-            </div>
-          )}
-
-          <div className="space-y-4 pt-1">
-            {/* Google OAuth Login */}
-            <GoogleLoginButton size="large" label="Masuk dengan Google" />
-
-            {/* Pemisah Alternatif Email */}
-            <div className="relative my-2">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-200" />
-              </div>
-              <div className="relative flex justify-center text-xs">
-                <span className="bg-white px-3 font-semibold text-slate-400">
-                  atau masuk dengan email
-                </span>
-              </div>
-            </div>
-
-            {/* Form Masuk dengan Email & Kata Sandi */}
-            <LoginForm />
-
-            <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100 text-xs text-slate-600 space-y-2">
-              <div className="flex items-center gap-2 font-semibold text-slate-800">
-                <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
-                <span>Otentikasi Resmi Google</span>
-              </div>
-              <p className="text-[11px] leading-relaxed text-slate-500">
-                Aman, cepat, dan tanpa perlu repot mengingat password. FairShare hanya membaca profil dasar publik Google Anda.
-              </p>
-            </div>
-          </div>
-
-          <div className="text-center text-xs text-slate-500 pt-3 border-t border-slate-100">
-            Belum punya akun?{" "}
-            <Link href="/register" className="font-bold text-slate-900 hover:underline">
-              Daftar gratis di sini
-            </Link>
+          {/* Cloud Background Layer */}
+          <div className="overflow-hidden absolute right-0 bottom-0 left-0 mx-auto w-full h-full -z-10 pointer-events-none">
+            <Image
+              className="absolute right-0 left-0 mx-auto animate-slow-cloud bottom-0"
+              src="/assets/img/fair-share-cloud2.svg"
+              alt=""
+              width={1400}
+              height={300}
+            />
           </div>
         </div>
+      </section>
 
-        <div className="text-center">
-          <Link href="/" className="text-xs font-semibold text-slate-500 hover:text-slate-900 underline">
-            ← Kembali ke Halaman Utama
-          </Link>
-        </div>
-      </div>
+      {/* Footer */}
+      <PublicFooter />
+
+      {/* Floating WhatsApp */}
+      <WhatsAppFloatingButton />
     </div>
   );
 }
-

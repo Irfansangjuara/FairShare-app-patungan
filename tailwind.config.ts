@@ -13,6 +13,9 @@ const config: Config = {
           400: "#b7e913",
           500: "#a3d40e",
         },
+        theme: {
+          500: "#b7e913",
+        },
       },
       spacing: {
         4.5: "1.125rem",

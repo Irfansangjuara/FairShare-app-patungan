@@ -1,10 +1,25 @@
 import { z } from "zod";
 
-export const registerSchema = z.object({
-  name: z.string().trim().min(2, "Nama minimal 2 karakter").max(100, "Nama maksimal 100 karakter"),
-  email: z.string().trim().email("Format email tidak valid"),
-  password: z.string().min(6, "Kata sandi minimal 6 karakter"),
-});
+export const registerSchema = z
+  .object({
+    name: z.string().trim().min(2, "Nama minimal 2 karakter").max(100, "Nama maksimal 100 karakter"),
+    email: z.string().trim().email("Format email tidak valid"),
+    phone: z.string().optional().nullable(),
+    password: z.string().min(6, "Kata sandi minimal 6 karakter"),
+    password_confirmation: z.string().optional().nullable(),
+  })
+  .refine(
+    (data) => {
+      if (data.password_confirmation && data.password !== data.password_confirmation) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Konfirmasi kata sandi tidak cocok",
+      path: ["password_confirmation"],
+    }
+  );
 
 export const loginSchema = z.object({
   email: z.string().trim().email("Format email tidak valid"),

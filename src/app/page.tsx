@@ -1,274 +1,825 @@
 import Link from "next/link";
+import Image from "next/image";
+import { Metadata } from "next";
 import { getSessionUser } from "../lib/auth";
-import { Navbar } from "../components/Navbar";
+import { FairShareNavbar } from "../components/FairShareNavbar";
 import { PublicFooter } from "../components/PublicFooter";
-import {
-  Wallet,
-  ArrowRight,
-  CheckCircle2,
-  Copy,
-  Receipt,
-  Users,
-  ShieldCheck,
-  Smartphone,
-} from "lucide-react";
+import { WhatsAppFloatingButton } from "../components/WhatsAppFloatingButton";
+import { getSiteSettings } from "../server/queries";
 
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+
+  return {
+    title: `${settings.siteName} | Bereskan Patungan Trip Tanpa Bingung`,
+    description:
+      settings.defaultDescription ||
+      "Fair Share mengubah catatan pengeluaran grup yang tercecer menjadi satu jawaban pasti: siapa membayar siapa, berapa nominal rupiahnya, dan apakah sudah lunas.",
+    alternates: {
+      canonical: "/",
+    },
+  };
+}
 
 export default async function HomePage() {
   const user = await getSessionUser();
 
+  const featureCards = [
+    {
+      title: "Catat Pengeluaran",
+      subtitle: "Satu Tempat",
+      tag: "Lebih Rapi",
+      bg: "bg-pink-400",
+    },
+    {
+      title: "Hitung Otomatis",
+      subtitle: "Jatah Masing-masing",
+      tag: "Presisi Rupiah",
+      bg: "bg-purple-400",
+    },
+    {
+      title: "Saldo Anggota",
+      subtitle: "Siapa Bayar Siapa",
+      tag: "Langsung Jelas",
+      bg: "bg-blue-400",
+    },
+    {
+      title: "Minim Transfer",
+      subtitle: "Pelunasan Ringkas",
+      tag: "Hemat Waktu",
+      bg: "bg-orange-400",
+    },
+    {
+      title: "Checklist Lunas",
+      subtitle: "Status Tersimpan",
+      tag: "Mudah Dipantau",
+      bg: "bg-teal-400",
+    },
+    {
+      title: "Rekap WhatsApp",
+      subtitle: "Siap Dibagikan",
+      tag: "Sekali Salin",
+      bg: "bg-red-400",
+    },
+    {
+      title: "Trip & Acara",
+      subtitle: "Semua Kebutuhan",
+      tag: "Fleksibel",
+      bg: "bg-yellow-400",
+    },
+    {
+      title: "Daftar Gratis",
+      subtitle: "Mulai Sekarang",
+      tag: "Tanpa Ribet",
+      bg: "bg-emerald-400",
+    },
+  ];
+
+  const testimonials = [
+    {
+      quote:
+        "Semua pengeluaran trip langsung kelihatan. Gak ada lagi yang bingung harus transfer ke siapa.",
+      author: "Simulasi Trip Kantor",
+      avatar: "/assets/img/fair-share-p1.jpg",
+    },
+    {
+      quote:
+        "Rekapnya rapi banget buat dibagikan ke grup. Tinggal salin, kirim, lalu semua langsung paham.",
+      author: "Simulasi Grup Teman",
+      avatar: "/assets/img/fair-share-p2.jpg",
+    },
+    {
+      quote:
+        "Biasanya aku hitung ulang berkali-kali. Sekarang jatah dan saldo tiap orang langsung jelas.",
+      author: "Simulasi Liburan Keluarga",
+      avatar: "/assets/img/fair-share-p3.jpg",
+    },
+    {
+      quote:
+        "Tambah anggota dan pengeluaran gampang banget. Hasil pelunasannya langsung siap dicek.",
+      author: "Simulasi Acara Komunitas",
+      avatar: "/assets/img/fair-share-p4.jpg",
+    },
+    {
+      quote:
+        "Checklist lunasnya bikin tenang. Gak perlu tanya satu-satu siapa yang sudah transfer.",
+      author: "Simulasi Panitia Event",
+      avatar: "/assets/img/fair-share-p5.jpg",
+    },
+    {
+      quote:
+        "Cocok buat trip rame-rame. Bahkan sisa Rp 1 tetap dibagi dengan jelas dan konsisten.",
+      author: "Simulasi Perjalanan Grup",
+      avatar: "/assets/img/fair-share-p6.jpg",
+    },
+  ];
+
+  const faqs = [
+    {
+      q: "Apa itu Fair Share?",
+      a: "Fair Share adalah aplikasi patungan untuk mencatat pengeluaran grup, menghitung jatah dan saldo anggota, lalu memberikan rekomendasi transfer pelunasan.",
+    },
+    {
+      q: "Apakah platform ini gratis?",
+      a: "Ya. Fair Share dapat digunakan gratis tanpa biaya tersembunyi untuk membantu patungan trip, keluarga, teman kantor, maupun kepanitiaan.",
+    },
+    {
+      q: "Bagaimana jatah patungan dihitung?",
+      a: "Semua nominal dihitung menggunakan bilangan Rupiah utuh. Total pengeluaran dibagi menjadi jatah anggota secara adil dan presisi.",
+    },
+    {
+      q: "Bagaimana jika total tidak habis dibagi?",
+      a: "Sisa Rupiah dialokasikan secara deterministik kepada anggota, sehingga total pembagian selalu tepat tanpa kehilangan Rp 1 pun.",
+    },
+    {
+      q: "Apa itu saldo anggota?",
+      a: "Saldo menunjukkan selisih antara jumlah yang sudah dibayar anggota dan jatahnya. Saldo positif berarti menerima, saldo negatif berarti membayar.",
+    },
+    {
+      q: "Bagaimana rekomendasi transfer dibuat?",
+      a: "Fair Share mencocokkan anggota yang perlu membayar dengan anggota yang perlu menerima, lalu menyusun daftar transfer pelunasan yang ringkas.",
+    },
+    {
+      q: "Apakah status pelunasan tersimpan?",
+      a: "Ya. Tandai transfer yang sudah lunas dan statusnya tetap tersimpan saat halaman dimuat ulang.",
+    },
+    {
+      q: "Bisa kirim rekap ke WhatsApp?",
+      a: "Bisa. Satu tombol menyalin rekap rapi berisi jatah, saldo, dan transfer agar siap ditempel ke grup WhatsApp.",
+    },
+    {
+      q: "Siapa yang cocok memakai Fair Share?",
+      a: "Fair Share cocok untuk trip teman kantor, liburan keluarga, acara komunitas, kepanitiaan, dan kebutuhan patungan grup lainnya.",
+    },
+    {
+      q: "Apakah masih perlu spreadsheet?",
+      a: "Tidak. Cukup buat event, tambahkan anggota, dan catat pengeluaran. Fair Share menghitung jatah, saldo, dan pelunasan otomatis.",
+    },
+  ];
+
   return (
-    <div className="min-h-full flex flex-col bg-[#F8FAFC]">
-      <Navbar user={user} />
+    <div className="min-h-screen flex flex-col bg-white text-gray-900 font-sans">
+      {/* Floating Header */}
+      <FairShareNavbar user={user} />
 
       {/* Hero Section */}
-      <main className="flex-1">
-        <section className="relative overflow-hidden py-16 sm:py-24 px-4 sm:px-6">
-          <div className="mx-auto max-w-4xl text-center space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-800 shadow-sm">
-              <span className="flex h-2 w-2 rounded-full bg-[#b7e913] animate-pulse" />
-              <span>Aplikasi Patungan & Pelunasan Generasi Baru</span>
+      <section className="relative overflow-hidden pt-6 pb-12">
+        <div className="px-4 pt-8 md:pt-16 mx-auto max-w-6xl text-center relative z-10">
+          <h1 className="mb-8 text-4xl font-medium md:text-7xl lg:text-7xl max-w-[28ch] mx-auto tracking-tight leading-tight">
+            Bereskan Patungan{" "}
+            <span className="px-4 py-0.5 rounded-full bg-theme-500 inline-block">
+              Trip
+            </span>{" "}
+            Tanpa Bingung
+            <div className="inline-block relative align-middle mx-2">
+              <span className="absolute flex justify-center items-center z-10 max-md:text-xs text-sm font-bold text-white h-full w-full !leading-none">
+                100%<br />GRATIS
+              </span>
+              <Image
+                src="/assets/img/fair-share-badge.svg"
+                width={90}
+                height={95}
+                className="inline-block max-md:w-14 animate-spin-super-slow"
+                alt="Badge 100% Gratis"
+              />
+            </div>
+            Hitung, Lunasi &amp; Beres
+          </h1>
+
+          <Image
+            src="/assets/img/fair-share-server.webp"
+            width={208}
+            height={189}
+            className="absolute max-w-52 right-[10%] top-[30%] -z-10 max-xl:hidden animate-slow-cloud-up object-contain"
+            alt="Server cloud Fair Share"
+          />
+
+          <p className="mx-auto max-w-xl text-lg sm:text-xl text-gray-500 mb-8 sm:mb-16 leading-relaxed">
+            Fair Share mengubah catatan pengeluaran grup yang tercecer menjadi satu jawaban pasti: siapa membayar siapa, berapa nominal rupiahnya, dan apakah sudah lunas.
+          </p>
+
+          <div className="justify-around items-center sm:flex">
+            <Image
+              className="max-md:max-w-24 max-sm:mb-6 mx-auto max-w-[230px] w-full object-contain"
+              width={230}
+              height={281}
+              src="/assets/img/fair-share-maskot1.webp"
+              alt="Maskot Fair Share 1"
+              priority
+            />
+
+            <div className="flex flex-col sm:flex-row flex-none mb-8 gap-3 justify-center items-center">
+              <Link href="/about" className="btn w-fit mx-auto btn-lg accent">
+                Kenali Fair Share
+              </Link>
+              <Link
+                href={user ? "/dashboard" : "/register"}
+                className="btn btn-lg primary group"
+              >
+                {user ? "Buka Dashboard" : "Mulai Patungan Gratis"}
+                <span className="has-arrow inline-flex ml-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="3"
+                    stroke="currentColor"
+                    className="size-4"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                    />
+                  </svg>
+                </span>
+              </Link>
             </div>
 
-            <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-950 leading-[1.15]">
-              Bereskan Patungan Trip{" "}
-              <span className="bg-gradient-to-r from-slate-950 via-slate-800 to-slate-600 bg-clip-text text-transparent">
-                Tanpa Bingung & Spreadsheet
-              </span>
-            </h1>
+            <Image
+              className="max-w-[230px] w-full max-sm:hidden mx-auto max-md:max-w-24 object-contain"
+              width={230}
+              height={281}
+              src="/assets/img/fair-share-maskot2.webp"
+              alt="Maskot Fair Share 2"
+              priority
+            />
+          </div>
+        </div>
 
-            <p className="mx-auto max-w-2xl text-base sm:text-lg text-slate-600 leading-relaxed">
-              FairShare mengubah catatan pengeluaran grup yang tercecer menjadi satu jawaban pasti:{" "}
-              <strong>siapa membayar siapa, berapa nominal rupiahnya, dan apakah sudah lunas</strong>.
+        <div className="overflow-hidden absolute right-0 left-0 -bottom-20 mx-auto w-full h-full -z-10 pointer-events-none">
+          <Image
+            className="absolute right-0 bottom-0 left-0 mx-auto md:-bottom-36 animate-slow-cloud"
+            src="/assets/img/fair-share-cloud.svg"
+            alt=""
+            width={1400}
+            height={300}
+          />
+        </div>
+      </section>
+
+      {/* Feature Badges Cards (Carousel) */}
+      <section className="px-4 py-8 overflow-x-auto no-scrollbar">
+        <div className="flex items-center gap-4 pb-6 w-full max-w-6xl mx-auto overflow-x-auto py-2">
+          {featureCards.map((card, idx) => (
+            <div key={idx} className="shrink-0 w-64 p-1">
+              <div
+                className={`flex relative flex-col gap-3 justify-center items-center px-4 py-8 text-white ${card.bg} rounded-3xl shadow-sm before:w-16 before:h-16 before:rounded-full before:bg-white before:-left-10 before:absolute after:w-16 after:h-16 after:rounded-full after:bg-white after:-right-10 after:absolute overflow-hidden`}
+              >
+                <div className="text-sm font-medium">{card.title}</div>
+                <div className="px-4 text-xl font-semibold text-center">
+                  {card.subtitle}
+                </div>
+                <div className="px-3 py-1 text-xs font-semibold rounded-full bg-black/15">
+                  {card.tag}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Apa Itu Fair Share Section */}
+      <section className="mt-8 py-12 md:py-16 rounded-t-3xl md:rounded-t-[50px] bg-gradient-to-b from-blue-50">
+        <div className="px-4 mx-auto mb-8 max-w-6xl text-center md:mb-12">
+          <h2 className="text-4xl md:text-5xl font-medium tracking-tight">
+            Apa Itu Fair Share?
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-4 mx-auto max-w-5xl items-center mb-10">
+          <div className="relative md:col-span-2 p-6 text-lg font-medium text-gray-600 bg-white md:bg-transparent rounded-2xl leading-relaxed">
+            <span className="text-black font-semibold">Fair Share</span> adalah aplikasi patungan yang menghitung jatah, saldo anggota, dan rekomendasi transfer pelunasan secara otomatis. Semua jadi jelas tanpa spreadsheet atau hitung ulang.
+          </div>
+          <div className="flex justify-center md:justify-end">
+            <Image
+              className="object-contain"
+              width={220}
+              height={220}
+              src="/assets/img/fair-share-maskot9.webp"
+              alt="Maskot Fair Share penjelasan"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 px-4 mx-auto max-w-5xl md:grid-cols-2">
+          {/* Card 1 */}
+          <div className="p-6 text-xl font-medium text-black bg-white rounded-2xl shadow-sm">
+            <div className="flex gap-4 items-start">
+              <div className="relative shrink-0">
+                <span className="absolute flex justify-center items-center z-10 text-xs font-bold text-white h-full w-full !leading-none">
+                  100%<br />GRATIS
+                </span>
+                <Image
+                  src="/assets/img/fair-share-badge.svg"
+                  width={80}
+                  height={85}
+                  className="inline-block animate-spin-super-slow"
+                  alt=""
+                />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-1">Hitung Jatah Otomatis</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">
+                  Setiap anggota mendapat jatah yang adil. Semua nominal dihitung presisi dalam Rupiah tanpa kehilangan Rp 1 pun.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 2 */}
+          <div className="p-6 text-xl font-medium text-black bg-white rounded-2xl shadow-sm">
+            <div className="flex gap-4 items-start">
+              <div className="relative shrink-0">
+                <span className="absolute flex justify-center items-center z-10 text-white h-full w-full">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.8"
+                    stroke="currentColor"
+                    className="size-7"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z"
+                    />
+                  </svg>
+                </span>
+                <Image
+                  src="/assets/img/fair-share-badge.svg"
+                  width={80}
+                  height={85}
+                  className="inline-block animate-spin-super-slow filter hue-rotate-180"
+                  alt=""
+                />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-1">Tanpa Spreadsheet</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">
+                  Tambahkan anggota dan catat siapa membayar apa. Fair Share langsung merangkum seluruh pengeluaran grup.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 3 */}
+          <div className="p-6 text-xl font-medium text-black bg-white rounded-2xl shadow-sm">
+            <div className="flex gap-4 items-start">
+              <div className="relative shrink-0">
+                <span className="absolute flex justify-center items-center z-10 text-white h-full w-full">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.8"
+                    stroke="currentColor"
+                    className="size-7"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 0 0-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"
+                    />
+                  </svg>
+                </span>
+                <Image
+                  src="/assets/img/fair-share-badge.svg"
+                  width={80}
+                  height={85}
+                  className="inline-block animate-spin-super-slow filter hue-rotate-30"
+                  alt=""
+                />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-1">Rekomendasi Transfer</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">
+                  Dapatkan jawaban sederhana tentang siapa harus membayar siapa dan berapa nominalnya.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 4 */}
+          <div className="p-6 text-xl font-medium text-black bg-white rounded-2xl shadow-sm">
+            <div className="flex gap-4 items-start">
+              <div className="relative shrink-0">
+                <span className="absolute flex justify-center items-center z-10 text-white h-full w-full">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.8"
+                    stroke="currentColor"
+                    className="size-7"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m15 11.25-3-3m0 0-3 3m3-3v7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
+                </span>
+                <Image
+                  src="/assets/img/fair-share-badge.svg"
+                  width={80}
+                  height={85}
+                  className="inline-block animate-spin-super-slow filter -hue-rotate-60"
+                  alt=""
+                />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-1">Rekap Siap Dibagikan</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">
+                  Tandai pembayaran yang sudah lunas, lalu salin rekap rapi untuk dibagikan ke grup WhatsApp.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Adil, Jelas, Tanpa Drama Section */}
+      <section className="mt-8 py-12 md:py-16 rounded-t-3xl md:rounded-t-[50px] bg-gray-100">
+        <div className="px-4 mx-auto mb-8 max-w-6xl text-center md:mb-12">
+          <h2 className="text-4xl md:text-5xl font-medium tracking-tight">
+            Adil, Jelas, Tanpa Drama
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 px-4 mx-auto max-w-5xl text-center md:grid-cols-3">
+          <div className="relative row-span-2 p-6 text-lg font-medium text-gray-600 bg-white md:rounded-2xl flex flex-col justify-between items-center">
+            <p className="mb-6">
+              Masih bingung siapa nombok paling banyak? Fair Share kasih jawabannya:
             </p>
+            <Image
+              className="object-contain"
+              width={260}
+              height={220}
+              src="/assets/img/fair-share-udang.webp"
+              alt="Udang di balik batu patungan"
+            />
+          </div>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 pt-3 w-full max-w-sm sm:max-w-none sm:w-auto mx-auto">
-              {user ? (
-                <Link
-                  href="/dashboard"
-                  className="btn-pill-lime text-sm sm:text-base py-3 sm:py-3.5 px-6 sm:px-8 font-bold shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 whitespace-nowrap shrink-0 sm:w-auto"
+          <div className="p-8 text-2xl font-semibold text-gray-700 bg-white rounded-2xl flex items-center justify-center">
+            Hitungan <br className="hidden md:block" /> Presisi
+          </div>
+
+          <div className="p-8 text-2xl font-semibold text-gray-700 bg-white rounded-2xl flex items-center justify-center">
+            Saldo <br className="hidden md:block" /> Transparan
+          </div>
+
+          <div className="p-8 text-2xl font-semibold text-gray-700 bg-white rounded-2xl flex items-center justify-center">
+            Status <br className="hidden md:block" /> Pelunasan
+          </div>
+
+          <div className="flex justify-center items-center p-6 bg-white md:bg-transparent rounded-2xl">
+            <Link
+              href={user ? "/dashboard" : "/register"}
+              className="btn primary btn-lg group w-full"
+            >
+              Mulai Patungan Gratis
+              <span className="has-arrow inline-flex ml-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="3"
+                  stroke="currentColor"
+                  className="size-4"
                 >
-                  <span className="whitespace-nowrap">Buka Dashboard Event</span>
-                  <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
-                </Link>
-              ) : (
-                <>
-                  <Link
-                    href="/register"
-                    className="btn-pill-lime text-sm sm:text-base py-3 sm:py-3.5 px-6 sm:px-8 font-bold shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 whitespace-nowrap shrink-0 sm:w-auto"
-                  >
-                    <span className="whitespace-nowrap">Mulai Sekarang — Gratis</span>
-                    <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
-                  </Link>
-                  <Link
-                    href="/login"
-                    className="inline-flex items-center justify-center gap-2.5 rounded-full border border-slate-300 bg-white hover:bg-slate-50 px-6 sm:px-7 py-3 sm:py-3.5 text-sm sm:text-base font-semibold text-slate-800 shadow-sm transition-all active:scale-[0.99] whitespace-nowrap shrink-0 sm:w-auto"
-                  >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                  />
+                </svg>
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Teman & Keluarga Section with Cloud Animation */}
+      <section className="relative py-12 text-center bg-gray-100 md:py-20 overflow-hidden">
+        <div className="px-4 mx-auto mb-10 max-w-6xl text-center">
+          <h2 className="text-4xl md:text-5xl font-medium tracking-tight">
+            Teman &amp; Keluarga
+            <br />
+            Bisa Patungan Lebih Rapi
+          </h2>
+        </div>
+
+        <div
+          className="px-4 bg-scroll bg-center bg-repeat-x animate-bg-scroll py-6"
+          style={{ backgroundImage: `url('/assets/img/fair-share-cloud.svg')` }}
+        >
+          <Image
+            className="mx-auto w-full max-w-3xl object-contain"
+            src="/assets/img/fair-share-rumah-internet.webp"
+            alt="Rumah internet patungan"
+            width={768}
+            height={400}
+          />
+        </div>
+      </section>
+
+      {/* Nggak Cuma Sekadar Bagi Rata */}
+      <section className="py-12 bg-gradient-to-b from-gray-100 rounded-t-3xl md:py-20">
+        <div className="px-4 mx-auto max-w-5xl">
+          <div className="gap-8 justify-between items-center md:flex">
+            <div className="mb-8 md:w-2/3 max-md:text-center">
+              <h2 className="mb-6 text-4xl md:text-5xl font-medium tracking-tight leading-tight">
+                Nggak Cuma
+                <br />
+                Sekadar Bagi Rata
+              </h2>
+
+              <p className="mb-8 text-xl text-gray-500">
+                Dari catatan pengeluaran sampai pelunasan, semuanya ada dalam satu alur
+              </p>
+
+              <ul className="space-y-4 text-lg">
+                {[
+                  "Catatan Pengeluaran",
+                  "Jatah & Saldo Anggota",
+                  "Rekomendasi Transfer",
+                  "Checklist Pelunasan",
+                  "Rekap untuk WhatsApp",
+                ].map((item, idx) => (
+                  <li key={idx} className="flex gap-x-4 max-md:justify-center items-center">
+                    <span className="flex justify-center items-center rounded-full size-7 bg-theme-500 shrink-0">
+                      <svg
+                        className="shrink-0 size-3.5 text-gray-900"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    </span>
+                    <span className="text-gray-700 font-medium">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="flex justify-center md:justify-end">
+              <Image
+                className="w-full max-w-md max-md:mx-auto object-contain"
+                width={394}
+                height={374}
+                src="/assets/img/fair-share-maskot3.webp"
+                alt="Maskot Fair Share 3"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3 Langkah Section */}
+      <section className="relative py-12 bg-gradient-to-t from-gray-100 md:py-20 overflow-hidden">
+        <div className="px-4 mx-auto max-w-6xl">
+          <div className="gap-8 justify-between items-center md:flex">
+            <div className="flex flex-col items-center">
+              <div className="relative mb-6 text-center max-md:max-w-[220px] inline-block p-4 mx-auto text-white rounded-2xl bg-orange-700 text-sm font-semibold shadow-md">
+                Gak perlu spreadsheet. Gak perlu debat.
+              </div>
+
+              <Image
+                className="mx-auto mb-6 max-w-xs w-full max-md:max-w-[120px] object-contain"
+                width={320}
+                height={335}
+                src="/assets/img/fair-share-maskot4.webp"
+                alt="Maskot Fair Share langkah"
+              />
+            </div>
+
+            <div className="mb-8 w-full max-w-2xl">
+              <h2 className="mb-8 text-4xl md:text-5xl font-medium text-center tracking-tight leading-tight">
+                3 Langkah
+                <br />
+                Patungan Langsung Beres
+              </h2>
+
+              <div className="grid overflow-hidden grid-cols-1 mb-8 rounded-3xl md:grid-cols-3 md:gap-4 gap-3">
+                <div className="p-6 text-center bg-white shadow-xs rounded-2xl border border-gray-100">
+                  <div className="flex items-center justify-center mx-auto mb-3 w-8 h-8 font-bold text-gray-900 rounded-full bg-theme-500">
+                    1
+                  </div>
+                  <div className="font-medium text-gray-800">
+                    Buat Event &amp; Tambahkan Anggota
+                  </div>
+                </div>
+
+                <div className="p-6 text-center bg-white shadow-xs rounded-2xl border border-gray-100">
+                  <div className="flex items-center justify-center mx-auto mb-3 w-8 h-8 font-bold text-gray-900 rounded-full bg-theme-500">
+                    2
+                  </div>
+                  <div className="font-medium text-gray-800">
+                    Catat Pengeluaran &amp; Pembayar
+                  </div>
+                </div>
+
+                <div className="p-6 text-center bg-white shadow-xs rounded-2xl border border-gray-100">
+                  <div className="flex items-center justify-center mx-auto mb-3 w-8 h-8 font-bold text-gray-900 rounded-full bg-theme-500">
+                    3
+                  </div>
+                  <div className="font-medium text-gray-800">
+                    Cek Transfer &amp; Tandai Lunas
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-center">
+                <Link
+                  href={user ? "/dashboard" : "/register"}
+                  className="btn primary btn-lg group shadow-sm"
+                >
+                  Mulai Patungan Gratis
+                  <span className="has-arrow inline-flex ml-2">
                     <svg
-                      className="h-5 w-5 shrink-0"
-                      width="20"
-                      height="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
                       viewBox="0 0 24 24"
-                      aria-hidden="true"
+                      strokeWidth="3"
+                      stroke="currentColor"
+                      className="size-4"
                     >
                       <path
-                        fill="#4285F4"
-                        d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"
-                      />
-                      <path
-                        fill="#34A853"
-                        d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"
-                      />
-                      <path
-                        fill="#FBBC05"
-                        d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"
-                      />
-                      <path
-                        fill="#EA4335"
-                        d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
                       />
                     </svg>
-                    <span className="whitespace-nowrap">Masuk Akun</span>
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* Interactive Benchmark Mockup / Live Preview */}
-          <div className="mx-auto max-w-3xl mt-10 sm:mt-16">
-            <div className="card-diskon border-2 border-slate-200 bg-white p-4 sm:p-8 shadow-xl relative overflow-hidden">
-              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4 sm:pb-5">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
-                    <span className="text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-wider">
-                      Simulasi Contoh Riil (PRD Benchmark)
-                    </span>
-                  </div>
-                  <h2 className="text-lg sm:text-xl font-bold text-slate-900 mt-0.5">
-                    Liburan Jogja Bersama 🏖️
-                  </h2>
-                </div>
-                <div className="text-right">
-                  <div className="text-[11px] sm:text-xs text-slate-600 font-medium">Total Pengeluaran</div>
-                  <div className="text-lg sm:text-xl font-bold font-mono-numbers text-slate-950">
-                    Rp 934.000
-                  </div>
-                </div>
-              </div>
-
-              {/* Members distribution & settlements preview */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 py-4 sm:py-5 border-b border-slate-100">
-                <div className="p-2.5 sm:p-3 rounded-2xl bg-slate-50">
-                  <span className="text-xs text-slate-600 block">Andri</span>
-                  <span className="font-bold text-slate-900 text-xs sm:text-sm font-mono-numbers">
-                    Bayar 385k
                   </span>
-                  <span className="text-[11px] font-semibold text-emerald-700 block">
-                    +Rp 151.500
-                  </span>
-                </div>
-                <div className="p-2.5 sm:p-3 rounded-2xl bg-slate-50">
-                  <span className="text-xs text-slate-600 block">Tedy</span>
-                  <span className="font-bold text-slate-900 text-xs sm:text-sm font-mono-numbers">
-                    Bayar 284k
-                  </span>
-                  <span className="text-[11px] font-semibold text-emerald-700 block">
-                    +Rp 50.500
-                  </span>
-                </div>
-                <div className="p-2.5 sm:p-3 rounded-2xl bg-slate-50">
-                  <span className="text-xs text-slate-600 block">Irfan</span>
-                  <span className="font-bold text-slate-900 text-xs sm:text-sm font-mono-numbers">
-                    Bayar 200k
-                  </span>
-                  <span className="text-[11px] font-semibold text-rose-700 block">
-                    -Rp 33.500
-                  </span>
-                </div>
-                <div className="p-2.5 sm:p-3 rounded-2xl bg-slate-50">
-                  <span className="text-xs text-slate-600 block">Rion</span>
-                  <span className="font-bold text-slate-900 text-xs sm:text-sm font-mono-numbers">
-                    Bayar 65k
-                  </span>
-                  <span className="text-[11px] font-semibold text-rose-700 block">
-                    -Rp 168.500
-                  </span>
-                </div>
-              </div>
-
-              {/* Settlement Transfer Result */}
-              <div className="pt-4 sm:pt-5 space-y-3">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
-                  <span className="text-[11px] sm:text-xs font-bold uppercase text-slate-600 tracking-wider">
-                    Hasil Rekomendasi Transfer Sederhana
-                  </span>
-                  <span className="text-[11px] sm:text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 self-start sm:self-auto">
-                    Jatah Masing-masing Rp 233.500
-                  </span>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-slate-200/80">
-                    <span className="text-xs sm:text-sm font-semibold text-slate-900">
-                      1. Rion ➡️ Andri
-                    </span>
-                    <div className="flex items-center gap-1.5 sm:gap-2">
-                      <span className="font-mono-numbers font-bold text-xs sm:text-sm text-slate-900">
-                        Rp 151.500
-                      </span>
-                      <span className="text-[10px] sm:text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
-                        Lunas ✓
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-slate-200/80">
-                    <span className="text-xs sm:text-sm font-semibold text-slate-900">
-                      2. Irfan ➡️ Tedy
-                    </span>
-                    <div className="flex items-center gap-1.5 sm:gap-2">
-                      <span className="font-mono-numbers font-bold text-xs sm:text-sm text-slate-900">
-                        Rp 33.500
-                      </span>
-                      <span className="text-[10px] sm:text-[11px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">
-                        Belum Lunas
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-slate-200/80">
-                    <span className="text-xs sm:text-sm font-semibold text-slate-900">
-                      3. Rion ➡️ Tedy
-                    </span>
-                    <div className="flex items-center gap-1.5 sm:gap-2">
-                      <span className="font-mono-numbers font-bold text-xs sm:text-sm text-slate-900">
-                        Rp 17.000
-                      </span>
-                      <span className="text-[10px] sm:text-[11px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">
-                        Belum Lunas
-                      </span>
-                    </div>
-                  </div>
-                </div>
+                </Link>
               </div>
             </div>
           </div>
 
-        </section>
-
-        {/* Feature Highlights Section */}
-        <section className="py-16 border-t border-slate-200/80 bg-white">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6">
-            <div className="text-center max-w-xl mx-auto mb-12">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-950">
-                Fitur Lengkap Sesuai Kebutuhan Nyata
-              </h2>
-              <p className="text-sm text-slate-600 mt-2">
-                Didesain khusus untuk trip teman kantor, liburan keluarga, maupun kepanitiaan.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="card-diskon p-6 space-y-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-black text-[#b7e913]">
-                  <Receipt className="h-5 w-5" />
-                </div>
-                <h3 className="text-base font-bold text-slate-900">Pembagian Beban Adil & Presisi</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Semua nominal dihitung murni dalam integer Rupiah. Bila ada sisa rupiah yang tidak
-                  habis dibagi, dialokasikan deterministik tanpa kehilangan Rp 1 pun.
-                </p>
-              </div>
-
-              <div className="card-diskon p-6 space-y-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-black text-[#b7e913]">
-                  <Copy className="h-5 w-5" />
-                </div>
-                <h3 className="text-base font-bold text-slate-900">Rekap Siap Kirim ke WhatsApp</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Cukup satu tombol, teks rekap rapi siap ditempel di grup chat tanpa perlu repot
-                  mengetik ulang nama dan nomor transfer.
-                </p>
-              </div>
-
-              <div className="card-diskon p-6 space-y-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-black text-[#b7e913]">
-                  <CheckCircle2 className="h-5 w-5" />
-                </div>
-                <h3 className="text-base font-bold text-slate-900">Checklist Pelunasan Tersimpan</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Tandai siapa yang sudah melunasi transfer. Status pelunasan persisten di database
-                  dan tidak akan hilang saat halaman dimuat ulang.
-                </p>
-              </div>
-            </div>
+          <div className="overflow-hidden absolute right-0 left-0 bottom-6 mx-auto w-full h-full -z-10 pointer-events-none">
+            <Image
+              className="absolute right-0 left-0 mx-auto animate-slow-cloud bottom-0"
+              src="/assets/img/fair-share-cloud2.svg"
+              alt=""
+              width={1400}
+              height={300}
+            />
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
 
+      {/* Testimonials / Simulasi Pengalaman */}
+      <section className="relative py-12 bg-gradient-to-b from-gray-100 md:py-20">
+        <div className="px-4 mx-auto max-w-6xl">
+          <h2 className="mb-10 text-4xl md:text-5xl font-medium text-center tracking-tight">
+            Contoh Situasi Patungan yang Lebih Rapi
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {testimonials.map((item, idx) => (
+              <div
+                key={idx}
+                className="flex flex-col justify-between gap-4 p-6 bg-white rounded-3xl shadow-xs border border-gray-100"
+              >
+                <div className="flex gap-1 text-yellow-400">
+                  {[...Array(5)].map((_, starIdx) => (
+                    <svg
+                      key={starIdx}
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="size-5"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  ))}
+                </div>
+
+                <p className="text-gray-700 leading-relaxed text-sm">
+                  &ldquo;{item.quote}&rdquo;
+                </p>
+
+                <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+                  <div className="font-semibold text-xs text-gray-900">
+                    {item.author}
+                  </div>
+                  <Image
+                    className="rounded-full object-cover"
+                    src={item.avatar}
+                    width={40}
+                    height={40}
+                    alt={item.author}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Semua Hitungan Transparan Section */}
+      <section className="py-12 md:py-16 bg-gradient-to-b from-blue-50 rounded-t-3xl md:rounded-t-[50px]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4 mx-auto max-w-5xl items-center">
+          <div className="md:col-span-2 max-md:text-center">
+            <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-6">
+              Semua Hitungan Transparan
+            </h2>
+            <div className="text-lg font-medium text-gray-600 leading-relaxed">
+              Fair Share memperlihatkan total pengeluaran, jatah masing-masing, saldo setiap anggota, dan transfer pelunasan. Semua orang bisa memahami hasilnya tanpa hitung ulang.
+            </div>
+            <Link
+              href={user ? "/dashboard" : "/register"}
+              className="btn primary btn-lg group mt-8 inline-flex"
+            >
+              Mulai Patungan Gratis
+              <span className="has-arrow inline-flex ml-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="3"
+                  stroke="currentColor"
+                  className="size-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                  />
+                </svg>
+              </span>
+            </Link>
+          </div>
+          <div className="flex justify-center md:justify-end">
+            <Image
+              className="object-contain"
+              width={230}
+              height={230}
+              src="/assets/img/fair-share-maskot2.webp"
+              alt="Maskot Fair Share transparan"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-12 md:py-20 bg-gradient-to-b from-blue-50/50">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-10 px-4">
+          <div className="md:w-2/5 flex flex-col items-center md:items-start text-center md:text-left">
+            <Image
+              className="mb-6 object-contain"
+              width={200}
+              height={200}
+              src="/assets/img/fair-share-maskot10.webp"
+              alt="Maskot Fair Share FAQ"
+            />
+            <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-4">
+              Pertanyaan Umum tentang Fair Share
+            </h2>
+            <p className="text-gray-500 text-sm">
+              Semua jawaban lengkap seputar cara kerja, keadilan pembagian, dan fitur pelunasan.
+            </p>
+          </div>
+
+          <div className="space-y-3 w-full md:w-3/5">
+            {faqs.map((faq, idx) => (
+              <details
+                key={idx}
+                className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-xs transition-colors"
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-gray-900">
+                  <span className="text-base sm:text-lg">{faq.q}</span>
+                  <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center text-xl rounded-full bg-slate-100 text-slate-700 transition-transform group-open:rotate-45 font-mono">
+                    +
+                  </span>
+                </summary>
+                <div className="mt-3 text-sm sm:text-base text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
+                  {faq.a}
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
       <PublicFooter />
+
+      {/* Floating WhatsApp */}
+      <WhatsAppFloatingButton />
     </div>
   );
 }

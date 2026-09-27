@@ -15,6 +15,37 @@
   --border-light: #e2e8f0;
 }
 
+.form-control {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #0f172a;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.form-control:focus {
+  outline: none;
+  border-color: #0f172a;
+  box-shadow: 0 0 0 3px rgba(183, 233, 19, 0.4);
+}
+.form-control.is-invalid {
+  border-color: #ef4444;
+}
+.link {
+  color: #0284c7;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
+.link:hover {
+  color: #0369a1;
+}
+
 body {
   background-color: var(--bg-canvas);
   color: var(--text-main);

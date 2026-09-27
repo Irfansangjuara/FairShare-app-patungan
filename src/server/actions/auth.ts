@@ -20,7 +20,9 @@ export async function registerAction(
   const rawData = {
     name: formData.get("name"),
     email: formData.get("email"),
+    phone: formData.get("phone") || undefined,
     password: formData.get("password"),
+    password_confirmation: formData.get("password_confirmation") || undefined,
   };
 
   const parsed = registerSchema.safeParse(rawData);

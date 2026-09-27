@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Fredoka, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import "./fair-share.css";
 
 const fredoka = Fredoka({
   variable: "--font-fredoka",
