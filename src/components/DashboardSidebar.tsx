@@ -71,11 +71,11 @@ export function DashboardSidebar({
     },
     {
       label: "Token Akses Telegram",
-      href: "/token",
+      href: "/dashboard/token",
       icon: Key,
       active:
-        pathname === "/token" ||
         pathname === "/dashboard/token" ||
+        pathname === "/token" ||
         pathname === "/developer" ||
         pathname === "/dashboard/developer",
       badge: "Token",

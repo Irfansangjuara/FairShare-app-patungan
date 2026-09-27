@@ -1,6 +1,25 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/token",
+        destination: "/dashboard/token",
+        permanent: true,
+      },
+      {
+        source: "/developer",
+        destination: "/dashboard/token",
+        permanent: true,
+      },
+      {
+        source: "/dashboard/developer",
+        destination: "/dashboard/token",
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     return [
       {
@@ -14,18 +33,6 @@ const nextConfig: NextConfig = {
       {
         source: "/dashboard/settings",
         destination: "/settings",
-      },
-      {
-        source: "/dashboard/token",
-        destination: "/token",
-      },
-      {
-        source: "/dashboard/developer",
-        destination: "/token",
-      },
-      {
-        source: "/developer",
-        destination: "/token",
       },
     ];
   },

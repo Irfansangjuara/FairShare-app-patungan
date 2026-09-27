@@ -216,3 +216,12 @@ body {
   border-color: #cbd5e1;
   box-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.08);
 }
+
+/* Safeguard: Ensure icon-padded inputs never have text overlapping the icon */
+input.pl-10, input[type="text"].pl-10 {
+  padding-left: 2.75rem !important;
+}
+input.pl-11, input[type="text"].pl-11 {
+  padding-left: 3rem !important;
+}
+

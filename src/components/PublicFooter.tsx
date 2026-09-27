@@ -94,9 +94,9 @@ export function PublicFooter() {
                 <li>
                   <Link
                     className="inline-flex py-1.5 text-sm text-gray-300 transition-colors hover:text-white"
-                    href="/developer"
+                    href="/dashboard/token"
                   >
-                    Dokumentasi API
+                    Token Akses Telegram
                   </Link>
                 </li>
                 <li>

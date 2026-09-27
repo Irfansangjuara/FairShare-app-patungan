@@ -60,9 +60,9 @@ export async function createApiTokenAction(
     scopes: parsed.data.scopes,
   });
 
+  revalidatePath("/dashboard/token");
+  revalidatePath("/dashboard/settings");
   revalidatePath("/token");
-  revalidatePath("/developer");
-  revalidatePath("/settings");
 
   return {
     success: true,
@@ -82,9 +82,9 @@ export async function revokeApiTokenAction(tokenId: string) {
     .set({ isRevoked: true })
     .where(and(eq(apiTokens.id, tokenId), eq(apiTokens.userId, user.id)));
 
+  revalidatePath("/dashboard/token");
+  revalidatePath("/dashboard/settings");
   revalidatePath("/token");
-  revalidatePath("/developer");
-  revalidatePath("/settings");
 
   return { success: true };
 }
@@ -120,9 +120,9 @@ export async function rotateApiTokenAction(tokenId: string): Promise<CreateToken
     scopes: existing.scopes,
   });
 
+  revalidatePath("/dashboard/token");
+  revalidatePath("/dashboard/settings");
   revalidatePath("/token");
-  revalidatePath("/developer");
-  revalidatePath("/settings");
 
   return {
     success: true,

@@ -8,7 +8,7 @@ import { Bot, Key, ArrowLeft, Shield } from "lucide-react";
 export default async function SettingsPage() {
   const user = await getSessionUser();
   if (!user) {
-    redirect("/login?redirect=/settings");
+    redirect("/login?redirect=/dashboard/settings");
   }
 
   const settings = await getUserAiSettings();
@@ -36,7 +36,7 @@ export default async function SettingsPage() {
 
           <div className="flex items-center gap-2">
             <Link
-              href="/token"
+              href="/dashboard/token"
               className="btn-pill-primary text-xs py-2 px-3.5 inline-flex items-center gap-1.5 font-semibold"
             >
               <Key className="h-3.5 w-3.5" />
