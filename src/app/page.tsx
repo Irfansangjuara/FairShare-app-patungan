@@ -115,9 +115,9 @@ export default async function HomePage() {
 
           <div className="justify-around items-center sm:flex">
             <Image
-              className="max-md:max-w-24 max-sm:mb-6 mx-auto max-w-[230px] w-full object-contain"
-              width={230}
-              height={281}
+              className="max-md:max-w-36 max-sm:mb-6 mx-auto max-w-[345px] w-full object-contain"
+              width={345}
+              height={422}
               src="/assets/img/meong-maskot-10.webp"
               alt="Maskot Fair Share 1"
               priority
@@ -152,9 +152,9 @@ export default async function HomePage() {
             </div>
 
             <Image
-              className="max-w-[230px] w-full max-sm:hidden mx-auto max-md:max-w-24 object-contain"
-              width={230}
-              height={281}
+              className="max-w-[345px] w-full max-sm:hidden mx-auto max-md:max-w-36 object-contain"
+              width={345}
+              height={422}
               src="/assets/img/meong-maskot-14.webp"
               alt="Maskot Fair Share 2"
               priority
@@ -493,9 +493,9 @@ export default async function HomePage() {
               </div>
 
               <Image
-                className="mx-auto mb-6 max-w-xs w-full max-md:max-w-[120px] object-contain relative z-20"
-                width={320}
-                height={335}
+                className="mx-auto mb-6 max-w-[480px] w-full max-md:max-w-[180px] object-contain relative z-20"
+                width={480}
+                height={503}
                 src="/assets/img/meong-maskot-11.webp"
                 alt="Maskot Fair Share langkah"
               />
@@ -622,9 +622,9 @@ export default async function HomePage() {
           </div>
           <div className="flex justify-center md:justify-end">
             <Image
-              className="object-contain"
-              width={230}
-              height={230}
+              className="max-w-[345px] w-full object-contain"
+              width={345}
+              height={345}
               src="/assets/img/meong-maskot-14.webp"
               alt="Maskot Fair Share transparan"
             />

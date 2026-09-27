@@ -224,9 +224,9 @@ export default async function AboutPage() {
 
             <div className="flex justify-center md:justify-end">
               <Image
-                className="max-w-[230px] max-md:mx-auto w-full max-md:max-w-[180px] object-contain"
-                width={230}
-                height={281}
+                className="max-w-[345px] max-md:mx-auto w-full max-md:max-w-[270px] object-contain"
+                width={345}
+                height={422}
                 src="/assets/img/meong-maskot-11.webp"
                 alt="Maskot teman beresin patungan"
               />
