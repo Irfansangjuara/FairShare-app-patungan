@@ -6,6 +6,7 @@ import { FairShareNavbar } from "../components/FairShareNavbar";
 import { PublicFooter } from "../components/PublicFooter";
 import { WhatsAppFloatingButton } from "../components/WhatsAppFloatingButton";
 import SituationTestimonialSlider from "../components/SituationTestimonialSlider";
+import FeatureBadgesSlider from "../components/FeatureBadgesSlider";
 import { getSiteSettings } from "../server/queries";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -24,57 +25,6 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function HomePage() {
   const user = await getSessionUser();
-
-  const featureCards = [
-    {
-      title: "Catat Pengeluaran",
-      subtitle: "Satu Tempat",
-      tag: "Lebih Rapi",
-      bg: "bg-pink-400",
-    },
-    {
-      title: "Hitung Otomatis",
-      subtitle: "Jatah Masing-masing",
-      tag: "Presisi Rupiah",
-      bg: "bg-purple-400",
-    },
-    {
-      title: "Saldo Anggota",
-      subtitle: "Siapa Bayar Siapa",
-      tag: "Langsung Jelas",
-      bg: "bg-blue-400",
-    },
-    {
-      title: "Minim Transfer",
-      subtitle: "Pelunasan Ringkas",
-      tag: "Hemat Waktu",
-      bg: "bg-orange-400",
-    },
-    {
-      title: "Checklist Lunas",
-      subtitle: "Status Tersimpan",
-      tag: "Mudah Dipantau",
-      bg: "bg-teal-400",
-    },
-    {
-      title: "Rekap WhatsApp",
-      subtitle: "Siap Dibagikan",
-      tag: "Sekali Salin",
-      bg: "bg-red-400",
-    },
-    {
-      title: "Trip & Acara",
-      subtitle: "Semua Kebutuhan",
-      tag: "Fleksibel",
-      bg: "bg-yellow-400",
-    },
-    {
-      title: "Daftar Gratis",
-      subtitle: "Mulai Sekarang",
-      tag: "Tanpa Ribet",
-      bg: "bg-emerald-400",
-    },
-  ];
 
   const faqs = [
     {
@@ -210,26 +160,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Feature Badges Cards (Carousel) */}
-      <section className="px-4 py-8 overflow-x-auto no-scrollbar">
-        <div className="flex items-center gap-4 pb-6 w-full max-w-6xl mx-auto overflow-x-auto py-2">
-          {featureCards.map((card, idx) => (
-            <div key={idx} className="shrink-0 w-64 p-1">
-              <div
-                className={`flex relative flex-col gap-3 justify-center items-center px-4 py-8 text-white ${card.bg} rounded-3xl shadow-sm before:w-16 before:h-16 before:rounded-full before:bg-white before:-left-10 before:absolute after:w-16 after:h-16 after:rounded-full after:bg-white after:-right-10 after:absolute overflow-hidden`}
-              >
-                <div className="text-sm font-medium">{card.title}</div>
-                <div className="px-4 text-xl font-semibold text-center">
-                  {card.subtitle}
-                </div>
-                <div className="px-3 py-1 text-xs font-semibold rounded-full bg-black/15">
-                  {card.tag}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* Feature Badges Cards (Carousel with Auto Slider) */}
+      <FeatureBadgesSlider />
 
       {/* Apa Itu Fair Share Section */}
       <section className="mt-8 py-12 md:py-16 rounded-t-3xl md:rounded-t-[50px] bg-gradient-to-b from-blue-50">
