@@ -1,7 +1,6 @@
 import { getSessionUser } from "../../../lib/auth";
 import { getUserEvents } from "../../../server/queries";
 import { redirect } from "next/navigation";
-import { Navbar } from "../../../components/Navbar";
 import Link from "next/link";
 import { formatRupiah } from "../../../lib/money";
 import {
@@ -30,10 +29,7 @@ export default async function DashboardPage() {
   const totalOverallExpenses = allEvents.reduce((sum, e) => sum + e.totalAmount, BigInt(0));
 
   return (
-    <div className="min-h-full flex flex-col bg-[#F8FAFC]">
-      <Navbar user={user} />
-
-      <main className="flex-1 mx-auto max-w-6xl w-full px-3.5 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
+    <div className="mx-auto max-w-6xl w-full space-y-6 sm:space-y-8">
         {/* Welcome & Action Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
           <div>
@@ -202,7 +198,6 @@ export default async function DashboardPage() {
             </div>
           </div>
         )}
-      </main>
     </div>
   );
 }

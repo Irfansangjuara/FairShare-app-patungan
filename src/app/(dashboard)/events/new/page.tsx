@@ -1,6 +1,5 @@
 import { getSessionUser } from "../../../../lib/auth";
 import { redirect } from "next/navigation";
-import { Navbar } from "../../../../components/Navbar";
 import { NewEventForm } from "./NewEventForm";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
@@ -12,28 +11,24 @@ export default async function NewEventPage() {
   }
 
   return (
-    <div className="min-h-full flex flex-col bg-[#F8FAFC]">
-      <Navbar user={user} />
+    <div className="mx-auto max-w-xl w-full py-4 sm:py-6 space-y-6">
+      <div>
+        <Link
+          href="/dashboard"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors mb-4"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          <span>Kembali ke Dashboard</span>
+        </Link>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-950 font-sans">
+          Buat Event Patungan Baru
+        </h1>
+        <p className="text-xs sm:text-sm text-slate-500 mt-1">
+          Beri judul kegiatan trip atau acara Anda untuk mulai mencatat peserta dan pengeluaran.
+        </p>
+      </div>
 
-      <main className="flex-1 mx-auto max-w-xl w-full px-4 sm:px-6 py-8 sm:py-10 space-y-6">
-        <div>
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors mb-4"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            <span>Kembali ke Dashboard</span>
-          </Link>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-950">
-            Buat Event Patungan Baru
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Beri judul kegiatan trip atau acara Anda untuk mulai mencatat peserta dan pengeluaran.
-          </p>
-        </div>
-
-        <NewEventForm />
-      </main>
+      <NewEventForm />
     </div>
   );
 }

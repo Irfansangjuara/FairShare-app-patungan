@@ -1,7 +1,6 @@
 import { getSessionUser } from "../../../../lib/auth";
 import { getEventDetails } from "../../../../server/queries";
 import { notFound, redirect } from "next/navigation";
-import { Navbar } from "../../../../components/Navbar";
 import { SummaryCards } from "../../../../components/SummaryCards";
 import { SettlementList } from "../../../../components/SettlementList";
 import { BalanceTable } from "../../../../components/BalanceTable";
@@ -78,10 +77,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
   });
 
   return (
-    <div className="min-h-full flex flex-col bg-[#F8FAFC]">
-      <Navbar user={user} />
-
-      <main className="flex-1 mx-auto max-w-6xl w-full px-3.5 sm:px-6 py-5 sm:py-8 space-y-5 sm:space-y-8">
+    <div className="mx-auto max-w-6xl w-full space-y-5 sm:space-y-8">
         {/* Navigation Breadcrumb & Back */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
           <div className="space-y-1">
@@ -257,7 +253,6 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
             />
           </div>
         </div>
-      </main>
     </div>
   );
 }
