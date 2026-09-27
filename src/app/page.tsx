@@ -77,18 +77,18 @@ export default async function HomePage() {
       {/* Hero Section */}
       <section className="relative isolate pt-6 md:pt-10">
         <div className="px-4 pt-12 md:pt-20 mx-auto max-w-6xl text-center relative z-10">
-          <h1 className="mb-8 text-4xl font-medium md:text-7xl lg:text-7xl max-w-5xl mx-auto tracking-tight leading-tight">
+          <h1 className="mb-8 text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-medium max-w-5xl mx-auto tracking-tight leading-tight sm:leading-tight">
             {/* Baris 1: Bereskan Patungan Trip + Badge 100% GRATIS tepat di sebelah kanan setelah teks Trip */}
-            <span className="inline-flex items-center justify-center flex-wrap">
-              <span className="px-3 sm:px-6 py-0.5 sm:py-1 rounded-2xl md:rounded-full bg-theme-500 inline-block my-1">
+            <span className="inline-flex items-center justify-center flex-nowrap whitespace-nowrap max-w-full">
+              <span className="px-2.5 xs:px-3 sm:px-5 md:px-6 py-0.5 sm:py-1 rounded-2xl md:rounded-full bg-theme-500 inline-block my-1 whitespace-nowrap">
                 Bereskan Patungan Trip
               </span>
-              <div className="inline-block relative align-middle mx-1.5 sm:mx-2.5 shrink-0">
+              <div className="inline-block relative align-middle ml-1.5 sm:ml-2.5 shrink-0">
                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none select-none text-center badge-text-pro">
-                  <span className="text-xs sm:text-sm md:text-[15px] font-black tracking-tight text-white leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">
+                  <span className="text-[9px] xs:text-[10px] sm:text-xs md:text-sm lg:text-[15px] font-black tracking-tight text-white leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">
                     100%
                   </span>
-                  <span className="text-[9px] sm:text-[10px] md:text-[11px] font-extrabold uppercase tracking-[0.14em] text-white leading-none mt-0.5 sm:mt-1 drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">
+                  <span className="text-[7px] xs:text-[8px] sm:text-[9px] md:text-[10px] lg:text-[11px] font-extrabold uppercase tracking-[0.12em] text-white leading-none mt-0.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">
                     GRATIS
                   </span>
                 </div>
@@ -96,16 +96,21 @@ export default async function HomePage() {
                   src="/assets/img/fair-share-badge.svg"
                   width={90}
                   height={95}
-                  className="inline-block max-md:w-14 sm:w-20 md:w-[90px] h-auto animate-spin-super-slow drop-shadow-xs"
+                  className="inline-block w-11 xs:w-12 sm:w-16 md:w-20 lg:w-[90px] h-auto animate-spin-super-slow drop-shadow-xs"
                   alt="Badge 100% Gratis"
                   priority
                 />
               </div>
             </span>
 
-            {/* Baris 2: Tanpa Bingung Hitung Manual, Lunasi & Beres */}
-            <span className="block mt-1 sm:mt-2">
-              Tanpa Bingung Hitung Manual, Lunasi &amp; Beres
+            {/* Baris 2: Tanpa Bingung Hitung Manual, */}
+            <span className="block mt-1 sm:mt-2 md:mt-3">
+              Tanpa Bingung Hitung Manual,
+            </span>
+
+            {/* Baris 3: Lunasi & Beres */}
+            <span className="block mt-0.5 sm:mt-1">
+              Lunasi &amp; Beres
             </span>
           </h1>
 
@@ -115,7 +120,7 @@ export default async function HomePage() {
 
           <div className="justify-around items-center sm:flex">
             <Image
-              className="max-md:max-w-36 max-sm:mb-6 mx-auto max-w-[345px] w-full object-contain"
+              className="max-sm:max-w-[270px] sm:max-w-[290px] md:max-w-[320px] lg:max-w-[345px] max-sm:mb-6 mx-auto w-full object-contain"
               width={345}
               height={422}
               src="/assets/img/meong-maskot-10.webp"
@@ -152,7 +157,7 @@ export default async function HomePage() {
             </div>
 
             <Image
-              className="max-w-[345px] w-full max-sm:hidden mx-auto max-md:max-w-36 object-contain"
+              className="max-w-[345px] sm:max-w-[260px] md:max-w-[300px] lg:max-w-[345px] w-full max-sm:hidden mx-auto object-contain"
               width={345}
               height={422}
               src="/assets/img/meong-maskot-14.webp"
