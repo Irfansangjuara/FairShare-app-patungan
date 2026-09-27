@@ -32,7 +32,7 @@ export function FairShareNavbar({ user }: FairShareNavbarProps) {
             aria-label="Fair Share, beranda"
           >
             <Image
-              src="/assets/img/meong-maskot-1.webp"
+              src="/assets/img/logo-fairshare.webp"
               alt="Fair Share"
               className="h-9 md:h-10 w-auto object-contain"
               width={40}
