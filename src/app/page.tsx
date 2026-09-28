@@ -111,10 +111,10 @@ export default async function HomePage() {
               </span>
               <div className="inline-block relative align-middle ml-1.5 sm:ml-2.5 shrink-0">
                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none select-none text-center badge-text-pro">
-                  <span className="text-[9px] xs:text-[10px] sm:text-xs md:text-sm lg:text-[15px] font-black tracking-tight text-slate-950 leading-none">
+                  <span className="text-[9px] xs:text-[10px] sm:text-xs md:text-sm lg:text-[15px] font-black tracking-tight text-white leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">
                     100%
                   </span>
-                  <span className="text-[7px] xs:text-[8px] sm:text-[9px] md:text-[10px] lg:text-[11px] font-black uppercase tracking-[0.12em] text-slate-900 leading-none mt-0.5">
+                  <span className="text-[7px] xs:text-[8px] sm:text-[9px] md:text-[10px] lg:text-[11px] font-black uppercase tracking-[0.12em] text-white leading-none mt-0.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">
                     GRATIS
                   </span>
                 </div>
