@@ -76,19 +76,19 @@ export default async function TermsPage() {
       icon: WalletCards,
       title: "Transfer Peer-to-Peer Langsung",
       desc: "Fair Share adalah alat kalkulasi. Pembayaran ditransfer langsung antar-rekening peserta tanpa perantara dan tanpa potongan biaya sepeserpun.",
-      color: "bg-blue-100 text-blue-900",
+      color: "bg-lime-100 text-lime-900",
     },
     {
       icon: Award,
       title: "Transparansi Penuh untuk Semua",
       desc: "Semua anggota dapat memeriksa siapa membayar apa, rekap saldo neto, dan status lunas melalui tautan rekap publik (share token).",
-      color: "bg-purple-100 text-purple-900",
+      color: "bg-lime-100 text-lime-900",
     },
     {
       icon: ShieldAlert,
       title: "Keamanan Akun & Kredensial",
       desc: "Pengguna bertanggung jawab penuh atas kerahasiaan kata sandi, token bot Telegram, dan hak akses API yang dibuat.",
-      color: "bg-amber-100 text-amber-900",
+      color: "bg-lime-100 text-lime-900",
     },
   ];
 
