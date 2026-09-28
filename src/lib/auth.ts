@@ -12,6 +12,7 @@ const SESSION_DURATION_DAYS = 30;
 export interface SessionUser {
   id: string;
   email: string;
+  phone?: string | null;
   name: string;
   role: string;
 }
@@ -65,6 +66,7 @@ export async function getSessionUser(): Promise<SessionUser | null> {
         user: {
           id: users.id,
           email: users.email,
+          phone: users.phone,
           name: users.name,
           role: users.role,
         },

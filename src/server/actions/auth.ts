@@ -2,9 +2,10 @@
 
 import { db } from "../../db";
 import { users } from "../../db/schema";
-import { eq } from "drizzle-orm";
+import { eq, or, inArray } from "drizzle-orm";
 import { hashPassword, verifyPassword, createSession, destroySession } from "../../lib/auth";
 import { registerSchema, loginSchema } from "../../lib/validation";
+import { normalizePhoneNumber, getPhoneVariants } from "../../lib/phone";
 import { redirect } from "next/navigation";
 import { ensureDatabaseSchema } from "../../db/migrate";
 
@@ -31,6 +32,8 @@ export async function registerAction(
   }
 
   const { name, email, password } = parsed.data;
+  const rawPhone = parsed.data.phone?.trim() || null;
+  const phone = rawPhone ? normalizePhoneNumber(rawPhone) : null;
 
   try {
     await ensureDatabaseSchema();
@@ -44,6 +47,18 @@ export async function registerAction(
       return { error: "Email sudah terdaftar. Silakan masuk menggunakan email tersebut." };
     }
 
+    // Check if phone already exists (if provided)
+    if (phone) {
+      const phoneVariants = getPhoneVariants(phone);
+      const existingPhone = await db.query.users.findFirst({
+        where: inArray(users.phone, phoneVariants),
+      });
+
+      if (existingPhone) {
+        return { error: "Nomor WhatsApp sudah terdaftar. Silakan gunakan nomor lain atau masuk." };
+      }
+    }
+
     const passwordHash = await hashPassword(password);
 
     const [newUser] = await db
@@ -51,6 +66,7 @@ export async function registerAction(
       .values({
         name,
         email: email.toLowerCase(),
+        phone,
         passwordHash,
       })
       .returning({ id: users.id });
@@ -114,17 +130,30 @@ export async function loginAction(
     return { error: parsed.error.issues[0].message };
   }
 
-  const { email, password } = parsed.data;
+  const { email: identifier, password } = parsed.data;
+  const trimmed = identifier.trim();
+  const isEmail = trimmed.includes("@");
 
   try {
     await ensureDatabaseSchema();
 
-    let user = await db.query.users.findFirst({
-      where: eq(users.email, email.toLowerCase()),
-    });
+    let user;
+    if (isEmail) {
+      user = await db.query.users.findFirst({
+        where: eq(users.email, trimmed.toLowerCase()),
+      });
+    } else {
+      const phoneVariants = getPhoneVariants(trimmed);
+      user = await db.query.users.findFirst({
+        where: or(
+          inArray(users.phone, phoneVariants),
+          eq(users.email, trimmed.toLowerCase())
+        ),
+      });
+    }
 
     // Auto-provision admin user if logging in as admin and not yet in database
-    if (!user && email.toLowerCase() === "admin@admin.com" && password === "admin#123") {
+    if (!user && trimmed.toLowerCase() === "admin@admin.com" && password === "admin#123") {
       const passwordHash = await hashPassword("admin#123");
       const [newAdmin] = await db
         .insert(users)
@@ -137,18 +166,22 @@ export async function loginAction(
       user = newAdmin;
     }
 
-    if (!user || !user.passwordHash) {
-      return { error: "Email tidak ditemukan atau akun ini terdaftar via Google." };
+    if (!user) {
+      return { error: "Akun dengan email atau nomor WhatsApp tersebut tidak ditemukan." };
+    }
+
+    if (!user.passwordHash) {
+      return { error: "Akun ini terdaftar via Google. Silakan masuk menggunakan tombol Google." };
     }
 
     // Special bypass for admin credentials
     const isAdminMatch =
-      email.toLowerCase() === "admin@admin.com" && password === "admin#123";
+      trimmed.toLowerCase() === "admin@admin.com" && password === "admin#123";
 
     if (!isAdminMatch) {
       const isMatch = await verifyPassword(password, user.passwordHash);
       if (!isMatch) {
-        return { error: "Email atau kata sandi salah." };
+        return { error: "Email, nomor WhatsApp, atau kata sandi salah." };
       }
     }
 

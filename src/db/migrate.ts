@@ -38,6 +38,7 @@ export async function ensureDatabaseSchema(): Promise<void> {
       `CREATE TABLE IF NOT EXISTS users (
         id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
         email text NOT NULL UNIQUE,
+        phone varchar(30),
         google_id text UNIQUE,
         name varchar(120) NOT NULL,
         avatar_url text,
@@ -45,10 +46,12 @@ export async function ensureDatabaseSchema(): Promise<void> {
         role varchar(20) DEFAULT 'user' NOT NULL,
         created_at timestamptz DEFAULT now() NOT NULL
       )`,
+      `ALTER TABLE users ADD COLUMN IF NOT EXISTS phone varchar(30)`,
       `ALTER TABLE users ADD COLUMN IF NOT EXISTS google_id text`,
       `ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar_url text`,
       `ALTER TABLE users ADD COLUMN IF NOT EXISTS password_hash text`,
       `ALTER TABLE users ADD COLUMN IF NOT EXISTS role varchar(20) DEFAULT 'user' NOT NULL`,
+      `CREATE UNIQUE INDEX IF NOT EXISTS users_phone_unique_idx ON users (phone) WHERE phone IS NOT NULL`,
 
       `CREATE TABLE IF NOT EXISTS sessions (
         id text PRIMARY KEY,

@@ -77,11 +77,11 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
               </h1>
 
               {/* Maskot Animasi Melayang untuk Mobile dan Tablet */}
-              <div className="lg:hidden flex justify-center mb-6 sm:mb-8">
+              <div className="flex lg:!hidden justify-center mb-6 sm:mb-10 w-full">
                 <Image
-                  className="w-28 sm:w-36 md:w-40 h-auto animate-mascot-float object-contain drop-shadow-xs"
-                  width={230}
-                  height={281}
+                  className="w-full max-w-[280px] xs:max-w-[320px] sm:max-w-[420px] md:max-w-[480px] h-auto animate-mascot-float object-contain drop-shadow-xs"
+                  width={480}
+                  height={586}
                   src="/assets/img/meong-maskot-5.webp"
                   alt="Maskot Fair Share"
                   priority

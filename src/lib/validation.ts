@@ -4,7 +4,15 @@ export const registerSchema = z
   .object({
     name: z.string().trim().min(2, "Nama minimal 2 karakter").max(100, "Nama maksimal 100 karakter"),
     email: z.string().trim().email("Format email tidak valid"),
-    phone: z.string().optional().nullable(),
+    phone: z
+      .string()
+      .trim()
+      .refine(
+        (val) => !val || /^[0-9+\-\s()]{8,25}$/.test(val),
+        "Format nomor WhatsApp tidak valid (contoh: 081234567890)"
+      )
+      .optional()
+      .nullable(),
     password: z.string().min(6, "Kata sandi minimal 6 karakter"),
     password_confirmation: z.string().optional().nullable(),
   })
@@ -22,7 +30,15 @@ export const registerSchema = z
   );
 
 export const loginSchema = z.object({
-  email: z.string().trim().email("Format email tidak valid"),
+  email: z
+    .string()
+    .trim()
+    .min(1, "Email atau nomor WhatsApp wajib diisi")
+    .refine((val) => {
+      const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+      const isPhone = /^[0-9+\-\s()]{8,25}$/.test(val);
+      return isEmail || isPhone;
+    }, "Format email atau nomor WhatsApp tidak valid"),
   password: z.string().min(1, "Kata sandi wajib diisi"),
 });
 

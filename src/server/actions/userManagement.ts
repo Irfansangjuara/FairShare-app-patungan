@@ -16,6 +16,7 @@ export interface UserListItem {
   id: string;
   name: string;
   email: string;
+  phone?: string | null;
   role: string;
   createdAt: Date;
   eventCount: number;
@@ -44,6 +45,7 @@ export async function getAllUsersAction(): Promise<UserListItem[]> {
       id: u.id,
       name: u.name,
       email: u.email,
+      phone: u.phone || null,
       role: u.role || "user",
       createdAt: u.createdAt,
       eventCount: u.events ? u.events.length : 0,
