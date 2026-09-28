@@ -15,6 +15,10 @@ const config: Config = {
         },
         theme: {
           500: "#b7e913",
+          blue: "#007aff",
+        },
+        badge: {
+          blue: "#007aff",
         },
       },
       spacing: {
