@@ -94,7 +94,7 @@ export async function PATCH(req: NextRequest, { params }: RouteProps) {
       message: "Data pengguna berhasil diperbarui",
       user: updatedUser,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("PATCH /api/v1/admin/users/[id] error:", error);
     return NextResponse.json(
       { success: false, error: "Gagal memperbarui pengguna" },
@@ -158,7 +158,7 @@ export async function DELETE(req: NextRequest, { params }: RouteProps) {
       success: true,
       message: `Akun ${targetUser.name} (${targetUser.email}) berhasil dihapus`,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("DELETE /api/v1/admin/users/[id] error:", error);
     return NextResponse.json(
       { success: false, error: "Gagal menghapus pengguna" },

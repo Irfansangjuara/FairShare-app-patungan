@@ -9,7 +9,9 @@ import {
   verifySignedOAuthState,
   resolveOAuthRedirectUri,
   createSessionSyncToken,
+  isTrustedOrigin,
 } from "@/lib/oauth-state";
+import { getBaseUrl } from "@/lib/site-url";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -38,16 +40,17 @@ export async function GET(request: NextRequest) {
   // Verifikasi state token secara fleksibel & aman (CSRF protected via HMAC)
   const verification = verifySignedOAuthState(state, savedState);
 
-  // Tentukan Base URL kembali (utamakan origin asli tempat user mulai login)
+  // Tentukan Base URL kembali (utamakan origin asli tempat user mulai login,
+  // tetapi hanya bila origin tersebut termasuk allowlist tepercaya).
   let baseUrl: string;
-  if (verification.payload?.origin) {
+  if (verification.payload?.origin && isTrustedOrigin(verification.payload.origin)) {
     baseUrl = verification.payload.origin;
   } else if (isLocal) {
     baseUrl = "http://localhost:3000";
   } else if (host) {
     baseUrl = `${proto}://${host}`;
   } else {
-    baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app-fairshare.vercel.app";
+    baseUrl = process.env.NEXT_PUBLIC_APP_URL || getBaseUrl();
   }
 
   // Tangani error dari Google

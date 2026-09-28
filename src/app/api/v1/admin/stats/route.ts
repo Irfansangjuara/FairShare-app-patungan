@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
       success: true,
       data: stats,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("GET /api/v1/admin/stats error:", error);
     return NextResponse.json(
       { success: false, error: "Gagal memuat statistik admin" },

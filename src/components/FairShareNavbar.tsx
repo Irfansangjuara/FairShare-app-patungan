@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useClientSession } from "../lib/session-client";
 import {
   Menu,
   X,
@@ -24,9 +25,15 @@ interface FairShareNavbarProps {
   } | null;
 }
 
-export function FairShareNavbar({ user }: FairShareNavbarProps) {
+export function FairShareNavbar({ user: serverUser }: FairShareNavbarProps) {
   const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // When no `user` prop is supplied the page is statically rendered (marketing
+  // pages must not read cookies), so the signed-in state resolves on the client
+  // through the shared session probe. When the prop IS supplied (dashboard and
+  // admin shells), it is trusted as-is.
+  const { user } = useClientSession(serverUser);
 
   // Close sidebar on route change
   useEffect(() => {
@@ -75,7 +82,7 @@ export function FairShareNavbar({ user }: FairShareNavbarProps) {
           <Link
             href="/"
             className="flex items-center gap-2.5 focus:outline-hidden hover:opacity-90 transition-opacity"
-            aria-label="Fair Share, beranda"
+            aria-label="FairShare, beranda"
           >
             <Image
               src="/assets/img/logo-fairshare.webp"
@@ -264,7 +271,7 @@ export function FairShareNavbar({ user }: FairShareNavbarProps) {
             <Link
               className="inline-flex items-center flex-none rounded-md focus:outline-hidden hover:opacity-90 transition-opacity"
               href="/"
-              aria-label="Fair Share, beranda"
+              aria-label="FairShare, beranda"
             >
               <Image
                 src="/assets/img/logo-fairshare.webp"

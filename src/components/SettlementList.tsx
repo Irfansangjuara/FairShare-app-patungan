@@ -29,7 +29,24 @@ export function SettlementList({
   settlements: initialSettlements,
   isOwner,
 }: SettlementListProps) {
-  const [settlements, setSettlements] = useState(initialSettlements);
+  // The server list is the source of truth. Local state exists only so a
+  // "Tandai Lunas" click feels instant; it must resynchronise whenever the
+  // server sends a different list (e.g. after an expense is added, which
+  // rebuilds the settlement plan and revalidates this page).
+  const serverSignature = initialSettlements
+    .map((settlement) => `${settlement.id}:${settlement.isPaid ? 1 : 0}`)
+    .join("|");
+
+  const [state, setState] = useState({
+    signature: serverSignature,
+    items: initialSettlements,
+  });
+
+  if (state.signature !== serverSignature) {
+    setState({ signature: serverSignature, items: initialSettlements });
+  }
+
+  const settlements = state.signature === serverSignature ? state.items : initialSettlements;
   const [isPending, startTransition] = useTransition();
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
@@ -43,24 +60,15 @@ export function SettlementList({
     if (!isOwner) return;
 
     // Optimistic update
-    let nowAllPaid = false;
-    setSettlements((prev) => {
-      const updated = prev.map((s) => {
-        if (s.id === settlementId) {
-          const nextPaid = !s.isPaid;
-          return {
-            ...s,
-            isPaid: nextPaid,
-            paidAt: nextPaid ? new Date() : null,
-          };
-        }
-        return s;
-      });
-
-      nowAllPaid = updated.length > 0 && updated.every((s) => s.isPaid);
-      return updated;
+    const updated = settlements.map((s) => {
+      if (s.id !== settlementId) return s;
+      const nextPaid = !s.isPaid;
+      return { ...s, isPaid: nextPaid, paidAt: nextPaid ? new Date() : null };
     });
 
+    setState({ signature: serverSignature, items: updated });
+
+    const nowAllPaid = updated.length > 0 && updated.every((s) => s.isPaid);
     if (nowAllPaid) {
       confetti({
         particleCount: 100,
@@ -75,7 +83,7 @@ export function SettlementList({
       } catch (err) {
         console.error("Failed to toggle settlement status:", err);
         // Revert on error
-        setSettlements(initialSettlements);
+        setState({ signature: serverSignature, items: initialSettlements });
       }
     });
   };

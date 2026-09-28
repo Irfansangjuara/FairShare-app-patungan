@@ -7,7 +7,7 @@ import { Key, ArrowLeft, Bot } from "lucide-react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Pengaturan AI & Bot Telegram | FairShare",
+  title: "Pengaturan AI & Bot Telegram",
   description:
     "Kustomisasi bot Telegram, provider model AI (DeepSeek, Claude, Gemini, dll.), dan alur pemrosesan suara FairShare.",
   alternates: {

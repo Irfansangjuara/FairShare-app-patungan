@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 
 import { Metadata } from "next";
+import { absoluteUrl } from "../../../lib/site-url";
 
 interface SharePageProps {
   params: Promise<{ token: string }>;
@@ -32,22 +33,26 @@ export async function generateMetadata({ params }: SharePageProps): Promise<Meta
 
   if (!eventData) {
     return {
-      title: "Rekap Patungan | FairShare",
+      title: "Rekap Patungan",
     };
   }
 
   const { event } = eventData;
-  const title = `Rekap Patungan: ${event.title} | FairShare`;
+  const title = `Rekap Patungan: ${event.title}`;
   const description = `Lihat rincian pengeluaran, saldo anggota, dan rekomendasi transfer pelunasan untuk event patungan "${event.title}".`;
   const ogImageUrl = "/assets/img/fair-share-cover.webp";
 
   return {
     title,
     description,
+    robots: {
+      index: false,
+      follow: false,
+    },
     openGraph: {
       title,
       description,
-      url: `https://app-fairshare.vercel.app/share/${token}`,
+      url: absoluteUrl(`/share/${token}`),
       siteName: "FairShare",
       images: [
         {

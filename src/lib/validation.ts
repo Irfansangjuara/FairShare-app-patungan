@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { API_SCOPE_VALUES } from "./scopes.ts";
 
 export const registerSchema = z
   .object({
@@ -134,5 +135,11 @@ export const siteSettingsSchema = z.object({
 
 export const apiTokenSchema = z.object({
   name: z.string().trim().min(2, "Nama token minimal 2 karakter").max(100),
-  scopes: z.array(z.string()).min(1, "Pilih minimal 1 permission scope"),
+  scopes: z
+    .array(
+      z.enum(API_SCOPE_VALUES, {
+        message: "Permission scope tidak dikenal",
+      })
+    )
+    .min(1, "Pilih minimal 1 permission scope"),
 });

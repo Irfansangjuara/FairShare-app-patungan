@@ -1,18 +1,28 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
-import { getSessionUser } from "../lib/auth";
 import { FairShareNavbar } from "../components/FairShareNavbar";
+import { SessionAwareCta } from "../components/SessionAwareCta";
 import { PublicFooter } from "../components/PublicFooter";
 import { WhatsAppFloatingButton } from "../components/WhatsAppFloatingButton";
 import SituationTestimonialSlider from "../components/SituationTestimonialSlider";
 import FeatureBadgesSlider from "../components/FeatureBadgesSlider";
 import { getSiteSettings } from "../server/queries";
 import { Receipt, ArrowLeftRight, Share2 } from "lucide-react";
+import { getBaseUrl } from "../lib/site-url";
+
+// Statically rendered and revalidated: keeps the <title>/<meta> in <head>,
+// makes the landing page CDN-cacheable and lets it enter the back/forward
+// cache. Session-dependent UI hydrates client-side (see SessionAwareCta).
+export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
-  const title = `${settings.siteName} | Bereskan Patungan Hangout Tanpa Bingung`;
+  // The root page lives in the same segment as the root layout, so Next.js does
+  // NOT apply the layout's `title.template` here — the brand must be explicit.
+  const siteName = settings.siteName || "FairShare";
+  const headline = "Bereskan Patungan Hangout Tanpa Bingung";
+  const title = `${headline} | ${siteName}`;
   const description =
     settings.defaultDescription ||
     "Fair Share mengubah catatan pengeluaran grup yang tercecer menjadi satu jawaban pasti: siapa membayar siapa, berapa nominal rupiahnya, dan apakah sudah lunas.";
@@ -27,7 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title,
       description,
-      url: "https://app-fairshare.vercel.app",
+      url: getBaseUrl(),
       siteName: settings.siteName,
       images: [
         {
@@ -50,8 +60,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const user = await getSessionUser();
-
   const faqs = [
     {
       q: "Apa itu Fair Share?",
@@ -98,8 +106,9 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900 font-sans">
       {/* Floating Header */}
-      <FairShareNavbar user={user} />
+      <FairShareNavbar />
 
+      <main>
       {/* Hero Section */}
       <section id="hero" className="relative isolate pt-6 md:pt-10">
         <div className="px-4 pt-12 md:pt-20 mx-auto max-w-6xl text-center relative z-10">
@@ -162,28 +171,10 @@ export default async function HomePage() {
               <Link href="/about" className="btn w-fit mx-auto btn-lg accent">
                 Kenali Fair Share
               </Link>
-              <Link
-                href={user ? "/dashboard" : "/register"}
+              <SessionAwareCta
                 className="btn btn-lg primary group"
-              >
-                {user ? "Buka Dashboard" : "Mulai Patungan Gratis"}
-                <span className="has-arrow inline-flex ml-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="3"
-                    stroke="currentColor"
-                    className="size-4"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-                    />
-                  </svg>
-                </span>
-              </Link>
+                signedInLabel="Buka Dashboard"
+              />
             </div>
 
             <Image
@@ -202,7 +193,8 @@ export default async function HomePage() {
           <img
             className="absolute right-0 bottom-0 left-0 mx-auto min-w-[900px] md:min-w-[1100px] w-full max-w-[1400px] md:-bottom-36 animate-slow-cloud select-none"
             src="/assets/img/fair-share-cloud.svg"
-            alt="Awan Fair Share"
+            alt=""
+            aria-hidden="true"
           />
         </div>
       </section>
@@ -345,28 +337,7 @@ export default async function HomePage() {
           </div>
 
           <div className="flex justify-center items-center p-6 bg-white md:bg-transparent rounded-2xl">
-            <Link
-              href={user ? "/dashboard" : "/register"}
-              className="btn primary btn-lg group w-full"
-            >
-              Mulai Patungan Gratis
-              <span className="has-arrow inline-flex ml-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="3"
-                  stroke="currentColor"
-                  className="size-4"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-                  />
-                </svg>
-              </span>
-            </Link>
+            <SessionAwareCta className="btn primary btn-lg group w-full" />
           </div>
         </div>
       </section>
@@ -385,10 +356,13 @@ export default async function HomePage() {
           className="px-4 bg-scroll bg-center bg-repeat-x animate-bg-scroll"
           style={{ backgroundImage: `url('/assets/img/fair-share-cloud.svg')` }}
         >
-          <img
+          <Image
             className="mx-auto w-full max-w-3xl"
             src="/assets/img/meong-maskot-9.webp"
             alt="Teman & Keluarga Bisa Patungan Lebih Rapi"
+            width={800}
+            height={800}
+            sizes="(max-width: 768px) 100vw, 768px"
           />
         </div>
       </section>
@@ -507,28 +481,7 @@ export default async function HomePage() {
               </div>
 
               <div className="flex justify-center relative z-20">
-                <Link
-                  href={user ? "/dashboard" : "/register"}
-                  className="btn primary btn-lg group shadow-sm"
-                >
-                  Mulai Patungan Gratis
-                  <span className="has-arrow inline-flex ml-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="3"
-                      stroke="currentColor"
-                      className="size-4"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-                      />
-                    </svg>
-                  </span>
-                </Link>
+                <SessionAwareCta className="btn primary btn-lg group shadow-sm" />
               </div>
             </div>
           </div>
@@ -538,6 +491,7 @@ export default async function HomePage() {
               className="absolute right-0 left-0 mx-auto animate-slow-cloud min-w-[900px] md:min-w-[1200px] w-full"
               src="/assets/img/fair-share-cloud2.svg"
               alt=""
+              aria-hidden="true"
             />
           </div>
         </div>
@@ -566,28 +520,7 @@ export default async function HomePage() {
             <div className="text-lg font-medium text-gray-600 leading-relaxed">
               Fair Share memperlihatkan total pengeluaran, jatah masing-masing, saldo setiap anggota, dan transfer pelunasan. Semua orang bisa memahami hasilnya tanpa hitung ulang.
             </div>
-            <Link
-              href={user ? "/dashboard" : "/register"}
-              className="btn primary btn-lg group mt-8 inline-flex"
-            >
-              Mulai Patungan Gratis
-              <span className="has-arrow inline-flex ml-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="3"
-                  stroke="currentColor"
-                  className="size-4"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-                  />
-                </svg>
-              </span>
-            </Link>
+            <SessionAwareCta className="btn primary btn-lg group mt-8 inline-flex" />
           </div>
           <div className="flex justify-center md:justify-end">
             <Image
@@ -640,6 +573,8 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      </main>
 
       {/* Footer */}
       <PublicFooter />

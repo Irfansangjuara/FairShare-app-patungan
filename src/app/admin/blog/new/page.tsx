@@ -2,7 +2,7 @@ import { ArticleEditor } from "@/components/ArticleEditor";
 import { requireAdmin } from "@/lib/auth";
 
 export const metadata = {
-  title: "Tulis Artikel Baru | Admin FairShare",
+  title: "Tulis Artikel Baru",
   robots: {
     index: false,
     follow: false,

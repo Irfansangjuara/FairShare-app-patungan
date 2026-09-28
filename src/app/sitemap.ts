@@ -2,37 +2,50 @@ import { MetadataRoute } from "next";
 import { db } from "../db";
 import { sitePages, articles } from "../db/schema";
 import { eq, and } from "drizzle-orm";
+import { getBaseUrl, absoluteUrl } from "../lib/site-url";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_APP_URL || "https://fairshare.copilotmarketing.id";
+  const baseUrl = getBaseUrl();
 
-  const entries: MetadataRoute.Sitemap = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 1.0,
-    },
-    {
-      url: `${baseUrl}/blog`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/login`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/register`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-  ];
+  const entries: MetadataRoute.Sitemap = [];
+  const seen = new Set<string>();
+
+  // Normalizes the URL (ignoring a trailing slash) so the same page is never
+  // emitted twice — e.g. the root `/` static entry and a dynamic `home` page.
+  const pushEntry = (entry: MetadataRoute.Sitemap[number]) => {
+    const key = entry.url.replace(/\/+$/, "");
+    if (seen.has(key)) return;
+    seen.add(key);
+    entries.push(entry);
+  };
+
+  pushEntry({
+    url: baseUrl,
+    lastModified: new Date(),
+    changeFrequency: "daily",
+    priority: 1.0,
+  });
+
+  pushEntry({
+    url: absoluteUrl("/blog"),
+    lastModified: new Date(),
+    changeFrequency: "daily",
+    priority: 0.9,
+  });
+
+  pushEntry({
+    url: absoluteUrl("/login"),
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.7,
+  });
+
+  pushEntry({
+    url: absoluteUrl("/register"),
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.7,
+  });
 
   try {
     // Dynamic published CMS pages
@@ -41,14 +54,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
 
     for (const page of pages) {
-      if (page.key !== "home") {
-        entries.push({
-          url: `${baseUrl}/${page.slug}`,
-          lastModified: page.updatedAt ? new Date(page.updatedAt) : new Date(),
-          changeFrequency: "weekly",
-          priority: 0.8,
-        });
-      }
+      if (page.key === "home" || !page.slug.trim()) continue;
+      pushEntry({
+        url: absoluteUrl(page.slug),
+        lastModified: page.updatedAt ? new Date(page.updatedAt) : new Date(),
+        changeFrequency: "weekly",
+        priority: 0.8,
+      });
     }
 
     // Dynamic published articles
@@ -57,8 +69,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
 
     for (const art of pubArticles) {
-      entries.push({
-        url: `${baseUrl}/blog/${art.slug}`,
+      if (!art.slug.trim()) continue;
+      pushEntry({
+        url: absoluteUrl(`/blog/${art.slug}`),
         lastModified: art.updatedAt ? new Date(art.updatedAt) : new Date(),
         changeFrequency: "weekly",
         priority: 0.8,

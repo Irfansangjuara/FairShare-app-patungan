@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Users, ArrowLeft, ShieldCheck } from "lucide-react";
 
 export const metadata = {
-  title: "Manajemen Pengguna | Admin FairShare",
+  title: "Manajemen Pengguna",
   description: "Kelola akun pengguna, hak akses administrator, dan atur kredensial.",
   robots: {
     index: false,

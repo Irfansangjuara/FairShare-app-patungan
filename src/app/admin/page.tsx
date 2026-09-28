@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "Admin Panel | FairShare",
+  title: "Admin Panel",
   description: "Pusat Kendali Administrasi FairShare - Manajemen Pengguna, Artikel Blog, CMS, dan SEO.",
   robots: {
     index: false,

@@ -22,28 +22,24 @@ export async function POST(req: NextRequest) {
     const text = message.text;
     const voice = message.voice;
 
-    // 1. Verify Telegram webhook secret token and find corresponding user AI config
+    // Authenticate the webhook. Telegram echoes the per-bot secret that was
+    // registered with setWebhook. Without it, an anonymous caller could drive
+    // any active tenant's bot, spend their AI credits and exfiltrate their
+    // event data to an arbitrary chat id.
     const secretHeader = req.headers.get("x-telegram-bot-api-secret-token");
-    let aiConfig = null;
-
-    if (secretHeader) {
-      aiConfig = await db.query.userAiSettings.findFirst({
-        where: and(
-          eq(userAiSettings.telegramWebhookSecret, secretHeader),
-          eq(userAiSettings.isBotActive, true)
-        ),
-      });
+    if (!secretHeader) {
+      return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
     }
 
-    if (!aiConfig) {
-      // Fallback for direct local testing / single-tenant setup
-      aiConfig = await db.query.userAiSettings.findFirst({
-        where: eq(userAiSettings.isBotActive, true),
-      });
-    }
+    const aiConfig = await db.query.userAiSettings.findFirst({
+      where: and(
+        eq(userAiSettings.telegramWebhookSecret, secretHeader),
+        eq(userAiSettings.isBotActive, true)
+      ),
+    });
 
     if (!aiConfig || !aiConfig.telegramBotToken) {
-      return NextResponse.json({ ok: true });
+      return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
     }
 
     const botToken = aiConfig.telegramBotToken;
@@ -159,8 +155,8 @@ Aturan:
     }
 
     return NextResponse.json({ ok: true });
-  } catch (err: any) {
+  } catch (err) {
     console.error("Telegram webhook error:", err);
-    return NextResponse.json({ ok: true, error: err?.message });
+    return NextResponse.json({ ok: false, error: "Internal error" }, { status: 500 });
   }
 }

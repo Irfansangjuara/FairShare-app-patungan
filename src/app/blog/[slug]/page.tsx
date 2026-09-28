@@ -1,11 +1,24 @@
-import { getArticleBySlug, getSiteSettings } from "../../../server/queries";
-import { getSessionUser } from "../../../lib/auth";
+import { getArticleBySlug, getPublishedArticles, getSiteSettings } from "../../../server/queries";
+import { absoluteUrl } from "../../../lib/site-url";
 import { FairShareNavbar } from "../../../components/FairShareNavbar";
+import { AdminOnly } from "../../../components/AdminOnly";
 import { PublicFooter } from "../../../components/PublicFooter";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Calendar, User, Share2, Tag, BookOpen } from "lucide-react";
 import { Metadata } from "next";
+
+export const revalidate = 300;
+
+/**
+ * Prerender every published article so each one is served as static HTML: the
+ * metadata lands in `<head>` and the response is CDN-cacheable. Articles
+ * published later are generated on demand and cached by the `revalidate` above.
+ */
+export async function generateStaticParams() {
+  const articles = await getPublishedArticles();
+  return articles.map((article) => ({ slug: article.slug }));
+}
 
 interface ArticleDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -15,17 +28,19 @@ export async function generateMetadata({
   params,
 }: ArticleDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const article = await getArticleBySlug(slug, true);
+  // Published-only: this route is publicly prerendered, so drafts must not
+  // surface here at all — not even through metadata.
+  const article = await getArticleBySlug(slug);
   const settings = await getSiteSettings();
 
   if (!article) {
     return {
-      title: `Artikel Tidak Ditemukan | ${settings.siteName}`,
+      title: "Artikel Tidak Ditemukan",
     };
   }
 
   return {
-    title: article.seoTitle || `${article.title} | ${settings.siteName}`,
+    title: article.seoTitle ? { absolute: article.seoTitle } : article.title,
     description: article.seoDescription || article.summary || article.title,
     alternates: {
       canonical: article.canonicalUrl || `/blog/${article.slug}`,
@@ -58,20 +73,15 @@ export async function generateMetadata({
 }
 
 export default async function ArticleDetailPage({ params }: ArticleDetailPageProps) {
-  const user = await getSessionUser();
   const { slug } = await params;
   const settings = await getSiteSettings();
 
-  // Allow admin to preview draft
-  const isAdmin = user?.role === "admin";
-  const article = await getArticleBySlug(slug, isAdmin);
-
-  if (!article) {
-    notFound();
-  }
+  const article = await getArticleBySlug(slug);
 
   // Requirement: Draft articles cannot be accessed by public visitors
-  if (article.status !== "published" && !isAdmin) {
+  // (getArticleBySlug only returns published rows for this public page,
+  // so a draft slug resolves to null and falls through to notFound()).
+  if (!article) {
     notFound();
   }
 
@@ -112,7 +122,7 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
 
   return (
     <div className="min-h-full flex flex-col bg-[#F8FAFC]">
-      <FairShareNavbar user={user} />
+      <FairShareNavbar />
 
       <main className="flex-1 mx-auto max-w-4xl w-full px-4 sm:px-6 py-8 sm:py-12">
         {/* Navigation Breadcrumb */}
@@ -125,14 +135,14 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
             <span>Kembali ke Semua Artikel</span>
           </Link>
 
-          {isAdmin && (
+          <AdminOnly>
             <Link
               href={`/admin/blog/${article.id}/edit`}
               className="text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-full transition-colors"
             >
               Edit di Admin
             </Link>
-          )}
+          </AdminOnly>
         </div>
 
         {/* Google SEO JSON-LD Structured Data */}
@@ -161,17 +171,11 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
               },
               mainEntityOfPage: {
                 "@type": "WebPage",
-                "@id": article.canonicalUrl || `https://fairshare.copilotmarketing.id/blog/${article.slug}`,
+                "@id": article.canonicalUrl || absoluteUrl(`/blog/${article.slug}`),
               },
             }),
           }}
         />
-
-        {article.status === "draft" && (
-          <div className="mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm font-semibold flex items-center justify-between">
-            <span>⚠️ Status: DRAFT — Artikel ini hanya terlihat oleh Administrator.</span>
-          </div>
-        )}
 
         <article className="card-diskon bg-white p-6 sm:p-12 border border-slate-200 space-y-8">
           <header className="space-y-4">

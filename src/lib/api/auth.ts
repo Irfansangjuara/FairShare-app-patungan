@@ -2,19 +2,32 @@ import { db } from "../../db/index.ts";
 import { apiTokens, users } from "../../db/schema.ts";
 import { eq, and } from "drizzle-orm";
 import crypto from "crypto";
+import { rateLimit } from "../rate-limit.ts";
+import { API_SCOPE_VALUES, type ApiScope } from "../scopes.ts";
 
 export type RequestWithHeaders = Request | { headers: { get(name: string): string | null } };
 
-export type ApiScope =
-  | "read:campaigns"
-  | "write:expenses"
-  | "read:settlements"
-  | "write:settlements"
-  | "admin:manage"
-  | "articles:read"
-  | "articles:write";
+export type { ApiScope };
+export { API_SCOPE_VALUES, USER_ASSIGNABLE_SCOPES, ADMIN_ONLY_SCOPES } from "../scopes.ts";
 
-export const OFFICIAL_AI_AGENT_TOKEN = "fs_live_copilot_ai_agent_master_key_2026";
+/**
+ * Optional official AI-agent token, supplied ONLY through the environment.
+ *
+ * Never hardcode this value: a token committed to the repository is a
+ * permanent, publicly known administrator backdoor. When
+ * `FAIRSHARE_AGENT_TOKEN` is unset there is no official agent token at all.
+ */
+export const OFFICIAL_AI_AGENT_TOKEN = process.env.FAIRSHARE_AGENT_TOKEN?.trim() || null;
+
+export const OFFICIAL_AI_AGENT_SCOPES: ApiScope[] = [
+  "admin:manage",
+  "articles:read",
+  "articles:write",
+  "read:campaigns",
+  "write:expenses",
+  "read:settlements",
+  "write:settlements",
+];
 
 export interface AuthResult {
   authorized: boolean;
@@ -38,37 +51,34 @@ export function generateTokenSecret(): { rawToken: string; tokenHash: string; to
   const randomBytes = crypto.randomBytes(24).toString("hex");
   const rawToken = `fs_live_${randomBytes}`;
   const tokenHash = hashToken(rawToken);
-  const tokenPrefix = `fs_live_${randomBytes.slice(0, 6)}...`;
+  const tokenPrefix = `fs_live_${randomBytes.slice(0, 8)}`;
   return { rawToken, tokenHash, tokenPrefix };
 }
 
-interface RateLimitBucket {
-  count: number;
-  resetAt: number;
-}
-const rateLimitMap = new Map<string, RateLimitBucket>();
-
+/**
+ * Fixed-window limiter keyed by token id: 120 requests/minute.
+ * Delegates to the shared process-local limiter.
+ */
 export function checkRateLimit(
   tokenId: string,
-  limit = 60,
+  limit = 120,
   windowMs = 60_000
 ): { allowed: boolean; remaining: number } {
-  const now = Date.now();
-  const bucket = rateLimitMap.get(tokenId);
-  if (!bucket || now > bucket.resetAt) {
-    rateLimitMap.set(tokenId, { count: 1, resetAt: now + windowMs });
-    return { allowed: true, remaining: limit - 1 };
-  }
-  if (bucket.count >= limit) {
-    return { allowed: false, remaining: 0 };
-  }
-  bucket.count += 1;
-  return { allowed: true, remaining: limit - bucket.count };
+  const result = rateLimit(`api-token:${tokenId}`, limit, windowMs);
+  return { allowed: result.allowed, remaining: result.remaining };
 }
 
+/**
+ * Verifies the `Authorization: Bearer fs_live_...` header for the public API.
+ *
+ * When a token is valid but lacks `requiredScope`, this returns
+ * `authorized: false` **with `user` and `tokenScopes` populated** so callers can
+ * implement documented OR-semantics (e.g. `admin:manage` also permits article
+ * writes). When the token itself is invalid, `user` is undefined.
+ */
 export async function verifyApiRequest(
   req: RequestWithHeaders,
-  requiredScope?: ApiScope
+  requiredScope?: ApiScope | ApiScope[]
 ): Promise<AuthResult> {
   const authHeader = req.headers.get("authorization");
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -79,7 +89,7 @@ export async function verifyApiRequest(
     };
   }
 
-  const rawToken = authHeader.replace("Bearer ", "").trim();
+  const rawToken = authHeader.slice("Bearer ".length).trim();
   if (!rawToken.startsWith("fs_live_")) {
     return {
       authorized: false,
@@ -88,121 +98,137 @@ export async function verifyApiRequest(
     };
   }
 
-  const tokenHash = hashToken(rawToken);
+  try {
+    const tokenHash = hashToken(rawToken);
 
-  let foundToken = await db.query.apiTokens.findFirst({
-    where: and(eq(apiTokens.tokenHash, tokenHash), eq(apiTokens.isRevoked, false)),
-    with: {
-      user: true,
-    },
-  });
-
-  // Auto-provision official AI Agent token if used and not yet recorded
-  if (!foundToken && rawToken === OFFICIAL_AI_AGENT_TOKEN) {
-    let adminUser = await db.query.users.findFirst({
-      where: eq(users.email, "admin@fairshare.copilotmarketing.id"),
+    let foundToken = await db.query.apiTokens.findFirst({
+      where: and(eq(apiTokens.tokenHash, tokenHash), eq(apiTokens.isRevoked, false)),
+      with: {
+        user: true,
+      },
     });
 
-    if (!adminUser) {
-      const [newAdmin] = await db
-        .insert(users)
+    // Environment-configured official agent token. It is recorded once for
+    // auditability, and NEVER auto-creates a user or grants administrator
+    // authority to an account that does not already exist.
+    if (!foundToken && OFFICIAL_AI_AGENT_TOKEN && rawToken === OFFICIAL_AI_AGENT_TOKEN) {
+      const agentEmail = process.env.FAIRSHARE_AGENT_EMAIL?.trim().toLowerCase();
+      if (!agentEmail) {
+        return {
+          authorized: false,
+          status: 503,
+          error:
+            "FAIRSHARE_AGENT_EMAIL belum diset. Setel env FAIRSHARE_AGENT_EMAIL ke email akun pemilik agent.",
+        };
+      }
+
+      const agentUser = await db.query.users.findFirst({
+        where: eq(users.email, agentEmail),
+      });
+
+      if (!agentUser) {
+        return {
+          authorized: false,
+          status: 503,
+          error: `Akun agent '${agentEmail}' tidak ditemukan. Buat akun tersebut (atau promosikan ke admin) terlebih dahulu.`,
+        };
+      }
+
+      const [recorded] = await db
+        .insert(apiTokens)
         .values({
-          name: "Admin FairShare",
-          email: "admin@fairshare.copilotmarketing.id",
-          passwordHash: "$2a$10$Q7w/0fS5jUj1dD6gK7HhU.K1zO0Y7m0u3cI5A.Zg3Jp9z1.XQjH.S",
-          role: "admin",
+          userId: agentUser.id,
+          name: "Official AI Agent Token (env)",
+          tokenHash,
+          tokenPrefix: `fs_live_${tokenHash.slice(0, 8)}`,
+          scopes: OFFICIAL_AI_AGENT_SCOPES,
         })
         .returning();
-      adminUser = newAdmin;
+
+      foundToken = { ...recorded, user: agentUser };
     }
 
-    const [createdToken] = await db
-      .insert(apiTokens)
-      .values({
-        userId: adminUser.id,
-        name: "Official Copilot AI Agent Master Token",
-        tokenHash,
-        tokenPrefix: "fs_live_copilot_ai_agent...",
-        scopes: [
-          "admin:manage",
-          "articles:read",
-          "articles:write",
-          "read:campaigns",
-          "write:expenses",
-          "read:settlements",
-          "write:settlements",
-        ],
-      })
-      .returning();
+    if (!foundToken || !foundToken.user) {
+      return {
+        authorized: false,
+        status: 401,
+        error: "Token API tidak valid atau telah dicabut.",
+      };
+    }
 
-    foundToken = {
-      ...createdToken,
-      user: adminUser,
-    };
-  }
+    if (foundToken.expiresAt && new Date(foundToken.expiresAt) < new Date()) {
+      return {
+        authorized: false,
+        status: 401,
+        error: "Token API telah kedaluwarsa. Silakan lakukan rotasi atau buat token baru.",
+      };
+    }
 
-  if (!foundToken || !foundToken.user) {
-    return {
-      authorized: false,
-      status: 401,
-      error: "Token API tidak valid atau telah dicabut.",
-    };
-  }
+    const limit = checkRateLimit(foundToken.id);
+    if (!limit.allowed) {
+      return {
+        authorized: false,
+        status: 429,
+        error:
+          "Terlalu banyak permintaan (Rate limit terlampaui: batas 120 request/menit). Silakan coba lagi beberapa saat.",
+      };
+    }
 
-  // Check token expiry if set
-  if (foundToken.expiresAt && new Date(foundToken.expiresAt) < new Date()) {
-    return {
-      authorized: false,
-      status: 401,
-      error: "Token API telah kedaluwarsa. Silakan lakukan rotasi atau buat token baru.",
-    };
-  }
-
-  // Rate limiting: 120 requests/minute per active token for agent
-  const rateLimit = checkRateLimit(foundToken.id, 120, 60_000);
-  if (!rateLimit.allowed) {
-    return {
-      authorized: false,
-      status: 429,
-      error: "Terlalu banyak permintaan (Rate limit terlampaui: batas 120 request/menit). Silakan coba lagi beberapa saat.",
-    };
-  }
-
-  // Scope check
-  if (requiredScope && !foundToken.scopes.includes(requiredScope)) {
-    return {
-      authorized: false,
-      status: 403,
-      error: `Token tidak memiliki izin yang dibutuhkan ('${requiredScope}'). Izin token Anda: ${foundToken.scopes.join(", ")}`,
-    };
-  }
-
-  // Update lastUsedAt asynchronously
-  try {
-    await db
-      .update(apiTokens)
-      .set({ lastUsedAt: new Date() })
-      .where(eq(apiTokens.id, foundToken.id));
-  } catch (err) {
-    // Non-fatal
-  }
-
-  return {
-    authorized: true,
-    user: {
+    const caller = {
       id: foundToken.user.id,
       email: foundToken.user.email,
       name: foundToken.user.name,
       role: foundToken.user.role || "user",
-    },
-    tokenId: foundToken.id,
-    tokenScopes: foundToken.scopes,
-  };
+    };
+
+    const required = requiredScope
+      ? Array.isArray(requiredScope)
+        ? requiredScope
+        : [requiredScope]
+      : [];
+
+    const hasScope =
+      required.length === 0 || required.some((scope) => foundToken!.scopes.includes(scope));
+
+    if (!hasScope) {
+      return {
+        authorized: false,
+        status: 403,
+        error: `Token tidak memiliki izin yang dibutuhkan ('${required.join("' atau '")}'). Izin token Anda: ${foundToken.scopes.join(", ")}`,
+        user: caller,
+        tokenId: foundToken.id,
+        tokenScopes: foundToken.scopes,
+      };
+    }
+
+    try {
+      await db
+        .update(apiTokens)
+        .set({ lastUsedAt: new Date() })
+        .where(eq(apiTokens.id, foundToken.id));
+    } catch {
+      // Non-fatal: usage bookkeeping must not fail the request.
+    }
+
+    return {
+      authorized: true,
+      user: caller,
+      tokenId: foundToken.id,
+      tokenScopes: foundToken.scopes,
+    };
+  } catch (err) {
+    console.error("verifyApiRequest failed:", err);
+    return {
+      authorized: false,
+      status: 500,
+      error: "Terjadi kesalahan saat memverifikasi token API.",
+    };
+  }
 }
 
 export async function verifyAdminApiRequest(
   req: RequestWithHeaders,
-  requiredScope?: ApiScope
+  requiredScope: ApiScope = "admin:manage"
 ): Promise<AuthResult> {
   const auth = await verifyApiRequest(req, requiredScope);
   if (!auth.authorized) {
@@ -217,6 +243,9 @@ export async function verifyAdminApiRequest(
       authorized: false,
       status: 403,
       error: "Akses Ditolak: Diperlukan hak akses Administrator atau scope 'admin:manage'.",
+      user: auth.user,
+      tokenId: auth.tokenId,
+      tokenScopes: auth.tokenScopes,
     };
   }
 

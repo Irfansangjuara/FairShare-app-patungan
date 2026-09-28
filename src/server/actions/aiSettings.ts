@@ -44,12 +44,23 @@ export async function getUserAiSettings() {
     };
   }
 
+  // Only masked secrets may cross the server -> client boundary.
+  // Never spread `settings` (it carries the raw telegramBotToken / aiApiKey).
   return {
-    ...settings,
-    aiProvider: (settings.aiProvider || "deepseek") as AIProviderId,
-    voiceResponseMode: (settings.voiceResponseMode || "text") as "text" | "voice" | "both",
+    telegramBotToken: null,
     telegramBotTokenMasked: maskSecret(settings.telegramBotToken),
+    telegramBotUsername: settings.telegramBotUsername,
+    isBotActive: settings.isBotActive,
+    telegramChatId: settings.telegramChatId,
+    aiProvider: (settings.aiProvider || "deepseek") as AIProviderId,
+    aiApiKey: null,
     aiApiKeyMasked: maskSecret(settings.aiApiKey),
+    aiModel: settings.aiModel,
+    customModelId: settings.customModelId,
+    voiceResponseMode: (settings.voiceResponseMode || "text") as
+      | "text"
+      | "voice"
+      | "both",
   };
 }
 

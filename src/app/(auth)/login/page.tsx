@@ -7,6 +7,7 @@ import { PublicFooter } from "../../../components/PublicFooter";
 import { WhatsAppFloatingButton } from "../../../components/WhatsAppFloatingButton";
 import { LoginForm } from "../../../components/LoginForm";
 import { getSiteSettings } from "../../../server/queries";
+import { absoluteUrl } from "../../../lib/site-url";
 
 interface LoginPageProps {
   searchParams: Promise<{ error?: string; redirect?: string }>;
@@ -28,7 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title,
       description,
-      url: "https://app-fairshare.vercel.app/login",
+      url: absoluteUrl("/login"),
       siteName: settings.siteName,
       images: [
         {

@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Token Akses Telegram | FairShare",
+  title: "Token Akses Telegram",
   description:
     "Token akses dan kredensial aman untuk integrasi bot Telegram dan agent otomasi yang terhubung dengan FairShare.",
   alternates: {

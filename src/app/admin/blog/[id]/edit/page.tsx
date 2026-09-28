@@ -6,7 +6,7 @@ import { ArticleEditor } from "@/components/ArticleEditor";
 import { requireAdmin } from "@/lib/auth";
 
 export const metadata = {
-  title: "Edit Artikel Blog | Admin FairShare",
+  title: "Edit Artikel Blog",
   robots: {
     index: false,
     follow: false,

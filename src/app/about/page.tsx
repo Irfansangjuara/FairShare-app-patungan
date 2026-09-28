@@ -2,22 +2,24 @@ import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
 import { getSitePageByKey, getSiteSettings } from "../../server/queries";
-import { getSessionUser } from "../../lib/auth";
 import { FairShareNavbar } from "../../components/FairShareNavbar";
 import { PublicFooter } from "../../components/PublicFooter";
 import { WhatsAppFloatingButton } from "../../components/WhatsAppFloatingButton";
+import { absoluteUrl } from "../../lib/site-url";
+
+export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getSitePageByKey("about");
   const settings = await getSiteSettings();
-  const title = page?.seoTitle || `Tentang Fair Share | Kelola Patungan & Pelunasan Adil`;
+  const title = page?.seoTitle || "Tentang Fair Share";
   const description =
     page?.seoDescription ||
     "Bukan sekadar bagi tagihan, Fair Share bikin patungan trip, makan bareng, dan liburan terasa adil tanpa drama spreadsheet.";
   const ogImageUrl = page?.ogImage || settings.defaultOgImage || "/assets/img/fair-share-cover.webp";
 
   return {
-    title,
+    title: page?.seoTitle ? { absolute: page.seoTitle } : title,
     description,
     alternates: {
       canonical: page?.canonicalUrl || "/about",
@@ -29,7 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title,
       description,
-      url: "https://app-fairshare.vercel.app/about",
+      url: absoluteUrl("/about"),
       siteName: settings.siteName,
       images: [
         {
@@ -51,12 +53,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function AboutPage() {
-  const user = await getSessionUser();
-
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900 font-sans">
       {/* Floating Header */}
-      <FairShareNavbar user={user} />
+      <FairShareNavbar />
 
       {/* Hero Section */}
       <section className="relative py-8 bg-gradient-to-t from-white md:py-16 overflow-hidden">

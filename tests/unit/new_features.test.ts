@@ -292,22 +292,29 @@ describe("Fitur Admin: Portal Login & Manajemen Pengguna", () => {
     assert.equal(canDeleteLastAdmin, false);
   });
 
-  it("memverifikasi format akun kredensial admin resmi copilotmarketing.id", () => {
+  it("memvalidasi kekuatan password admin melalui skema registrasi", () => {
     const adminEmail = "admin@fairshare.copilotmarketing.id";
-    const adminPass = "#@Cusn77";
 
-    const parsed = registerSchema.safeParse({
+    const accepted = registerSchema.safeParse({
       name: "Admin FairShare",
       email: adminEmail,
-      password: adminPass,
+      password: "Contoh-Sandi-Kuat-Uji-2026!",
     });
-    assert.equal(parsed.success, true);
+    assert.equal(accepted.success, true);
     assert.equal(adminEmail.endsWith("@fairshare.copilotmarketing.id"), true);
+
+    const rejected = registerSchema.safeParse({
+      name: "Admin FairShare",
+      email: adminEmail,
+      password: "123",
+    });
+    assert.equal(rejected.success, false);
   });
 
-  it("memverifikasi token resmi AI Agent master dan otorisasi admin API", async () => {
-    assert.equal(typeof OFFICIAL_AI_AGENT_TOKEN, "string");
-    assert.equal(OFFICIAL_AI_AGENT_TOKEN.startsWith("fs_live_"), true);
+  it("tidak menanam token AI Agent resmi di dalam kode sumber", async () => {
+    // Token agent resmi WAJIB berasal dari environment (FAIRSHARE_AGENT_TOKEN).
+    // Nilai hardcoded adalah backdoor admin yang dapat diketahui publik.
+    assert.equal(OFFICIAL_AI_AGENT_TOKEN, null);
 
     // Header tanpa token harus ditolak
     const unauth = await verifyAdminApiRequest({ headers: new Headers() });

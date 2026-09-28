@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Bot } from "lucide-react";
 
 export const metadata = {
-  title: "AI Agent & Integrasi API | Admin FairShare",
+  title: "AI Agent & Integrasi API",
   description: "Kelola token akses AI Agent untuk otomasi konten blog dan manajemen dashboard.",
   robots: {
     index: false,

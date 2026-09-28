@@ -57,9 +57,10 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
       unpaidSettlements: data.filter((s) => !s.isPaid).length,
       settlements: data,
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    console.error("GET /api/v1/campaigns/[id]/settlements error:", err);
     return NextResponse.json(
-      { error: `Internal server error: ${err?.message}` },
+      { error: "Terjadi kesalahan pada server." },
       { status: 500 }
     );
   }

@@ -52,7 +52,7 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
     }
 
     return NextResponse.json({ success: true, data: article });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("GET /api/v1/articles/[id] error:", error);
     return NextResponse.json(
       { success: false, error: "Gagal mengambil data artikel" },
@@ -65,10 +65,15 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
 // AI Agent updates article
 export async function PATCH(req: NextRequest, { params }: RouteProps) {
   const auth = await verifyApiRequest(req, "articles:write");
-  if (!auth.authorized) {
-    if (!auth.tokenScopes?.includes("admin:manage") && auth.user?.role !== "admin") {
-      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
-    }
+  const canWrite =
+    auth.authorized ||
+    auth.tokenScopes?.includes("admin:manage") ||
+    auth.user?.role === "admin";
+  if (!canWrite) {
+    return NextResponse.json(
+      { error: auth.error || "Akses ditolak." },
+      { status: auth.status || 401 }
+    );
   }
 
   try {
@@ -163,7 +168,7 @@ export async function PATCH(req: NextRequest, { params }: RouteProps) {
       adminUrl: `/admin/blog/${updatedArticle.id}/edit`,
       article: updatedArticle,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("PATCH /api/v1/articles/[id] error:", error);
     return NextResponse.json(
       { success: false, error: "Gagal memperbarui artikel" },
@@ -175,10 +180,15 @@ export async function PATCH(req: NextRequest, { params }: RouteProps) {
 // DELETE /api/v1/articles/[id]
 export async function DELETE(req: NextRequest, { params }: RouteProps) {
   const auth = await verifyApiRequest(req, "articles:write");
-  if (!auth.authorized) {
-    if (!auth.tokenScopes?.includes("admin:manage") && auth.user?.role !== "admin") {
-      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
-    }
+  const canWrite =
+    auth.authorized ||
+    auth.tokenScopes?.includes("admin:manage") ||
+    auth.user?.role === "admin";
+  if (!canWrite) {
+    return NextResponse.json(
+      { error: auth.error || "Akses ditolak." },
+      { status: auth.status || 401 }
+    );
   }
 
   try {
@@ -205,7 +215,7 @@ export async function DELETE(req: NextRequest, { params }: RouteProps) {
       success: true,
       message: `Artikel "${existing.title}" berhasil dihapus`,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("DELETE /api/v1/articles/[id] error:", error);
     return NextResponse.json(
       { success: false, error: "Gagal menghapus artikel" },

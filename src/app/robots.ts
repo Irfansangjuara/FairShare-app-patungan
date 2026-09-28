@@ -1,14 +1,14 @@
 import { MetadataRoute } from "next";
+import { getBaseUrl } from "../lib/site-url";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_APP_URL || "https://fairshare.copilotmarketing.id";
+  const baseUrl = getBaseUrl();
 
   return {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/api/", "/admin/", "/events/"],
+      disallow: ["/api/", "/admin/", "/dashboard/", "/events/", "/share/"],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
   };

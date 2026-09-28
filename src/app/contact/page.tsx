@@ -2,10 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
 import { getSitePageByKey, getSiteSettings } from "../../server/queries";
-import { getSessionUser } from "../../lib/auth";
 import { FairShareNavbar } from "../../components/FairShareNavbar";
 import { PublicFooter } from "../../components/PublicFooter";
 import { WhatsAppFloatingButton } from "../../components/WhatsAppFloatingButton";
+import { absoluteUrl } from "../../lib/site-url";
 import { PublicContactForm } from "../../components/PublicContactForm";
 import {
   Mail,
@@ -20,17 +20,23 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
+/** Support channels published in the CMS Contact page copy. Keep in sync. */
+const SUPPORT_EMAIL = "support@copilotmarketing.id";
+const SUPPORT_WHATSAPP = "6282350203300";
+
+export const revalidate = 300;
+
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getSitePageByKey("contact");
   const settings = await getSiteSettings();
-  const title = page?.seoTitle || `Kontak & Bantuan | ${settings.siteName}`;
+  const title = page?.seoTitle || "Kontak & Bantuan";
   const description =
     page?.seoDescription ||
     "Hubungi tim Fair Share untuk bantuan penggunaan, kendala perhitungan, saran fitur, ataupun pertanyaan seputar integrasi bot patungan.";
   const ogImageUrl = page?.ogImage || settings.defaultOgImage || "/assets/img/fair-share-cover.webp";
 
   return {
-    title,
+    title: page?.seoTitle ? { absolute: page.seoTitle } : title,
     description,
     alternates: {
       canonical: page?.canonicalUrl || "/contact",
@@ -42,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title,
       description,
-      url: "https://app-fairshare.vercel.app/contact",
+      url: absoluteUrl("/contact"),
       siteName: settings.siteName,
       images: [
         {
@@ -64,8 +70,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ContactPage() {
-  const user = await getSessionUser();
-
   const contactChannels = [
     {
       icon: MessageCircle,
@@ -74,7 +78,7 @@ export default async function ContactPage() {
       badgeColor: "bg-emerald-100 text-emerald-950",
       desc: "Konsultasi langsung dengan tim support Fair Share setiap hari kerja.",
       actionText: "Chat WhatsApp",
-      actionUrl: "https://wa.me/6281234567890?text=Halo%20FairShare,%20saya%20ingin%20bertanya%20seputar%20aplikasi",
+      actionUrl: `https://wa.me/${SUPPORT_WHATSAPP}?text=${encodeURIComponent("Halo FairShare, saya ingin bertanya seputar aplikasi")}`,
       iconBg: "bg-emerald-100 text-emerald-700",
     },
     {
@@ -83,8 +87,8 @@ export default async function ContactPage() {
       badge: "1x24 Jam",
       badgeColor: "bg-emerald-100 text-emerald-950",
       desc: "Kirimkan pertanyaan, laporan teknis, atau proposal kerjasama via email.",
-      actionText: "support@fairshare.id",
-      actionUrl: "mailto:support@fairshare.copilotmarketing.id",
+      actionText: SUPPORT_EMAIL,
+      actionUrl: `mailto:${SUPPORT_EMAIL}`,
       iconBg: "bg-emerald-100 text-emerald-700",
     },
     {
@@ -131,7 +135,7 @@ export default async function ContactPage() {
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900 font-sans">
       {/* Floating Header */}
-      <FairShareNavbar user={user} />
+      <FairShareNavbar />
 
       {/* Hero Section */}
       <section className="relative py-8 bg-gradient-to-t from-white md:py-16 overflow-hidden">
@@ -162,7 +166,7 @@ export default async function ContactPage() {
 
                   <div className="flex flex-wrap items-center gap-3 justify-center md:justify-start">
                     <a
-                      href="https://wa.me/6281234567890?text=Halo%20FairShare,%20saya%20butuh%20bantuan"
+                      href={`https://wa.me/${SUPPORT_WHATSAPP}?text=${encodeURIComponent("Halo FairShare, saya butuh bantuan")}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn btn-lg primary group inline-flex items-center gap-2"

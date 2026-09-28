@@ -71,13 +71,23 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       );
     }
 
-    const nominal = BigInt(Math.floor(Number(amount)));
-    if (nominal <= BigInt(0)) {
+    const numericAmount = Number(amount);
+    const isAmountValid =
+      amount !== undefined &&
+      amount !== null &&
+      amount !== "" &&
+      Number.isFinite(numericAmount) &&
+      Number.isInteger(numericAmount) &&
+      numericAmount > 0;
+
+    if (!isAmountValid) {
       return NextResponse.json(
         { error: "Field 'amount' harus berupa angka positif integer Rupiah." },
         { status: 400 }
       );
     }
+
+    const nominal = BigInt(numericAmount);
 
     // 5. Verify payer
     const payer = allMembers.find((m) => m.id === paidByMemberId);
@@ -123,9 +133,10 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       },
       { status: 201 }
     );
-  } catch (err: any) {
+  } catch (err: unknown) {
+    console.error("POST /api/v1/campaigns/[id]/expenses error:", err);
     return NextResponse.json(
-      { error: `Gagal memproses request: ${err?.message}` },
+      { error: "Gagal memproses request." },
       { status: 500 }
     );
   }

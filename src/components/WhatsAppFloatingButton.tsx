@@ -4,14 +4,20 @@ export function WhatsAppFloatingButton() {
   return (
     <Link
       href="/register"
-      aria-label="Daftar FairShare"
+      aria-label="Daftar FairShare — Ada Pertanyaan?"
       className="fixed bottom-10 right-6 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300 shadow-lg transition-transform hover:scale-105"
     >
-      <span className="absolute inline-flex w-14 h-14 rounded-full opacity-75 animate-ping bg-green-400"></span>
+      <span
+        aria-hidden="true"
+        className="absolute inline-flex w-14 h-14 rounded-full opacity-75 animate-ping bg-green-400"
+      ></span>
       <span className="absolute right-16 bg-white text-gray-800 text-xs font-semibold block px-3.5 py-2 rounded-2xl w-max shadow border border-gray-100">
         Ada Pertanyaan?
       </span>
-      <span className="absolute top-0.5 right-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center shadow">
+      <span
+        aria-hidden="true"
+        className="absolute top-0.5 right-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center shadow"
+      >
         1
       </span>
       <svg

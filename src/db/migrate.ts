@@ -187,27 +187,64 @@ export async function ensureDatabaseSchema(): Promise<void> {
         user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         name varchar(100) NOT NULL,
         token_hash text NOT NULL UNIQUE,
-        token_prefix varchar(16) NOT NULL,
+        token_prefix varchar(64) NOT NULL,
         scopes text[] DEFAULT ARRAY['read:campaigns']::text[] NOT NULL,
         last_used_at timestamptz,
         expires_at timestamptz,
         is_revoked boolean DEFAULT false NOT NULL,
         created_at timestamptz DEFAULT now() NOT NULL
-      )`
+      )`,
+      // Historical schema used varchar(16), which the generated 17-character
+      // prefix ("fs_live_" + 8 hex chars) overflows — insert failed with
+      // "value too long for type character varying(16)".
+      `ALTER TABLE api_tokens ALTER COLUMN token_prefix TYPE varchar(64)`
     ];
 
     for (const stmt of tableStatements) {
       await db.execute(sql.raw(stmt));
     }
 
-    // 3. Ensure admin account exists with 'admin' role
-    const adminPasswordHash = await bcrypt.hash("admin#123", 10);
-    await db.execute(sql`
-      INSERT INTO users (id, email, name, password_hash, role)
-      VALUES (gen_random_uuid(), 'admin@admin.com', 'Administrator', ${adminPasswordHash}, 'admin')
-      ON CONFLICT (email) 
-      DO UPDATE SET password_hash = ${adminPasswordHash}, role = 'admin';
-    `);
+    // 3. Administrator bootstrap — driven ONLY by environment variables.
+    //    No credential is ever hardcoded: a literal password in the source is a
+    //    permanent, publicly known administrator backdoor.
+    const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase() || null;
+    const adminPassword = process.env.ADMIN_PASSWORD || null;
+
+    if (adminEmail && adminPassword) {
+      const adminPasswordHash = await bcrypt.hash(adminPassword, 10);
+      await db.execute(sql`
+        INSERT INTO users (id, email, name, password_hash, role)
+        VALUES (gen_random_uuid(), ${adminEmail}, 'Administrator', ${adminPasswordHash}, 'admin')
+        ON CONFLICT (email)
+        DO UPDATE SET password_hash = ${adminPasswordHash}, role = 'admin';
+      `);
+    } else {
+      console.warn(
+        "[FairShare] ADMIN_EMAIL/ADMIN_PASSWORD belum diset: tidak ada akun administrator yang dibuat, dan akun default lama dinonaktifkan. Akibatnya /admin TIDAK dapat diakses sampai kedua variabel ini diset dan aplikasi dijalankan ulang. Set keduanya di environment (lihat README)."
+      );
+    }
+
+    // 3b. Neutralize the historical backdoor accounts. Both addresses shipped
+    //     with well-known default passwords in the source and in the public
+    //     admin login form, so neither may retain administrator access. Their
+    //     passwords are permanently public, which makes leaving them enabled a
+    //     full admin takeover regardless of everything else.
+    //     The configured ADMIN_EMAIL (if any) is exempt — it was just upserted
+    //     above with a secret-managed password.
+    const LEGACY_BACKDOOR_EMAILS = [
+      "admin@admin.com",
+      "admin@fairshare.copilotmarketing.id",
+    ];
+
+    for (const legacyEmail of LEGACY_BACKDOOR_EMAILS) {
+      if (adminEmail === legacyEmail) continue;
+      await db.execute(sql`
+        UPDATE users
+        SET role = 'user', password_hash = NULL
+        WHERE email = ${legacyEmail}
+          AND (role = 'admin' OR password_hash IS NOT NULL)
+      `);
+    }
 
     // 4. Seed default site settings if not exists
     await db.execute(sql`

@@ -27,30 +27,9 @@ export async function seedDemoData() {
     console.log("✓ Created demo user:", user.email);
   }
 
-  // 1b. Check or create admin user
-  const adminEmail = "admin@admin.com";
-  const adminPasswordHash = await hashPassword("admin#123");
-  const existingAdmin = await db.query.users.findFirst({
-    where: eq(users.email, adminEmail),
-  });
-
-  if (!existingAdmin) {
-    const [createdAdmin] = await db
-      .insert(users)
-      .values({
-        email: adminEmail,
-        name: "Administrator",
-        passwordHash: adminPasswordHash,
-      })
-      .returning();
-    console.log("✓ Created admin user:", createdAdmin.email);
-  } else {
-    await db
-      .update(users)
-      .set({ passwordHash: adminPasswordHash })
-      .where(eq(users.id, existingAdmin.id));
-    console.log("✓ Updated admin user password:", existingAdmin.email);
-  }
+  // 1b. Administrator bootstrap is environment-driven (see
+  //     ensureDatabaseSchema). The demo seeder must never create a
+  //     well-known administrator password.
 
   // 2. Check if benchmark event exists
   const existingEvent = await db.query.events.findFirst({

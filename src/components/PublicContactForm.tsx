@@ -1,7 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Send, CheckCircle2, MessageSquare, Mail, Phone, Sparkles, ArrowRight } from "lucide-react";
+import { Send, CheckCircle2, Mail, Phone, Sparkles, ArrowRight } from "lucide-react";
+
+/** Support channels published on the Contact page. Keep in sync with the CMS copy. */
+const SUPPORT_EMAIL = "support@copilotmarketing.id";
+const SUPPORT_WHATSAPP = "6282350203300";
 
 export function PublicContactForm() {
   const [name, setName] = useState("");
@@ -9,61 +13,97 @@ export function PublicContactForm() {
   const [phone, setPhone] = useState("");
   const [category, setCategory] = useState("Pertanyaan Umum & Cara Pakai");
   const [message, setMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submittedData, setSubmittedData] = useState<{ ticketId: string; name: string } | null>(null);
+  const [submitted, setSubmitted] = useState<{ name: string; mailtoUrl: string; waUrl: string } | null>(
+    null
+  );
+
+  const buildComposedMessage = () => {
+    const body = [
+      `Nama: ${name.trim()}`,
+      `Email: ${email.trim()}`,
+      phone.trim() ? `WhatsApp: ${phone.trim()}` : null,
+      `Kategori: ${category}`,
+      "",
+      message.trim(),
+    ]
+      .filter((line) => line !== null)
+      .join("\n");
+
+    const mailtoUrl = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(
+      `[${category}] Pesan dari ${name.trim()}`
+    )}&body=${encodeURIComponent(body)}`;
+
+    const waUrl = `https://wa.me/${SUPPORT_WHATSAPP}?text=${encodeURIComponent(body)}`;
+
+    return { mailtoUrl, waUrl };
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !email.trim() || !message.trim()) return;
 
-    setIsSubmitting(true);
-    // Simulate instantaneous graceful submission
-    setTimeout(() => {
-      const ticketId = `FS-${Math.floor(100000 + Math.random() * 900000)}`;
-      setSubmittedData({ ticketId, name: name.trim() });
-      setIsSubmitting(false);
-      setName("");
-      setEmail("");
-      setPhone("");
-      setMessage("");
-    }, 700);
+    const { mailtoUrl, waUrl } = buildComposedMessage();
+    const submittedName = name.trim();
+
+    // There is no mail server behind this form, so hand the fully composed
+    // message to the visitor's own mail client rather than pretending the
+    // server received it (which would silently drop the message).
+    window.location.href = mailtoUrl;
+
+    setSubmitted({ name: submittedName, mailtoUrl, waUrl });
+    setName("");
+    setEmail("");
+    setPhone("");
+    setMessage("");
   };
 
-  if (submittedData) {
+  if (submitted) {
     return (
       <div className="rounded-3xl border-2 border-lime-400 bg-slate-950 p-6 sm:p-10 text-white shadow-2xl animate-in zoom-in-95 space-y-5">
         <div className="inline-flex items-center gap-2 rounded-full bg-lime-400/20 px-3.5 py-1 text-xs font-bold text-lime-400 font-sans">
           <CheckCircle2 className="h-4 w-4" />
-          <span>Pesan Berhasil Terkirim!</span>
+          <span>Pesan Siap Dikirim</span>
         </div>
 
         <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-          Terima kasih, {submittedData.name}!
+          Terima kasih, {submitted.name}!
         </h3>
 
         <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-          Pesan dan pertanyaan Anda telah kami terima dengan nomor tiket{" "}
-          <strong className="text-[#b7e913] font-mono">#{submittedData.ticketId}</strong>.
-          Tim Fair Share akan merespons melalui email Anda dalam waktu maksimal 1x24 jam kerja.
+          Aplikasi email Anda seharusnya sudah terbuka dengan pesan yang terisi lengkap. Tekan{" "}
+          <strong className="text-[#b7e913]">Kirim</strong> di aplikasi email Anda untuk
+          menyelesaikannya ke <strong className="text-[#b7e913]">{SUPPORT_EMAIL}</strong>.
+        </p>
+
+        <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">
+          Email belum terbuka, atau ingin dibalas lebih cepat? Kirim pesan yang sama lewat WhatsApp
+          di bawah ini — pesannya sudah terisi otomatis.
         </p>
 
         <div className="pt-2 flex flex-col sm:flex-row gap-3">
-          <button
-            type="button"
-            onClick={() => setSubmittedData(null)}
-            className="btn-pill-lime text-xs sm:text-sm py-3 px-6 font-bold"
-          >
-            Kirim Pesan Lainnya
-          </button>
           <a
-            href="https://wa.me/6281234567890?text=Halo%20FairShare,%20saya%20butuh%20bantuan%20cepat"
+            href={submitted.waUrl}
             target="_blank"
             rel="noopener noreferrer"
+            className="btn-pill-lime text-xs sm:text-sm py-3 px-6 font-bold inline-flex items-center justify-center gap-2"
+          >
+            <Phone className="h-4 w-4" />
+            <span>Kirim via WhatsApp</span>
+          </a>
+          <a
+            href={submitted.mailtoUrl}
             className="inline-flex items-center justify-center gap-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm py-3 px-6 font-semibold transition-colors"
           >
-            <Phone className="h-4 w-4 text-lime-400" />
-            <span>Chat Cepat via WhatsApp</span>
+            <Mail className="h-4 w-4 text-lime-400" />
+            <span>Buka Ulang Aplikasi Email</span>
           </a>
+          <button
+            type="button"
+            onClick={() => setSubmitted(null)}
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm py-3 px-6 font-semibold transition-colors"
+          >
+            <span>Kirim Pesan Lainnya</span>
+          </button>
         </div>
       </div>
     );
@@ -163,10 +203,9 @@ export function PublicContactForm() {
 
         <button
           type="submit"
-          disabled={isSubmitting}
           className="btn primary btn-lg group w-full sm:w-auto inline-flex items-center justify-center gap-2"
         >
-          <span>{isSubmitting ? "Mengirim Pesan..." : "Kirim Pesan Sekarang"}</span>
+          <span>Kirim Pesan Sekarang</span>
           <Send className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
         </button>
       </div>

@@ -2,7 +2,7 @@
 
 Aplikasi web modern untuk mencatat biaya bersama dalam trip atau kegiatan, menghitung jatah dan saldo setiap peserta secara presisi, menyusun usulan transfer pelunasan sederhana (deterministik greedy), menandai checklist pelunasan persisten, serta menyalin rekap siap kirim ke WhatsApp.
 
-Aplikasi di-deploy ke Vercel: **[https://app-fairshare.vercel.app](https://app-fairshare.vercel.app)**
+Aplikasi di-deploy ke Vercel: **[https://fairshare.copilotmarketing.id](https://fairshare.copilotmarketing.id)**
 
 ---
 
@@ -53,7 +53,14 @@ Salin `.env.example` menjadi `.env` dan sesuaikan nilainya:
 ```env
 DATABASE_URL=postgresql://localhost:5432/fairshare
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-SESSION_SECRET=fairshare_jwt_session_secret_key_super_secure_32_chars_min!
+
+# Wajib: nilai ACAK minimal 32 karakter. Tidak ada fallback di kode, dan nilai
+# contoh yang pernah ter-commit akan DITOLAK (fails closed).
+SESSION_SECRET=<hasil-generate-acak>
+
+# Akun administrator di-bootstrap dari environment (tidak ada kredensial di kode).
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD=<password-kuat-anda>
 
 # Google OAuth Credentials
 GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
@@ -61,11 +68,20 @@ GOOGLE_CLIENT_SECRET=your-client-secret
 GOOGLE_REDIRECT_URI=http://localhost:3000/api/auth/google/callback
 ```
 
+Generate `SESSION_SECRET` dengan:
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
+```
+
 ### 3. Instalasi Dependensi & Migrasi Database
 ```bash
 npm install
-npm run db:push
+npm run db:migrate
 ```
+
+> Skema database juga **migrasi otomatis** saat aplikasi pertama kali menyentuh
+> database (`ensureDatabaseSchema`), sehingga `db:migrate` hanya perlu dijalankan
+> bila Anda ingin memverifikasi lebih awal.
 
 ### 4. Jalankan Server Development
 ```bash
@@ -77,19 +93,25 @@ Buka browser di **[http://localhost:3000](http://localhost:3000)**.
 
 ## ☁️ Pengaturan Deployment Vercel
 
-Pada dashboard proyek di **Vercel** (`app-fairshare.vercel.app`), tambahkan Environment Variables berikut:
+Pada dashboard proyek di **Vercel**, tambahkan Environment Variables berikut:
 
 1. `DATABASE_URL`: Connection string PostgreSQL cloud (misal Neon / Supabase / Vercel Postgres) dengan `sslmode=require`.
-2. `NEXT_PUBLIC_APP_URL`: `https://app-fairshare.vercel.app`
-3. `SESSION_SECRET`: String acak 32 karakter untuk pengamanan sesi cookie.
-4. `GOOGLE_CLIENT_ID`: Google OAuth Client ID.
-5. `GOOGLE_CLIENT_SECRET`: Google OAuth Client Secret.
-6. `GOOGLE_REDIRECT_URI`: `https://app-fairshare.vercel.app/api/auth/google/callback`
+2. `NEXT_PUBLIC_APP_URL`: `https://fairshare.copilotmarketing.id`
+3. `SESSION_SECRET`: String **acak** minimal 32 karakter untuk menandatangani state OAuth dan token session-sync. Nilai contoh lama dari repo akan ditolak.
+4. `ADMIN_EMAIL` + `ADMIN_PASSWORD`: akun administrator dibuat/di-rotate dari nilai ini saat aplikasi start. **Tanpa keduanya, `/admin` tidak dapat diakses** (fail-closed) dan akun default lama tetap dinonaktifkan.
+5. `GOOGLE_CLIENT_ID`: Google OAuth Client ID.
+6. `GOOGLE_CLIENT_SECRET`: Google OAuth Client Secret.
+7. `GOOGLE_REDIRECT_URI`: `https://fairshare.copilotmarketing.id/api/auth/google/callback`
 
 > [!IMPORTANT]
 > Di **Google Cloud Console (Credentials)**, tambahkan kedua URL berikut pada **Authorized redirect URIs**:
 > 1. `http://localhost:3000/api/auth/google/callback` (untuk pengujian lokal)
-> 2. `https://app-fairshare.vercel.app/api/auth/google/callback` (untuk versi live di Vercel)
+> 2. `https://fairshare.copilotmarketing.id/api/auth/google/callback` (untuk versi live di Vercel)
+
+> [!NOTE]
+> **AI Agent resmi (opsional).** Token agent tidak lagi ditanam di kode. Set
+> `FAIRSHARE_AGENT_TOKEN` (nilai acak ≥ 32 karakter) dan `FAIRSHARE_AGENT_EMAIL`
+> (harus menunjuk akun yang sudah ada) bila Anda memakai otomasi artikel/API.
 
 ---
 

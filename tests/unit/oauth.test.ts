@@ -8,6 +8,11 @@ import {
   verifySessionSyncToken,
 } from "../../src/lib/oauth-state.ts";
 
+// `oauth-state` deliberately has no hardcoded fallback signing key: it fails
+// closed unless a suitable SESSION_SECRET (or GOOGLE_CLIENT_SECRET) is set.
+// Supply one for the test process before any signing helper is invoked.
+process.env.SESSION_SECRET ??= "unit-test-oauth-signing-secret-32chars-min";
+
 describe("Google OAuth Security & Resilient State Verification", () => {
   test("generates and verifies valid signed OAuth state successfully without cookie", () => {
     const origin = "https://fairshare.copilotmarketing.id";

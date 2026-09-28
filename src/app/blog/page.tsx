@@ -1,14 +1,17 @@
 import { getPublishedArticles, getSiteSettings } from "../../server/queries";
-import { getSessionUser } from "../../lib/auth";
 import { FairShareNavbar } from "../../components/FairShareNavbar";
+import { AdminOnly } from "../../components/AdminOnly";
 import { PublicFooter } from "../../components/PublicFooter";
 import Link from "next/link";
 import { Calendar, ArrowRight, BookOpen, Clock, Tag } from "lucide-react";
 import { Metadata } from "next";
+import { absoluteUrl } from "../../lib/site-url";
+
+export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
-  const title = `Blog & Panduan Finansial Trip | ${settings.siteName}`;
+  const title = "Blog & Panduan Finansial Trip";
   const description = "Tips, panduan, dan artikel seputar cara mudah mengelola patungan, liburan hemat, dan keuangan bersama.";
   const ogImageUrl = settings.defaultOgImage || "/assets/img/fair-share-cover.webp";
 
@@ -21,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title,
       description,
-      url: "https://app-fairshare.vercel.app/blog",
+      url: absoluteUrl("/blog"),
       siteName: settings.siteName,
       images: [
         {
@@ -43,12 +46,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function BlogIndexPage() {
-  const user = await getSessionUser();
   const articles = await getPublishedArticles();
 
   return (
     <div className="min-h-full flex flex-col bg-[#F8FAFC]">
-      <FairShareNavbar user={user} />
+      <FairShareNavbar />
 
       <main className="flex-1 mx-auto max-w-6xl w-full px-4 sm:px-6 py-8 sm:py-14">
         {/* Header */}
@@ -75,7 +77,7 @@ export default async function BlogIndexPage() {
             <p className="text-xs text-slate-500 mt-1 mb-5">
               Artikel informatif sedang dipersiapkan oleh tim redaksi kami. Kunjungi kembali dalam waktu dekat!
             </p>
-            {user?.role === "admin" && (
+            <AdminOnly>
               <Link
                 href="/admin/blog/new"
                 className="btn-pill-lime text-xs py-2 px-4 inline-flex items-center gap-1.5 font-bold"
@@ -83,7 +85,7 @@ export default async function BlogIndexPage() {
                 <span>Tulis Artikel Pertama</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
-            )}
+            </AdminOnly>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -1,9 +1,36 @@
 import crypto from "crypto";
 
-const OAUTH_SECRET =
-  process.env.SESSION_SECRET ||
-  process.env.GOOGLE_CLIENT_SECRET ||
-  "fairshare_oauth_secret_fallback_key_2025_secure";
+/**
+ * Values that shipped inside this repository (`.env.example`, source fallbacks)
+ * and are therefore publicly known. Accepting one as the signing key would let
+ * anyone forge OAuth `state` tokens and cross-domain session-sync tokens, so
+ * they are rejected outright.
+ */
+const COMPROMISED_SECRETS: Record<string, true> = {
+  "fairshare_jwt_session_secret_key_super_secure_32_chars_min!": true,
+  "fairshare_oauth_secret_fallback_key_2025_secure": true,
+};
+
+/**
+ * HMAC key for signed OAuth `state` tokens and cross-domain session-sync
+ * tokens. It MUST come from the environment.
+ *
+ * A hardcoded fallback would be a publicly known signing key: an attacker
+ * could then forge a valid `state` (or session-sync token) and take over a
+ * session. When no suitable secret is configured this fails closed rather
+ * than silently using a shared constant.
+ */
+function requireOAuthSecret(): string {
+  const candidates = [process.env.SESSION_SECRET, process.env.GOOGLE_CLIENT_SECRET];
+  for (const candidate of candidates) {
+    if (candidate && candidate.length >= 32 && !Object.hasOwn(COMPROMISED_SECRETS, candidate)) {
+      return candidate;
+    }
+  }
+  throw new Error(
+    "SESSION_SECRET wajib diisi dengan nilai acak minimal 32 karakter (nilai contoh yang publik ditolak) untuk menandatangani state OAuth dan token session-sync."
+  );
+}
 
 export interface OAuthStatePayload {
   nonce: string;
@@ -31,7 +58,7 @@ export function generateSignedOAuthState(
   };
   const serialized = Buffer.from(JSON.stringify(payload)).toString("base64url");
   const signature = crypto
-    .createHmac("sha256", OAUTH_SECRET)
+    .createHmac("sha256", requireOAuthSecret())
     .update(serialized)
     .digest("base64url");
   return `${serialized}.${signature}`;
@@ -57,7 +84,7 @@ export function verifySignedOAuthState(
     if (parts.length === 2) {
       const [serialized, signature] = parts;
       const expectedSig = crypto
-        .createHmac("sha256", OAUTH_SECRET)
+        .createHmac("sha256", requireOAuthSecret())
         .update(serialized)
         .digest("base64url");
 
@@ -138,6 +165,31 @@ export function resolveOAuthRedirectUri(host: string): string {
 }
 
 /**
+ * Allowlist for the post-login redirect origin carried inside the signed OAuth
+ * state. Trusting an arbitrary payload origin would turn a leaked signing key
+ * into an open redirect that hands the session-sync token to an attacker host.
+ */
+export function isTrustedOrigin(origin: string): boolean {
+  try {
+    const url = new URL(origin);
+    if (url.protocol !== "http:" && url.protocol !== "https:") {
+      return false;
+    }
+    const host = url.hostname.toLowerCase();
+    return (
+      host === "localhost" ||
+      host === "127.0.0.1" ||
+      host === "copilotmarketing.id" ||
+      host.endsWith(".copilotmarketing.id") ||
+      host === "app-fairshare.vercel.app" ||
+      host === "www.app-fairshare.vercel.app"
+    );
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Creates a short-lived (2 minutes) cryptographically signed token for transferring
  * session safely across domains (e.g. from app-fairshare.vercel.app to fairshare.copilotmarketing.id).
  */
@@ -149,7 +201,7 @@ export function createSessionSyncToken(sessionId: string): string {
   };
   const serialized = Buffer.from(JSON.stringify(payload)).toString("base64url");
   const signature = crypto
-    .createHmac("sha256", OAUTH_SECRET)
+    .createHmac("sha256", requireOAuthSecret())
     .update(serialized)
     .digest("base64url");
   return `${serialized}.${signature}`;
@@ -167,7 +219,7 @@ export function verifySessionSyncToken(
     if (parts.length !== 2) return { valid: false };
     const [serialized, signature] = parts;
     const expectedSig = crypto
-      .createHmac("sha256", OAUTH_SECRET)
+      .createHmac("sha256", requireOAuthSecret())
       .update(serialized)
       .digest("base64url");
 

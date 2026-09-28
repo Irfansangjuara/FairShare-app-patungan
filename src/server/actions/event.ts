@@ -126,12 +126,24 @@ export async function deleteEventAction(eventId: string) {
     redirect("/login");
   }
 
+  // Ownership must be established BEFORE any destructive statement: the child
+  // rows are keyed only by eventId, so deleting them without this check would
+  // let any authenticated user wipe another user's members/expenses/settlements.
+  const owned = await db.query.events.findFirst({
+    where: and(eq(events.id, eventId), eq(events.ownerId, user.id)),
+    columns: { id: true },
+  });
+
+  if (!owned) {
+    return { error: "Event tidak ditemukan atau Anda tidak memiliki izin." };
+  }
+
   // Delete dependencies in order inside a transaction to prevent foreign key restrict violations
   await db.transaction(async (tx) => {
     await tx.delete(settlements).where(eq(settlements.eventId, eventId));
     await tx.delete(expenses).where(eq(expenses.eventId, eventId));
     await tx.delete(members).where(eq(members.eventId, eventId));
-    await tx.delete(events).where(and(eq(events.id, eventId), eq(events.ownerId, user.id)));
+    await tx.delete(events).where(eq(events.id, eventId));
   });
 
   revalidatePath("/dashboard");

@@ -49,11 +49,10 @@ export async function GET(req: NextRequest) {
       limit,
       with: {
         author: {
-          columns: {
-            id: true,
-            name: true,
-            email: true,
-          },
+          // Only privileged callers may see the author's email address.
+          columns: hasAdminOrReadScope
+            ? { id: true, name: true, email: true }
+            : { id: true, name: true },
         },
       },
     });
@@ -63,7 +62,7 @@ export async function GET(req: NextRequest) {
       total: list.length,
       data: list,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("GET /api/v1/articles error:", error);
     return NextResponse.json(
       { success: false, error: "Gagal mengambil daftar artikel" },
@@ -76,11 +75,15 @@ export async function GET(req: NextRequest) {
 // AI Agent creates a new blog article
 export async function POST(req: NextRequest) {
   const auth = await verifyApiRequest(req, "articles:write");
-  if (!auth.authorized) {
-    // Also accept admin:manage
-    if (!auth.tokenScopes?.includes("admin:manage") && auth.user?.role !== "admin") {
-      return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
-    }
+  const canWrite =
+    auth.authorized ||
+    auth.tokenScopes?.includes("admin:manage") ||
+    auth.user?.role === "admin";
+  if (!canWrite) {
+    return NextResponse.json(
+      { error: auth.error || "Akses ditolak." },
+      { status: auth.status || 401 }
+    );
   }
 
   try {
@@ -173,7 +176,7 @@ export async function POST(req: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("POST /api/v1/articles error:", error);
     return NextResponse.json(
       { success: false, error: "Gagal membuat artikel baru" },

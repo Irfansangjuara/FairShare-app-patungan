@@ -12,17 +12,28 @@ import {
 } from "drizzle-orm/pg-core";
 import { sql, relations } from "drizzle-orm";
 
-export const users = pgTable("users", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  email: text("email").notNull().unique(),
-  phone: varchar("phone", { length: 30 }),
-  googleId: text("google_id").unique(),
-  name: varchar("name", { length: 120 }).notNull(),
-  avatarUrl: text("avatar_url"),
-  passwordHash: text("password_hash"),
-  role: varchar("role", { length: 20 }).default("user").notNull(), // 'user' | 'admin'
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-});
+export const users = pgTable(
+  "users",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    email: text("email").notNull().unique(),
+    phone: varchar("phone", { length: 30 }),
+    googleId: text("google_id").unique(),
+    name: varchar("name", { length: 120 }).notNull(),
+    avatarUrl: text("avatar_url"),
+    passwordHash: text("password_hash"),
+    role: varchar("role", { length: 20 }).default("user").notNull(), // 'user' | 'admin'
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    // Partial unique index: phone is optional, so only non-null values are
+    // constrained. Declared here so `drizzle-kit push` does not drop the index
+    // that the runtime DDL creates.
+    uniqueIndex("users_phone_unique_idx")
+      .on(table.phone)
+      .where(sql`${table.phone} IS NOT NULL`),
+  ]
+);
 
 export const sessions = pgTable("sessions", {
   id: text("id").primaryKey(),
@@ -195,7 +206,7 @@ export const apiTokens = pgTable("api_tokens", {
     .references(() => users.id, { onDelete: "cascade" }),
   name: varchar("name", { length: 100 }).notNull(),
   tokenHash: text("token_hash").notNull().unique(),
-  tokenPrefix: varchar("token_prefix", { length: 16 }).notNull(),
+  tokenPrefix: varchar("token_prefix", { length: 64 }).notNull(),
   scopes: text("scopes").array().default(sql`ARRAY['read:campaigns']::text[]`).notNull(),
   lastUsedAt: timestamp("last_used_at", { withTimezone: true }),
   expiresAt: timestamp("expires_at", { withTimezone: true }),

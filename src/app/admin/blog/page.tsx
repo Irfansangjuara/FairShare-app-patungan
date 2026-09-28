@@ -5,7 +5,7 @@ import { Plus, FileText, Pencil, ExternalLink, Calendar, Trash2, ArrowLeft, Glob
 import { DeleteArticleButton } from "./DeleteArticleButton";
 
 export const metadata = {
-  title: "Manajemen Artikel Blog | Admin FairShare",
+  title: "Manajemen Artikel Blog",
   description: "Kelola artikel blog publik, optimasi SEO Google, dan publikasikan panduan finansial.",
   robots: {
     index: false,

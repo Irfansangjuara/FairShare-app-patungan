@@ -45,9 +45,10 @@ export async function GET(req: NextRequest) {
       count: data.length,
       data,
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    console.error("GET /api/v1/campaigns error:", err);
     return NextResponse.json(
-      { error: `Internal server error: ${err?.message}` },
+      { error: "Terjadi kesalahan pada server." },
       { status: 500 }
     );
   }

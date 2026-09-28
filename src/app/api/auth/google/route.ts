@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { generateSignedOAuthState, resolveOAuthRedirectUri } from "@/lib/oauth-state";
+import { getBaseUrl } from "@/lib/site-url";
 
 export async function GET(request: NextRequest) {
   const headerList = await headers();
@@ -19,7 +20,7 @@ export async function GET(request: NextRequest) {
   } else if (host) {
     baseUrl = `${proto}://${host}`;
   } else {
-    baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app-fairshare.vercel.app";
+    baseUrl = process.env.NEXT_PUBLIC_APP_URL || getBaseUrl();
   }
 
   const clientId = process.env.GOOGLE_CLIENT_ID;

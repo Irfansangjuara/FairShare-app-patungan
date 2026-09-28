@@ -2,10 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
 import { getSitePageByKey, getSiteSettings } from "../../server/queries";
-import { getSessionUser } from "../../lib/auth";
 import { FairShareNavbar } from "../../components/FairShareNavbar";
 import { PublicFooter } from "../../components/PublicFooter";
 import { WhatsAppFloatingButton } from "../../components/WhatsAppFloatingButton";
+import { absoluteUrl } from "../../lib/site-url";
 import {
   FileText,
   Scale,
@@ -19,17 +19,19 @@ import {
   Award,
 } from "lucide-react";
 
+export const revalidate = 300;
+
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getSitePageByKey("terms");
   const settings = await getSiteSettings();
-  const title = page?.seoTitle || `Syarat & Ketentuan | ${settings.siteName}`;
+  const title = page?.seoTitle || "Syarat & Ketentuan";
   const description =
     page?.seoDescription ||
     "Syarat dan ketentuan pemakaian platform patungan Fair Share untuk menjamin transparansi, ketepatan perhitungan, dan kesepahaman seluruh pengguna.";
   const ogImageUrl = page?.ogImage || settings.defaultOgImage || "/assets/img/fair-share-cover.webp";
 
   return {
-    title,
+    title: page?.seoTitle ? { absolute: page.seoTitle } : title,
     description,
     alternates: {
       canonical: page?.canonicalUrl || "/terms",
@@ -41,7 +43,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title,
       description,
-      url: "https://app-fairshare.vercel.app/terms",
+      url: absoluteUrl("/terms"),
       siteName: settings.siteName,
       images: [
         {
@@ -63,8 +65,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function TermsPage() {
-  const user = await getSessionUser();
-
   const termsHighlights = [
     {
       icon: Scale,
@@ -150,7 +150,7 @@ export default async function TermsPage() {
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900 font-sans">
       {/* Floating Header */}
-      <FairShareNavbar user={user} />
+      <FairShareNavbar />
 
       {/* Hero Section */}
       <section className="relative py-8 bg-gradient-to-t from-white md:py-16 overflow-hidden">

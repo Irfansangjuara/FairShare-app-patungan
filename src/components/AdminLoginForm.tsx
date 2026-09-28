@@ -11,11 +11,6 @@ export function AdminLoginForm() {
   const [emailValue, setEmailValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
 
-  const fillDefaultAdmin = () => {
-    setEmailValue("admin@fairshare.copilotmarketing.id");
-    setPasswordValue("#@Cusn77");
-  };
-
   return (
     <div className="w-full max-w-md mx-auto space-y-6">
       {/* Brand Header */}
@@ -53,7 +48,7 @@ export function AdminLoginForm() {
                 required
                 value={emailValue}
                 onChange={(e) => setEmailValue(e.target.value)}
-                placeholder="admin@fairshare.copilotmarketing.id"
+                placeholder="admin@contoh.com"
                 className="w-full rounded-2xl bg-slate-950/80 border border-slate-800 px-10 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#b7e913] focus:border-transparent transition-all"
               />
             </div>
@@ -103,15 +98,13 @@ export function AdminLoginForm() {
           </button>
         </form>
 
-        {/* Quick Fill Helper */}
+        {/* Access note */}
         <div className="pt-4 border-t border-slate-800/80 text-center">
-          <button
-            type="button"
-            onClick={fillDefaultAdmin}
-            className="text-[11px] text-slate-400 hover:text-[#b7e913] transition-colors inline-flex items-center gap-1.5"
-          >
-            <span>Gunakan Akun Utama (admin@fairshare.copilotmarketing.id)</span>
-          </button>
+          <p className="text-[11px] leading-relaxed text-slate-500">
+            Akun administrator dikonfigurasi melalui environment
+            (<code className="text-slate-400">ADMIN_EMAIL</code> /{" "}
+            <code className="text-slate-400">ADMIN_PASSWORD</code>).
+          </p>
         </div>
       </div>
 

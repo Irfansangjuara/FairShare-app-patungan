@@ -81,8 +81,10 @@ export async function getSessionUser(): Promise<SessionUser | null> {
     }
 
     return result[0].user;
-  } catch (error: any) {
-    if (error?.digest === "DYNAMIC_SERVER_USAGE" || error?.message?.includes("Dynamic server usage")) {
+  } catch (error) {
+    const digest = (error as { digest?: string } | null)?.digest;
+    const message = error instanceof Error ? error.message : "";
+    if (digest === "DYNAMIC_SERVER_USAGE" || message.includes("Dynamic server usage")) {
       throw error;
     }
     console.error("Error retrieving session user:", error);

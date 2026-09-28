@@ -18,14 +18,21 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+const APP_BASE_URL = (
+  process.env.NEXT_PUBLIC_APP_URL || "https://fairshare.copilotmarketing.id"
+).replace(/\/+$/, "");
+
 interface AdminAgentViewProps {
-  token: string;
+  token: string | null;
 }
 
 export function AdminAgentView({ token }: AdminAgentViewProps) {
   const [showToken, setShowToken] = useState(false);
   const [copiedToken, setCopiedToken] = useState(false);
   const [copiedCurl, setCopiedCurl] = useState<string | null>(null);
+
+  // Only used inside documentation samples; never a real credential.
+  const tokenPlaceholder = token ?? "<FAIRSHARE_AGENT_TOKEN>";
 
   const copyToClipboard = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
@@ -38,8 +45,8 @@ export function AdminAgentView({ token }: AdminAgentViewProps) {
     }
   };
 
-  const sampleCreateArticleCurl = `curl -X POST https://fairshare.copilotmarketing.id/api/v1/articles \\
-  -H "Authorization: Bearer ${token}" \\
+  const sampleCreateArticleCurl = `curl -X POST ${APP_BASE_URL}/api/v1/articles \\
+  -H "Authorization: Bearer ${tokenPlaceholder}" \\
   -H "Content-Type: application/json" \\
   -d '{
     "title": "7 Strategi Mengatur Keuangan Liburan Bareng Teman",
@@ -50,8 +57,8 @@ export function AdminAgentView({ token }: AdminAgentViewProps) {
     "seoDescription": "Pelajari trik patungan adil dan otomatis agar trip hemat dan menyenangkan."
   }'`;
 
-  const sampleGetStatsCurl = `curl -X GET https://fairshare.copilotmarketing.id/api/v1/admin/stats \\
-  -H "Authorization: Bearer ${token}"`;
+  const sampleGetStatsCurl = `curl -X GET ${APP_BASE_URL}/api/v1/admin/stats \\
+  -H "Authorization: Bearer ${tokenPlaceholder}"`;
 
   return (
     <div className="space-y-8">
@@ -92,29 +99,38 @@ export function AdminAgentView({ token }: AdminAgentViewProps) {
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-3 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3">
-            <code className="text-xs sm:text-sm font-mono text-[#b7e913] truncate">
-              {showToken ? token : `${token.slice(0, 18)}••••••••••••••••••••••••••••••••`}
-            </code>
+          {token ? (
+            <div className="flex items-center justify-between gap-3 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3">
+              <code className="text-xs sm:text-sm font-mono text-[#b7e913] truncate">
+                {showToken ? token : `${token.slice(0, 18)}••••••••••••••••••••••••••••••••`}
+              </code>
 
-            <button
-              type="button"
-              onClick={() => copyToClipboard(token, "token")}
-              className="btn-pill-lime py-1.5 px-3 text-xs font-bold shrink-0 flex items-center gap-1 shadow-sm"
-            >
-              {copiedToken ? (
-                <>
-                  <Check className="h-3.5 w-3.5 text-black" />
-                  <span>Tersalin!</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="h-3.5 w-3.5 text-black" />
-                  <span>Salin Token</span>
-                </>
-              )}
-            </button>
-          </div>
+              <button
+                type="button"
+                onClick={() => copyToClipboard(token, "token")}
+                className="btn-pill-lime py-1.5 px-3 text-xs font-bold shrink-0 flex items-center gap-1 shadow-sm"
+              >
+                {copiedToken ? (
+                  <>
+                    <Check className="h-3.5 w-3.5 text-black" />
+                    <span>Tersalin!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-3.5 w-3.5 text-black" />
+                    <span>Salin Token</span>
+                  </>
+                )}
+              </button>
+            </div>
+          ) : (
+            <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-[11px] sm:text-xs text-amber-200 leading-relaxed">
+              Token agent belum dikonfigurasi. Set environment variable{" "}
+              <code className="text-amber-100">FAIRSHARE_AGENT_TOKEN</code> (nilai acak minimal 32
+              karakter) dan <code className="text-amber-100">FAIRSHARE_AGENT_EMAIL</code> pada
+              environment deployment, lalu deploy ulang. Token tidak lagi ditanam di dalam kode.
+            </div>
+          )}
 
           <div className="flex flex-wrap items-center gap-2 pt-1 text-[11px] text-slate-400">
             <span className="font-semibold text-slate-300">Cakupan Izin (Scopes):</span>

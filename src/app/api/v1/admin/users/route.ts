@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
       total: data.length,
       data,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("GET /api/v1/admin/users error:", error);
     return NextResponse.json(
       { success: false, error: "Gagal mengambil daftar pengguna" },
@@ -118,7 +118,7 @@ export async function POST(req: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error("POST /api/v1/admin/users error:", error);
     return NextResponse.json(
       { success: false, error: "Gagal membuat pengguna baru" },
