@@ -72,26 +72,28 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
         <div className="px-4 mx-auto max-w-6xl">
           <div className="gap-4 justify-between items-center md:flex">
             <div className="mx-auto mb-8 w-full max-w-4xl">
-              <h1 className="mb-6 text-3xl sm:text-4xl md:text-5xl font-medium text-center tracking-tight">
+              <h1 className="mb-8 text-4xl font-medium text-center lg:mb-16 max-md:text-3xl tracking-tight">
                 Daftar Akun Fair Share
               </h1>
 
               {/* Maskot Animasi Melayang untuk Mobile dan Tablet */}
-              <div className="flex justify-center mb-8 lg:hidden">
-                <Image
-                  className="w-36 sm:w-44 md:w-48 h-auto animate-slow-cloud-up object-contain drop-shadow-xs"
-                  width={230}
-                  height={281}
-                  src="/assets/img/meong-maskot-5.webp"
-                  alt="Maskot Fair Share"
-                  priority
-                />
+              <div className="lg:hidden">
+                <div className="flex justify-center mb-8">
+                  <Image
+                    className="w-36 sm:w-44 md:w-48 h-auto animate-slow-cloud-up object-contain drop-shadow-xs"
+                    width={230}
+                    height={281}
+                    src="/assets/img/meong-maskot-5.webp"
+                    alt="Maskot Fair Share"
+                    priority
+                  />
+                </div>
               </div>
 
               <div className="justify-between items-center mx-auto w-full max-w-4xl lg:flex gap-8">
                 {/* Form Column */}
-                <div className="w-full lg:w-1/2">
-                  <div className="mt-2 sm:mt-5">
+                <div className="w-full max-w-md mx-auto lg:max-w-none lg:w-1/2">
+                  <div className="mt-5">
                     {/* Google OAuth Button */}
                     <a
                       href={googleOAuthUrl}
@@ -138,7 +140,7 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
                 {/* Mascot Column (Desktop only) */}
                 <div className="hidden lg:flex lg:w-1/2 justify-center">
                   <Image
-                    className="ml-auto w-4/5 animate-slow-cloud-up object-contain drop-shadow-sm"
+                    className="ml-auto w-4/5 animate-slow-cloud-up object-contain"
                     width={230}
                     height={281}
                     src="/assets/img/meong-maskot-5.webp"
