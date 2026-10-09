@@ -8,7 +8,7 @@ import { WhatsAppFloatingButton } from "../components/WhatsAppFloatingButton";
 import SituationTestimonialSlider from "../components/SituationTestimonialSlider";
 import FeatureBadgesSlider from "../components/FeatureBadgesSlider";
 import { getSiteSettings } from "../server/queries";
-import { Receipt, ArrowLeftRight, Share2 } from "lucide-react";
+import { Receipt, ArrowLeftRight, Share2, ChevronDown } from "lucide-react";
 import { getBaseUrl } from "../lib/site-url";
 
 // Statically rendered and revalidated: keeps the <title>/<meta> in <head>,
@@ -561,8 +561,8 @@ export default async function HomePage() {
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-gray-900">
                   <span className="text-base sm:text-lg">{faq.q}</span>
-                  <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center text-xl rounded-full bg-slate-100 text-slate-700 transition-transform group-open:rotate-45 font-mono">
-                    +
+                  <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-600 transition-all duration-200 group-open:rotate-180 group-open:border-blue-200 group-open:bg-blue-50 group-open:text-blue-700">
+                    <ChevronDown className="h-4 w-4" strokeWidth={2.25} aria-hidden="true" />
                   </span>
                 </summary>
                 <div className="mt-3 text-sm sm:text-base text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
